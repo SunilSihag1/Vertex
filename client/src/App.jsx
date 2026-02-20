@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Signup from "./Signup";
-import Login from "./Login";
-import OTP from "./Otp";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import OTP from "./pages/Otp";
 
 function App() {
   const [page, setPage] = useState("signup"); // signup | login | otp

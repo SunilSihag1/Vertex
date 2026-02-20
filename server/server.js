@@ -1,6 +1,6 @@
 import express from "express";
-import connectDB from "./db.js";
-import authRoutes from "./src/auth/routes.js";
+import connectDB from "./src/config/db.js";
+import authRoutes from "./src/modules/auth/auth.routes.js";
 import cors from "cors";
 
 const app = express();
