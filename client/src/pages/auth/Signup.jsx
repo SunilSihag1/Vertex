@@ -75,7 +75,7 @@
 
 
 import { useState } from "react";
-import api from "../services/api";
+import api from "../../service/api";
 
 const Signup = () => {
   const [formData, setFormData] = useState({

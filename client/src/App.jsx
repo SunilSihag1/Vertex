@@ -1,43 +1,35 @@
-import { useState } from "react";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
-import OTP from "./pages/Otp";
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '../public/logo/vite.svg'
+import './App.css'
 
 function App() {
-  const [page, setPage] = useState("signup"); // signup | login | otp
+  const [count, setCount] = useState(0)
 
   return (
-    <div>
-
-      {/* Page rendering */}
-      {page === "signup" && <Signup setPage={setPage} />}
-      {page === "login" && <Login />}
-      {page === "otp" && <OTP setPage={setPage} />}
-
-      {/* Toggle only for signup/login */}
-      {page !== "otp" && (
-        <p style={{ textAlign: "center", marginTop: "10px" }}>
-          {page === "login"
-            ? "Don't have an account?"
-            : "Already have an account?"}
-
-          <span
-            onClick={() =>
-              setPage(page === "login" ? "signup" : "login")
-            }
-            style={{
-              color: "blue",
-              cursor: "pointer",
-              marginLeft: "5px"
-            }}
-          >
-            {page === "login" ? "Signup" : "Login"}
-          </span>
+    <>
+      <div>
+        <a href="https://vite.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
+      </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.jsx</code> and save to test HMR
         </p>
-      )}
-
-    </div>
-  );
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
+  )
 }
 
-export default App;
+export default App
