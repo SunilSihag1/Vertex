@@ -16,7 +16,7 @@
         "express",
         "mongodb"
     ],
-    "author": "Sunil Sihag",
+    "author": "Sunil Sihag, Shreya Popat",
     "license": "ISC",
     "dependencies": {
         "bcryptjs": "^2.4.3",
