@@ -43,6 +43,6 @@ const userSchema = new mongoose.Schema({
     otp: String,
     otpExpiry: Date
 }, 
-{ timestamps: true }); // ye automatically createdAt add karega
+{ timestamps: true });
 
 export default mongoose.model("User", userSchema);
