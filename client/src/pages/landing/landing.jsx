@@ -8,8 +8,7 @@ const Landing = () => {
             <main>
 
                 <section className="relative pt-32 pb-32 md:pt-48 md:pb-52 overflow-hidden bg-background-light dark:bg-background-dark">
-                    <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-sage/10 rounded-full blur-[120px]"></div>
-                    <div className="absolute bottom-0 right-[-5%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[100px]"></div>
+                    <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-sage/20 rounded-full blur-[120px]"></div>
                     <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                         <div className="flex flex-col gap-8 relative z-10">
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sage/10 border border-sage/20 text-primary dark:text-sage text-[10px] font-black uppercase tracking-[0.2em]">
@@ -92,13 +91,13 @@ const Landing = () => {
                     <div className="max-w-7xl mx-auto px-6 relative z-10">
                         <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
                             <div className="max-w-2xl">
-                                <h2 className="text-4xl md:text-6xl font-extrabold text-primary mb-8 tracking-tight font-display">
+                                <h2 className="text-4xl md:text-6xl font-extrabold text-primary dark:text-sage mb-8 tracking-tight font-display">
                                     Engineered for <br />Seamless Control</h2>
-                                <p className="text-xl text-slate-500 font-medium">From warehousing to customer experience, we
+                                <p className="text-xl text-slate-500 dark:text-slate-400 font-medium">From warehousing to customer experience, we
                                     synchronize every touchpoint of your commerce ecosystem.</p>
                             </div>
                             <div className="pb-2">
-                                <a className="group text-primary font-bold flex items-center gap-2 text-lg" href="#">
+                                <a className="group text-primary dark:text-sage font-bold flex items-center gap-2 text-lg" href="#">
                                     View all modules
                                     <span
                                         className="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_right_alt</span>
@@ -107,64 +106,59 @@ const Landing = () => {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                             <div
-                                className="group p-10 rounded-2xl bg-white border border-slate-100 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
+                                className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200  dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
                                 <div
-                                    className="absolute -right-12 -top-12 w-32 h-32 bg-sage/5 rounded-full transition-all group-hover:scale-150">
+                                    className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150">
                                 </div>
                                 <div
-                                    className="w-16 h-16 bg-gradient-to-br from-sage to-sage/40 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
+                                    className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
                                     <span className="material-symbols-outlined text-primary text-3xl">inventory_2</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Stock Intelligence</h3>
-                                <p className="text-slate-500 leading-relaxed font-medium">Predictive restocking and multi-channel
+                                <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">Predictive restocking and multi-channel
                                     synchronization powered by neural supply chains.</p>
                                 <div
                                     className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Explore module <span className="material-symbols-outlined text-base">chevron_right</span>
+                                    <a href="#">Explore module</a> <span className="material-symbols-outlined text-base">chevron_right</span>
                                 </div>
                             </div>
                             <div
-                                className="group p-10 rounded-2xl bg-white border border-slate-100 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
+                                className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200 dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
                                 <div
-                                    className="absolute -right-12 -top-12 w-32 h-32 bg-primary/5 rounded-full transition-all group-hover:scale-150">
+                                    className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary rounded-full transition-all group-hover:scale-150">
                                 </div>
                                 <div
-                                    className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-primary/10 relative z-10">
+                                    className="w-16 h-16 bg-gradient-to-br from-primary to-primary rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-primary/10 relative z-10">
                                     <span className="material-symbols-outlined text-sage text-3xl">storefront</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Store Experience</h3>
-                                <p className="text-slate-500 leading-relaxed font-medium">Next-gen storefront builder with headless
+                                <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">Next-gen storefront builder with headless
                                     capabilities and 0.2s load times for maximum conversion.</p>
                                 <div
                                     className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Explore module <span className="material-symbols-outlined text-base">chevron_right</span>
+                                    <a href="#">Explore module</a> <span className="material-symbols-outlined text-base">chevron_right</span>
                                 </div>
                             </div>
                             <div
-                                className="group p-10 rounded-2xl bg-white border border-slate-100 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
+                                className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200  dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
                                 <div
-                                    className="absolute -right-12 -top-12 w-32 h-32 bg-sage/5 rounded-full transition-all group-hover:scale-150">
+                                    className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150">
                                 </div>
                                 <div
-                                    className="w-16 h-16 bg-gradient-to-br from-sage to-sage/40 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
+                                    className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
                                     <span className="material-symbols-outlined text-primary text-3xl">monitoring</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Unified Analytics</h3>
-                                <p className="text-slate-500 leading-relaxed font-medium">A single source of truth for revenue,
+                                <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">A single source of truth for revenue,
                                     customer lifetime value, and operational overheads.</p>
                                 <div
                                     className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                                    Explore module <span className="material-symbols-outlined text-base">chevron_right</span>
+                                    <a href="#">Explore module</a> <span className="material-symbols-outlined text-base">chevron_right</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
-
-
-                <div className="h-32 bg-primary organic-divider -mb-16 relative z-10">
-                    <div className="grainy-bg absolute inset-0"></div>
-                </div>
 
 
                 <section className="bg-primary pt-40 pb-32 relative overflow-hidden">
@@ -228,93 +222,93 @@ const Landing = () => {
 
 
 
-                <section className="py-32 bg-white relative">
+                <section className="py-32 relative">
                     <div className="max-w-7xl mx-auto px-6">
                         <div className="text-center max-w-2xl mx-auto mb-20">
-                            <h2 className="text-4xl md:text-5xl font-extrabold text-primary mb-6 tracking-tight font-display">Scale
+                            <h2 className="text-4xl md:text-5xl font-extrabold text-primary dark:text-sage mb-6 tracking-tight font-display">Scale
                                 Your Vision</h2>
-                            <p className="text-slate-500 font-medium text-lg">Flexible pricing architecture designed to grow from
+                            <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">Flexible pricing architecture designed to grow from
                                 boutique to enterprise.</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <div
-                                className="bg-slate-50 border border-slate-100 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
-                                <h3 className="text-xl font-bold mb-1 text-primary">Essentials</h3>
-                                <p className="text-slate-400 text-sm mb-8 font-medium italic">For solo creators</p>
-                                <div className="text-5xl font-extrabold mb-8 text-primary font-display">$0<span
-                                    className="text-slate-400 text-lg font-normal">/mo</span></div>
+                                className="bg-slate-50 dark:bg-primary border border-slate-100 dark:border-slate-500 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
+                                <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">Essentials</h3>
+                                <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">For solo creators</p>
+                                <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">$0<span
+                                    className="text-slate-400 dark:text-slate-300 text-lg font-normal">/month</span></div>
                                 <ul className="space-y-5 mb-10">
-                                    <li className="flex items-center gap-3 text-slate-500 font-medium">
+                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
                                         <span className="material-symbols-outlined text-sage text-xl">check_circle</span> 50
                                         Products
                                     </li>
-                                    <li className="flex items-center gap-3 text-slate-500 font-medium">
+                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
                                         <span className="material-symbols-outlined text-sage text-xl">check_circle</span> Core
                                         Dashboard
                                     </li>
-                                    <li className="flex items-center gap-3 text-slate-500 font-medium">
+                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
                                         <span className="material-symbols-outlined text-sage text-xl">check_circle</span> 1 Physical
                                         Store
                                     </li>
                                 </ul>
                                 <button
-                                    className="w-full py-4 border-2 border-slate-200 rounded-full font-bold text-primary hover:bg-white transition-all">Get
+                                    className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white  dark:hover:bg-sage/80 transition-all cursor-pointer">Get
                                     Started</button>
                             </div>
                             <div
-                                className="bg-primary text-white p-10 rounded-[2.5rem] relative shadow-[0_30px_60px_-15px_rgba(20,49,9,0.3)] hover:-translate-y-2 transition-all">
+                                className="bg-primary dark:bg-sage text-white dark:text-primary  dark:border dark:border-slate-500 p-10 rounded-[2.5rem] relative shadow-[0_30px_60px_-15px_rgba(20,49,9,0.3)] hover:-translate-y-2 transition-all">
                                 <div className="grainy-bg absolute inset-0 opacity-10"></div>
                                 <div
-                                    className="absolute -top-4 left-1/2 -translate-x-1/2 bg-sage text-primary text-[10px] font-black px-5 py-1.5 rounded-full uppercase tracking-widest shadow-xl">
+                                    className="absolute -top-4 left-1/2 -translate-x-1/2 bg-sage dark:bg-primary dark:border dark:border-slate-500 text-primary dark:text-sage text-[10px] font-black px-5 py-1.5 rounded-full uppercase tracking-widest shadow-xl">
                                     Best Value</div>
-                                <h3 className="text-xl font-bold mb-1 text-sage">Growth Pro</h3>
-                                <p className="text-sage/60 text-sm mb-8 font-medium italic">For scaling teams</p>
-                                <div className="text-5xl font-extrabold mb-8 font-display text-white">$49<span
-                                    className="text-sage/50 text-lg font-normal">/mo</span></div>
+                                <h3 className="text-xl font-bold mb-1 text-sage dark:text-primary">Growth Pro</h3>
+                                <p className="text-sage/60 dark:text-primary/90 text-sm mb-8 font-medium italic">For scaling teams</p>
+                                <div className="text-5xl font-extrabold mb-8 font-display text-white dark:text-primary">$49<span
+                                    className="text-sage/50 dark:text-primary/90 text-lg font-normal">/month</span></div>
                                 <ul className="space-y-5 mb-10">
                                     <li className="flex items-center gap-3 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">verified</span> Unlimited
+                                        <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">verified</span> Unlimited
                                         Inventory
                                     </li>
                                     <li className="flex items-center gap-3 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">verified</span> Store
+                                        <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">verified</span> Store
                                         Experience Builder
                                     </li>
                                     <li className="flex items-center gap-3 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">verified</span> AI Growth
+                                        <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">verified</span> AI Growth
                                         Assistant
                                     </li>
                                     <li className="flex items-center gap-3 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">verified</span> Multi-region
+                                        <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">verified</span> Multi-region
                                         Sync
                                     </li>
                                 </ul>
                                 <button
-                                    className="shimmer-btn w-full py-4 bg-sage text-primary rounded-full font-bold text-lg shadow-xl shadow-black/20 hover:scale-[1.02] transition-transform">Start
+                                    className="shimmer-btn w-full py-4 bg-sage dark:bg-primary text-primary dark:text-sage rounded-full font-bold text-lg shadow-xl shadow-black/20 hover:scale-[1.02] transition-transform cursor-pointer">Start
                                     14-Day Trial</button>
                             </div>
                             <div
-                                className="bg-slate-50 border border-slate-100 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
-                                <h3 className="text-xl font-bold mb-1 text-primary">Enterprise</h3>
-                                <p className="text-slate-400 text-sm mb-8 font-medium italic">For global operations</p>
-                                <div className="text-5xl font-extrabold mb-8 text-primary font-display">$99<span
-                                    className="text-slate-400 text-lg font-normal">/mo</span></div>
+                                className="bg-slate-50 dark:bg-primary border border-slate-100 dark:border-slate-500 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
+                                <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">Enterprise</h3>
+                                <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">For global operations</p>
+                                <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">$99<span
+                                    className="text-slate-400 dark:text-slate-300 text-lg font-normal">/month</span></div>
                                 <ul className="space-y-5 mb-10">
-                                    <li className="flex items-center gap-3 text-slate-500 font-medium">
+                                    <li className="flex items-center gap-3 text-slate-500  dark:text-slate-300 font-medium">
                                         <span className="material-symbols-outlined text-sage text-xl">check_circle</span> Unlimited
                                         Nodes
                                     </li>
-                                    <li className="flex items-center gap-3 text-slate-500 font-medium">
+                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
                                         <span className="material-symbols-outlined text-sage text-xl">check_circle</span> 24/7
                                         Priority Support
                                     </li>
-                                    <li className="flex items-center gap-3 text-slate-500 font-medium">
+                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
                                         <span className="material-symbols-outlined text-sage text-xl">check_circle</span>
                                         White-label API
                                     </li>
                                 </ul>
                                 <button
-                                    className="w-full py-4 border-2 border-slate-200 rounded-full font-bold text-primary hover:bg-white transition-all">Talk
+                                    className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white  dark:hover:bg-sage/80 transition-all cursor-pointer">Talk
                                     to Sales</button>
                             </div>
                         </div>
@@ -336,11 +330,12 @@ const Landing = () => {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-5 w-full justify-center">
                                 <button
-                                    className="shimmer-btn bg-white text-primary px-12 py-6 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-2xl">
+                                    className="shimmer-btn bg-white text-primary px-12 py-6 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-2xl cursor-pointer
+                                    ">
                                     Build My Store
                                 </button>
                                 <button
-                                    className="bg-primary border border-white/20 text-white px-12 py-6 rounded-full font-bold text-xl hover:bg-white/5 transition-colors">
+                                    className="bg-primary border border-white/20 text-white px-12 py-6 rounded-full font-bold text-xl hover:bg-white/5 transition-colors cursor-pointer">
                                     Request Pricing
                                 </button>
                             </div>

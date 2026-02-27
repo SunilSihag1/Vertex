@@ -39,7 +39,7 @@ const ThemeSwitcher = () => {
     return (
         <button
             onClick={toggleTheme}
-            className="relative w-14 h-8 flex items-center rounded-full bg-slate-200 dark:bg-slate-700 transition-all duration-500 p-1"
+            className="relative w-14 h-8 flex items-center rounded-full bg-slate-200 dark:bg-slate-700 transition-all duration-500 p-1 cursor-pointer"
         >
             {/* Sliding Circle */}
             <div
