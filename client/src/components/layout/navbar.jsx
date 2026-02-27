@@ -15,13 +15,6 @@ const MoonIcon = () => (
     </svg>
 );
 
-const SystemIcon = () => (
-    <svg className="w-5 h-5 text-primary dark:text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <rect x="3" y="4" width="18" height="14" rx="2" />
-        <path d="M8 20h8" />
-    </svg>
-);
-
 const ThemeSwitcher = () => {
     const [theme, setThemeState] = useState("light");
 
@@ -53,9 +46,10 @@ const ThemeSwitcher = () => {
 };
 const Navbar = () => {
     const [hovered, setHovered] = useState(null);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     return (
-        <header className="fixed top-0 z-50 w-full bg-white/60 dark:bg-background-dark/60 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50">
+        <header className="fixed top-0 z-50 w-full bg-white dark:bg-background-dark backdrop-blur-xl border-b border-slate-300 dark:border-slate-800/50">
             <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                 <div className="flex items-center gap-3 group">
                     <div className="p-2 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
@@ -75,7 +69,7 @@ const Navbar = () => {
                         </a>
                     </div>
                 </div>
-                <nav className="hidden md:flex items-center gap-10">
+                <nav className="hidden min-[950px]:flex items-center gap-10">
                     {["Platform", "Solutions", "Resources", "Pricing"].map((item, index) => (
                         <a
                             key={index}
@@ -95,20 +89,82 @@ const Navbar = () => {
                 <div className="flex items-center gap-4">
                     <a
                         href="/login"
-                        className="px-5 py-2.5 text-slate-700 dark:text-slate-400 font-bold text-sm transition-all duration-300 hover:text-primary dark:hover:text-sage hover:scale-105"
+                        className="hidden min-[950px]:block px-5 py-2.5 text-slate-700 dark:text-slate-400 font-bold text-sm transition-all duration-300 hover:text-primary dark:hover:text-sage hover:scale-105"
                     >
                         Log In
                     </a>
-                    <button className="shimmer-btn bg-primary hover:shadow-primary/30 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-xl transition-all duration-300 hover:scale-105 active:scale-95">
+                    <button className="hidden min-[950px]:block shimmer-btn bg-primary hover:shadow-primary/30 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-xl transition-all duration-300 hover:scale-105 active:scale-95">
                         Start Free Trial
                     </button>
 
-                <ThemeSwitcher />
+                    <ThemeSwitcher />
+
+                    {/* Hamburger */}
+                    <button
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        className="min-[950px]:hidden w-10 h-10 rounded-lg flex flex-col justify-center items-center gap-1 bg-primary dark:bg-primary transition-all duration-300"
+                    >
+                        <span
+                            className={`w-6 h-[2px] bg-white transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[6px]" : ""
+                                }`}
+                        ></span>
+                        <span
+                            className={`w-6 h-[2px] bg-white transition-all duration-300 ${menuOpen ? "opacity-0" : ""
+                                }`}
+                        ></span>
+                        <span
+                            className={`w-6 h-[2px] bg-white transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-[6px]" : ""
+                                }`}
+                        ></span>
+                    </button>
                 </div>
 
 
 
             </div>
+
+            {/* Mobile Menu */}
+            <div
+                className={`fixed top-20 right-0 h-full w-72 shadow-2xl transform transition-transform duration-500 ease-in-out z-40 min-[950px]:hidden ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
+                <div className="p-6 flex flex-col gap-6  bg-white dark:bg-background-dark h-screen border-l border-slate-700">
+
+                    {["Platform", "Solutions", "Resources", "Pricing"].map((item, index) => (
+                        <a
+                            key={index}
+                            href="#"
+                            onClick={() => setMenuOpen(false)}
+                            className="relative text-slate-500 dark:text-slate-300 font-semibold text-sm tracking-wide transition-colors duration-300 hover:text-primary hover:dark:text-sage"
+                        >
+                            {item}
+                        </a>
+                    ))}
+
+                    <div className="border-t border-slate-200 dark:border-slate-700 my-4"></div>
+
+                    <a
+                        href="/login"
+                        onClick={() => setMenuOpen(false)}
+                        className="px-5 py-2.5 text-slate-700 dark:text-slate-400 font-bold text-sm transition-all duration-300 hover:text-primary dark:hover:text-sage hover:scale-105"
+                    >
+                        Log In
+                    </a>
+
+                    <button
+                        onClick={() => setMenuOpen(false)}
+                        className="shimmer-btn bg-primary hover:shadow-primary/30 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+                    >
+                        Start Free Trial
+                    </button>
+
+                </div>
+            </div>
+
+            {/* Overlay */}
+            {menuOpen && (
+                <div
+                    onClick={() => setMenuOpen(false)}
+                ></div>
+            )}
         </header>
     );
 };

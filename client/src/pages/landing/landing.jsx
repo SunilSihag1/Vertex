@@ -9,7 +9,7 @@ const Landing = () => {
 
                 <section className="relative pt-32 pb-32 md:pt-48 md:pb-52 overflow-hidden bg-background-light dark:bg-background-dark">
                     <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-sage/20 rounded-full blur-[120px]"></div>
-                    <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                    <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                         <div className="flex flex-col gap-8 relative z-10">
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-sage/10 border border-sage/20 text-primary dark:text-sage text-[10px] font-black uppercase tracking-[0.2em]">
                                 <span className="relative flex h-2 w-2">
@@ -18,20 +18,22 @@ const Landing = () => {
                                 </span>
                                 Smart Inventory 1.0 Is Live
                             </div>
-                            <h1 className="text-6xl md:text-8xl font-extrabold text-primary dark:text-white leading-[0.95] tracking-tight font-display">
-                                Evolve Your <br /><span className="text-sage italic">Storefront.</span>
-                            </h1>
-                            <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg font-medium">
-                                The intelligence layer for high-growth retail. Unified commerce, smart logistics, and AI insights.
-                            </p>
-                            <div className="flex flex-wrap gap-5">
-                                <button className="shimmer-btn bg-primary text-white px-10 py-5 rounded-full font-bold text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105">
-                                    Get Started Free
-                                </button>
-                                <button className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-charcoal dark:text-white px-10 py-5 rounded-full font-bold text-lg hover:border-sage transition-all flex items-center gap-2">
-                                    Watch Demo
-                                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_circle</span>
-                                </button>
+                            <div className="m-auto">
+                                <h1 className="text-6xl md:text-8xl font-extrabold text-primary dark:text-white leading-[0.95] tracking-tight font-display max-[426px]:text-5xl">
+                                    Evolve Your <br /><span className="text-sage italic">Storefront.</span>
+                                </h1>
+                                <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg font-medium max-[426px]:text-lg">
+                                    The intelligence layer for high-growth retail. Unified commerce, smart logistics, and AI insights.
+                                </p>
+                                <div className="flex flex-wrap gap-5 mt-8">
+                                    <button className="shimmer-btn bg-primary text-white px-10 py-5 rounded-full font-bold text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 cursor-pointer">
+                                        Get Started Free
+                                    </button>
+                                    <button className="group bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-charcoal dark:text-white px-10 py-5 rounded-full font-bold text-lg hover:border-sage transition-all flex items-center gap-2 cursor-pointer">
+                                        Watch Demo
+                                        <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">play_circle</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div className="relative lg:h-[600px] flex items-center justify-center">
