@@ -120,7 +120,7 @@ const Landing = () => {
                                 <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">Predictive restocking and multi-channel
                                     synchronization powered by neural supply chains.</p>
                                 <div
-                                    className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                    className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 transition-opacity">
                                     <a href="#">Explore module</a> <span className="material-symbols-outlined text-base">chevron_right</span>
                                 </div>
                             </div>
@@ -137,7 +137,7 @@ const Landing = () => {
                                 <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">Next-gen storefront builder with headless
                                     capabilities and 0.2s load times for maximum conversion.</p>
                                 <div
-                                    className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                    className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 transition-opacity">
                                     <a href="#">Explore module</a> <span className="material-symbols-outlined text-base">chevron_right</span>
                                 </div>
                             </div>
@@ -154,7 +154,7 @@ const Landing = () => {
                                 <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">A single source of truth for revenue,
                                     customer lifetime value, and operational overheads.</p>
                                 <div
-                                    className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                                    className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 transition-opacity">
                                     <a href="#">Explore module</a> <span className="material-symbols-outlined text-base">chevron_right</span>
                                 </div>
                             </div>
@@ -325,19 +325,19 @@ const Landing = () => {
                         <div className="absolute top-0 right-0 w-96 h-96 bg-sage/10 blur-[100px] rounded-full"></div>
                         <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 blur-[80px] rounded-full"></div>
                         <div className="relative z-10 flex flex-col items-center gap-10">
-                            <h2 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight font-display max-w-4xl">
+                            <h2 className="text-5xl md:text-7xl max-[425px]:text-4xl font-extrabold text-white tracking-tight font-display max-w-4xl">
                                 Ready to redefine your retail engine?</h2>
-                            <p className="text-sage/70 text-xl md:text-2xl max-w-2xl leading-relaxed font-medium">
+                            <p className="text-sage/70 text-xl md:text-xl max-[425px]:text-sm max-w-2xl leading-relaxed font-medium">
                                 Join the 5,000+ merchants who transitioned from manual chaos to automated growth.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-5 w-full justify-center">
                                 <button
-                                    className="shimmer-btn bg-white text-primary px-12 py-6 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-2xl cursor-pointer
+                                    className="shimmer-btn bg-white text-primary px-12 py-6 rounded-full max-[426px]:rounded-3xl max-[426px]:px-6 font-black text-xl max-[426px]:text-sm hover:scale-105 transition-transform shadow-2xl cursor-pointer
                                     ">
                                     Build My Store
                                 </button>
                                 <button
-                                    className="bg-primary border border-white/20 text-white px-12 py-6 rounded-full font-bold text-xl hover:bg-white/5 transition-colors cursor-pointer">
+                                    className="bg-primary border border-white/20 text-white px-12 py-6 rounded-full max-[426px]:rounded-3xl max-[426px]:px-6 font-bold text-xl max-[426px]:text-sm hover:bg-white/5 transition-colors cursor-pointer">
                                     Request Pricing
                                 </button>
                             </div>

@@ -102,7 +102,7 @@ const Navbar = () => {
                     {/* Hamburger */}
                     <button
                         onClick={() => setMenuOpen(!menuOpen)}
-                        className="min-[950px]:hidden w-10 h-10 rounded-lg flex flex-col justify-center items-center gap-1 bg-primary dark:bg-primary transition-all duration-300"
+                        className="min-[950px]:hidden w-10 h-10 rounded-lg flex flex-col justify-center items-center gap-1 bg-primary dark:bg-primary transition-all duration-300 cursor-pointer"
                     >
                         <span
                             className={`w-6 h-[2px] bg-white transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[6px]" : ""
