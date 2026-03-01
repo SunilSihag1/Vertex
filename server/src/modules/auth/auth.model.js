@@ -15,7 +15,9 @@ const userSchema = new mongoose.Schema({
 
     password: {
         type: String,
-        required: true
+        required: function () {
+            return !this.googleId; // password only required if NOT google user
+        }
     },
 
     phone: {
@@ -36,13 +38,23 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+
+    otp: {
+        type: String
+    },
+
+    otpExpires: {
+        type: Date
+    },
+
     isVerified: {
         type: Boolean,
         default: false
     },
-    otp: String,
-    otpExpiry: Date
-}, 
-{ timestamps: true });
+    googleId: {
+        type: String
+    }
+},
+    { timestamps: true });
 
 export default mongoose.model("User", userSchema);
