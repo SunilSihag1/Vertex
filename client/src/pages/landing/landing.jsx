@@ -1,13 +1,9 @@
-import Navbar from "../../components/layout/navbar";
-import Footer from "../../components/layout/footer";
-
 const Landing = () => {
     return (
         <>
-            <Navbar />
             <main>
 
-                <section className="relative pt-32 pb-32 md:pt-48 md:pb-52 overflow-hidden bg-background-light dark:bg-background-dark">
+                <section className="relative pt-20 pb-20 md:pt-14 md:pb-14 overflow-hidden bg-background-light dark:bg-background-dark">
                     <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-sage/20 rounded-full blur-[120px]"></div>
                     <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
                         <div className="flex flex-col gap-8 relative z-10">
@@ -347,8 +343,6 @@ const Landing = () => {
                     </div>
                 </section>
             </main >
-
-            <Footer />
 
         </>
     );

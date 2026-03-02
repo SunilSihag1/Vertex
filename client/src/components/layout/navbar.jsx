@@ -19,7 +19,7 @@ const ThemeSwitcher = () => {
     const [theme, setThemeState] = useState("light");
 
     useEffect(() => {
-        const saved = localStorage.getItem("theme") || "light";
+        const saved = localStorage.getItem("theme_vertex") || "light";
         setThemeState(saved);
     }, []);
 
@@ -93,7 +93,7 @@ const Navbar = () => {
                     >
                         Log In
                     </a>
-                    <button className="hidden min-[950px]:block shimmer-btn bg-primary hover:shadow-primary/30 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-xl transition-all duration-300 hover:scale-105 active:scale-95">
+                    <button className="hidden min-[950px]:block shimmer-btn bg-primary hover:shadow-primary/30 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer">
                         Start Free Trial
                     </button>
 

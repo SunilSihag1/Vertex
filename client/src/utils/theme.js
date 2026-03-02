@@ -8,7 +8,7 @@ export const setTheme = (theme) => {
             document.documentElement.classList.remove("dark");
         }
     } else {
-        localStorage.setItem("theme", theme);
+        localStorage.setItem("theme_vertex", theme);
 
         if (theme === "dark") {
             document.documentElement.classList.add("dark");
@@ -19,7 +19,7 @@ export const setTheme = (theme) => {
 };
 
 export const initTheme = () => {
-    const saved = localStorage.getItem("theme");
+    const saved = localStorage.getItem("theme_vertex");
 
     if (!saved) {
         document.documentElement.classList.remove("dark");
