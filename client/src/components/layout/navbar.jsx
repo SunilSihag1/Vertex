@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { setTheme } from "../../utils/theme";
+import { useNavigate } from "react-router-dom";
 
 
 const SunIcon = () => (
@@ -45,6 +46,7 @@ const ThemeSwitcher = () => {
     );
 };
 const Navbar = () => {
+    const navigate = useNavigate();
     const [hovered, setHovered] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -88,8 +90,8 @@ const Navbar = () => {
                 </nav>
                 <div className="flex items-center gap-4">
                     <a
-                        href="/login"
-                        className="hidden min-[950px]:block px-5 py-2.5 text-slate-700 dark:text-slate-400 font-bold text-sm transition-all duration-300 hover:text-primary dark:hover:text-sage hover:scale-105"
+                        onClick={() => navigate("/login")}
+                        className=" cursor-pointer hidden min-[950px]:block px-5 py-2.5 text-slate-700 dark:text-slate-400 font-bold text-sm transition-all duration-300 hover:text-primary dark:hover:text-sage hover:scale-105"
                     >
                         Log In
                     </a>

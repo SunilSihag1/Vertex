@@ -7,14 +7,11 @@ const firebaseConfig = {
   projectId: "shop-management-system-7a86a",
   storageBucket: "shop-management-system-7a86a.firebasestorage.app",
   messagingSenderId: "492145593278",
-  appId: "1:492145593278:web:b8d19e1d4f77ff2a3cc7ef"
+  appId: "1:492145593278:web:b8d19e1d4f77ff2a3cc7ef",
+  measurementId: "G-7BRK1G875C"
 };
 
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-
 export const provider = new GoogleAuthProvider();
-provider.setCustomParameters({
-  prompt: "select_account"
-});
