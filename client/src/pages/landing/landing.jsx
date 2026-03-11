@@ -1,4 +1,89 @@
+import { useEffect, useState } from "react";
+import api from "../../service/api"
 const Landing = () => {
+
+
+    const [plans, setPlans] = useState([]);
+    const [billing, setBilling] = useState("monthly");
+
+    const getRazorpayKey = async () => {
+
+        const res = await api.get("/subscription/razorpay-key");
+
+        return res.data.key;
+
+    };
+
+    const handleSelectPlan = async (planId) => {
+
+        const res = await api.post("/subscription/create-order", {
+            planId,
+            billing
+        });
+
+        const order = res.data.order;
+
+        const razorpaykey = await getRazorpayKey();
+
+        const options = {
+
+            key: razorpaykey,
+
+            order_id: order.id,
+            amount: order.amount,
+            currency: order.currency,
+
+            name: "My Bizz",
+
+            handler: async function (response) {
+
+                await api.post("/subscription/verify-payment", response);
+
+                alert("Subscription activated");
+
+            },
+
+            theme: {
+                color: "#143109"
+            }
+
+        };
+
+        const rzp = new window.Razorpay(options);
+
+        // ✅ ERROR HANDLER YAHAN HOGA
+        rzp.on("payment.failed", function (response) {
+
+            alert("Payment Failed: " + response.error.description);
+
+            fetch("/api/payment/payment-failed", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    razorpay_order_id: response.error.metadata.order_id,
+                    error_code: response.error.code,
+                    error_reason: response.error.description
+                })
+            });
+
+        });
+
+        rzp.open();
+    };
+    useEffect(() => {
+        const fetchPlans = async () => {
+            try {
+                const res = await api.get("/plans");
+                setPlans(res.data.data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchPlans();
+    }, []);
     return (
         <>
             <main>
@@ -218,97 +303,170 @@ const Landing = () => {
                     </div>
                 </section>
 
-
-
                 <section className="py-32 relative">
                     <div className="max-w-7xl mx-auto px-6">
                         <div className="text-center max-w-2xl mx-auto mb-20">
-                            <h2 className="text-4xl md:text-5xl font-extrabold text-primary dark:text-sage mb-6 tracking-tight font-display">Scale
-                                Your Vision</h2>
-                            <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">Flexible pricing architecture designed to grow from
-                                boutique to enterprise.</p>
+                            <h2 className="text-4xl md:text-5xl font-extrabold text-primary dark:text-sage mb-6 tracking-tight font-display">
+                                Scale Your Vision
+                            </h2>
+                            <p className="text-slate-500 dark:text-slate-400 font-medium text-lg">
+                                Flexible pricing architecture designed to grow from boutique to enterprise.
+                            </p>
+                        </div>
+
+
+                        <div className="flex justify-center mb-14">
+                            <div className="flex items-center bg-slate-100 dark:bg-primary border border-slate-200 dark:border-slate-500 rounded-full p-1">
+
+                                <button
+                                    onClick={() => setBilling("monthly")}
+                                    className={`px-6 py-2 rounded-full text-sm font-semibold transition cursor-pointer ${billing === "monthly"
+                                        ? "bg-white dark:bg-sage text-primary"
+                                        : "text-slate-500 dark:text-slate-300"
+                                        }`}
+                                >
+                                    Monthly
+                                </button>
+
+                                <button
+                                    onClick={() => setBilling("yearly")}
+                                    className={`px-6 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2 cursor-pointer ${billing === "yearly"
+                                        ? "bg-white dark:bg-sage text-primary"
+                                        : "text-slate-500 dark:text-slate-300"
+                                        }`}
+                                >
+                                    Yearly
+                                    <span className="bg-sage text-primary text-xs px-2 py-0.5 rounded-full">
+                                        Save 20%
+                                    </span>
+                                </button>
+
+                            </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div
-                                className="bg-slate-50 dark:bg-primary border border-slate-100 dark:border-slate-500 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
-                                <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">Essentials</h3>
-                                <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">For solo creators</p>
-                                <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">$0<span
-                                    className="text-slate-400 dark:text-slate-300 text-lg font-normal">/month</span></div>
-                                <ul className="space-y-5 mb-10">
-                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">check_circle</span> 50
-                                        Products
-                                    </li>
-                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">check_circle</span> Core
-                                        Dashboard
-                                    </li>
-                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">check_circle</span> 1 Physical
-                                        Store
-                                    </li>
-                                </ul>
-                                <button
-                                    className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white  dark:hover:bg-sage/80 transition-all cursor-pointer">Get
-                                    Started</button>
-                            </div>
-                            <div
-                                className="bg-primary dark:bg-sage text-white dark:text-primary  dark:border dark:border-slate-500 p-10 rounded-[2.5rem] relative shadow-[0_30px_60px_-15px_rgba(20,49,9,0.3)] hover:-translate-y-2 transition-all">
-                                <div className="grainy-bg absolute inset-0 opacity-10"></div>
-                                <div
-                                    className="absolute -top-4 left-1/2 -translate-x-1/2 bg-sage dark:bg-primary dark:border dark:border-slate-500 text-primary dark:text-sage text-[10px] font-black px-5 py-1.5 rounded-full uppercase tracking-widest shadow-xl">
-                                    Best Value</div>
-                                <h3 className="text-xl font-bold mb-1 text-sage dark:text-primary">Growth Pro</h3>
-                                <p className="text-sage/60 dark:text-primary/90 text-sm mb-8 font-medium italic">For scaling teams</p>
-                                <div className="text-5xl font-extrabold mb-8 font-display text-white dark:text-primary">$49<span
-                                    className="text-sage/50 dark:text-primary/90 text-lg font-normal">/month</span></div>
-                                <ul className="space-y-5 mb-10">
-                                    <li className="flex items-center gap-3 font-medium">
-                                        <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">verified</span> Unlimited
-                                        Inventory
-                                    </li>
-                                    <li className="flex items-center gap-3 font-medium">
-                                        <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">verified</span> Store
-                                        Experience Builder
-                                    </li>
-                                    <li className="flex items-center gap-3 font-medium">
-                                        <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">verified</span> AI Growth
-                                        Assistant
-                                    </li>
-                                    <li className="flex items-center gap-3 font-medium">
-                                        <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">verified</span> Multi-region
-                                        Sync
-                                    </li>
-                                </ul>
-                                <button
-                                    className="shimmer-btn w-full py-4 bg-sage dark:bg-primary text-primary dark:text-sage rounded-full font-bold text-lg shadow-xl shadow-black/20 hover:scale-[1.02] transition-transform cursor-pointer">Start
-                                    14-Day Trial</button>
-                            </div>
-                            <div
-                                className="bg-slate-50 dark:bg-primary border border-slate-100 dark:border-slate-500 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
-                                <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">Enterprise</h3>
-                                <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">For global operations</p>
-                                <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">$99<span
-                                    className="text-slate-400 dark:text-slate-300 text-lg font-normal">/month</span></div>
-                                <ul className="space-y-5 mb-10">
-                                    <li className="flex items-center gap-3 text-slate-500  dark:text-slate-300 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">check_circle</span> Unlimited
-                                        Nodes
-                                    </li>
-                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">check_circle</span> 24/7
-                                        Priority Support
-                                    </li>
-                                    <li className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
-                                        <span className="material-symbols-outlined text-sage text-xl">check_circle</span>
-                                        White-label API
-                                    </li>
-                                </ul>
-                                <button
-                                    className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white  dark:hover:bg-sage/80 transition-all cursor-pointer">Talk
-                                    to Sales</button>
-                            </div>
+
+                            {plans[0] && (
+                                <div className="bg-slate-50 dark:bg-primary border border-slate-100 dark:border-slate-500 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
+                                    <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">
+                                        {plans[0].name}
+                                    </h3>
+
+                                    <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">
+                                        For solo creators
+                                    </p>
+
+                                    <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">
+                                        ₹{billing === "monthly" ? plans[0].monthlyPrice : plans[0].yearlyPrice}
+                                        <span className="text-slate-400 dark:text-slate-300 text-lg font-normal">
+                                            /month
+                                        </span>
+                                    </div>
+
+                                    <ul className="space-y-5 mb-10">
+                                        {plans[0].features?.map((feature, i) => (
+                                            <li key={i} className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
+                                                <span className="material-symbols-outlined text-sage text-xl">
+                                                    check_circle
+                                                </span>
+                                                {feature}
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <button
+                                        onClick={() => handleSelectPlan(plans[0]._id)}
+                                        className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white dark:hover:bg-sage/80 transition-all cursor-pointer"
+                                    >
+                                        {plans[0].monthlyPrice === 0
+                                            ? "Get Started"
+                                            : `Start ${plans[0].trialDays}-Day Trial`}
+                                    </button>
+                                </div>
+                            )}
+
+                            {plans[1] && (
+                                <div className="bg-primary dark:bg-sage text-white dark:text-primary dark:border dark:border-slate-500 p-10 rounded-[2.5rem] relative shadow-[0_30px_60px_-15px_rgba(20,49,9,0.3)] hover:-translate-y-2 transition-all">
+
+                                    <div className="grainy-bg absolute inset-0 opacity-10"></div>
+
+                                    {plans[1].isPopular && (
+                                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-sage dark:bg-primary dark:border dark:border-slate-500 text-primary dark:text-sage text-[10px] font-black px-5 py-1.5 rounded-full uppercase tracking-widest shadow-xl">
+                                            Best Value
+                                        </div>
+                                    )}
+
+                                    <h3 className="text-xl font-bold mb-1 text-sage dark:text-primary">
+                                        {plans[1].name}
+                                    </h3>
+
+                                    <p className="text-sage/60 dark:text-primary/90 text-sm mb-8 font-medium italic">
+                                        For scaling teams
+                                    </p>
+
+                                    <div className="text-5xl font-extrabold mb-8 font-display text-white dark:text-primary">
+                                        ₹{billing === "monthly" ? plans[1].monthlyPrice : plans[1].yearlyPrice}
+                                        <span className="text-sage/50 dark:text-primary/90 text-lg font-normal">
+                                            /month
+                                        </span>
+                                    </div>
+
+                                    <ul className="space-y-5 mb-10">
+                                        {plans[1].features?.map((feature, i) => (
+                                            <li key={i} className="flex items-center gap-3 font-medium">
+                                                <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">
+                                                    verified
+                                                </span>
+                                                {feature}
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <button
+                                        onClick={() => handleSelectPlan(plans[1]._id)}
+                                        className="shimmer-btn w-full py-4 bg-sage dark:bg-primary text-primary dark:text-sage rounded-full font-bold text-lg shadow-xl shadow-black/20 hover:scale-[1.02] transition-transform cursor-pointer"
+                                    >
+                                        {`Start ${plans[1].trialDays}-Day Trial`}
+                                    </button>
+                                </div>
+                            )}
+
+                            {plans[2] && (
+                                <div className="bg-slate-50 dark:bg-primary border border-slate-100 dark:border-slate-500 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
+                                    <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">
+                                        {plans[2].name}
+                                    </h3>
+
+                                    <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">
+                                        For global operations
+                                    </p>
+
+                                    <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">
+                                        ₹{billing === "monthly" ? plans[2].monthlyPrice : plans[2].yearlyPrice}
+                                        <span className="text-slate-400 dark:text-slate-300 text-lg font-normal">
+                                            /month
+                                        </span>
+                                    </div>
+
+                                    <ul className="space-y-5 mb-10">
+                                        {plans[2].features?.map((feature, i) => (
+                                            <li key={i} className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
+                                                <span className="material-symbols-outlined text-sage text-xl">
+                                                    check_circle
+                                                </span>
+                                                {feature}
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <button
+                                        onClick={() => handleSelectPlan(plans[2]._id)}
+                                        className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white dark:hover:bg-sage/80 transition-all cursor-pointer"
+                                    >
+                                        Talk to Sales
+                                    </button>
+                                </div>
+                            )}
+
                         </div>
                     </div>
                 </section>

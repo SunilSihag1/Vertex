@@ -3,7 +3,7 @@ import Signup from "../pages/auth/Signup";
 import Landing from "../pages/landing/landing";
 import Login from "../pages/auth/Login";
 import Otp from "../pages/auth/Otp";
-
+import Pricing from "../pages/landing/pricing";
 
 const AppRoutes = () => {
   return (
@@ -12,7 +12,8 @@ const AppRoutes = () => {
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
       <Route path="/verify-otp" element={<Otp />} />
-    </Routes>
+      <Route path="/pricing" element={<Pricing />} />
+      </Routes>
   );
 };
 
