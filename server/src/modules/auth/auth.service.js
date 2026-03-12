@@ -24,7 +24,8 @@ const signup = async ({ name, email, password }) => {
         password.length < 8 ||
         !/[A-Z]/.test(password) ||
         !/[a-z]/.test(password) ||
-        !/[0-9]/.test(password)
+        !/[0-9]/.test(password) ||
+        !/[!@#$%^&*(),.?":{}|<>]/.test(password)
     ) {
         throw new Error("Password does not meet security requirements");
     }

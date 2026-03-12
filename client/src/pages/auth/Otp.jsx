@@ -84,23 +84,22 @@ function Otp() {
 
     return (
         <main className="flex-grow flex items-center justify-center px-6 py-12 relative z-10">
-            <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-sage/10 p-8 md:p-10 flex flex-col items-center text-center">
-                <div className="w-14 h-14 bg-primary/5 text-primary rounded-full flex items-center justify-center mb-6">
+            <div className="w-full max-w-md bg-background-light dark:bg-primary/30 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-300 dark:border-slate-800 p-8 md:p-10 flex flex-col items-center text-center">
+                <div className="w-14 h-14 bg-sage/60 text-primary rounded-full flex items-center justify-center mb-6">
                     <span className="material-symbols-outlined text-3xl font-light">verified_user</span>
                 </div>
 
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                <h2 className="text-2xl font-bold text-primary dark:text-sage mb-2">
                     Verify Your Identity
                 </h2>
 
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-8">
                     We've sent a 6-digit code to your email{" "}
-                    <span className="font-medium text-slate-700 dark:text-slate-200">
+                    <span className="font-medium text-primary dark:text-sage">
                         ({email})
                     </span>. Please enter it below.
                 </p>
 
-                {/* ✅ Only Added onSubmit */}
                 <form className="w-full space-y-8" onSubmit={handleSubmit}>
 
                     <div className="flex justify-between gap-2 md:gap-3">
@@ -113,7 +112,7 @@ function Otp() {
                                 onChange={(e) => handleChange(e.target.value, index)}
                                 maxLength="1"
                                 type="text"
-                                className="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-xl font-bold border-2 border-sage/40 rounded-lg bg-transparent focus:outline-none transition-all dark:border-slate-700"
+                                className="otp-input w-12 h-14 md:w-14 md:h-16 text-center text-xl font-bold border-2 border-primary/50 rounded-lg bg-transparent focus:outline-none transition-all dark:border-sage/40"
                                 placeholder="•"
                                 autoFocus={index === 0}
                             />
@@ -122,17 +121,17 @@ function Otp() {
                     </div>
 
                     <div className="flex flex-col items-center gap-2">
-                        <p className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
                             <span className="material-symbols-outlined text-sm">schedule</span>
-                            Resend code in <span className="font-semibold">{timer}s</span>
+                            Resend code in <span className="font-semibold">{timer} sec</span>
                         </p>
                         <button
                             onClick={handleResendOtp}
                             disabled={timer > 0}
                             type="button"
                             className={`text-sm font-semibold transition-colors ${timer > 0
-                                    ? "text-slate-300 dark:text-slate-600 cursor-not-allowed"
-                                    : "text-primary hover:underline"
+                                    ? "text-primary/40 dark:text-sage/40 cursor-not-allowed"
+                                    : "text-primary dark:text-sage hover:underline cursor-pointer"
                                 }`}
                         >
                             Resend Code
@@ -141,21 +140,11 @@ function Otp() {
 
                     <div className="space-y-4">
                         <button
-                            className="w-full bg-primary text-white font-bold py-4 rounded-lg hover:opacity-95 transition-all shadow-lg shadow-primary/10 active:scale-[0.98]"
+                            className="w-full shimmer-btn bg-primary text-white py-3.5 rounded-full  font-bold text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 cursor-pointer border border-slate-200 dark:border-slate-700"
                             type="submit"
                         >
                             Verify & Proceed
                         </button>
-
-                        <a
-                            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-primary transition-colors"
-                            href="/login"
-                        >
-                            <span className="material-symbols-outlined text-base">
-                                arrow_back
-                            </span>
-                            Back to Login
-                        </a>
                     </div>
 
                 </form>

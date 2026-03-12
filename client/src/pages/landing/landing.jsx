@@ -101,10 +101,10 @@ const Landing = () => {
                             </div>
                             <div className="m-auto">
                                 <h1 className="text-6xl md:text-8xl font-extrabold text-primary dark:text-white leading-[0.95] tracking-tight font-display max-[426px]:text-5xl">
-                                    Evolve Your <br /><span className="text-sage italic">Storefront.</span>
+                                    Open Your <br /><span className="text-sage italic">Store.</span>
                                 </h1>
                                 <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg font-medium max-[426px]:text-lg">
-                                    The intelligence layer for high-growth retail. Unified commerce, smart logistics, and AI insights.
+                                    All-in-one platform for selling online, managing deliveries, and growing your business smarter.
                                 </p>
                                 <div className="flex flex-wrap gap-5 mt-8">
                                     <button className="shimmer-btn bg-primary text-white px-10 py-5 rounded-full font-bold text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 cursor-pointer">
@@ -358,7 +358,7 @@ const Landing = () => {
                                     <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">
                                         ₹{billing === "monthly" ? plans[0].monthlyPrice : plans[0].yearlyPrice}
                                         <span className="text-slate-400 dark:text-slate-300 text-lg font-normal">
-                                            /month
+                                            /{billing === "monthly" ? "month" : "year"}
                                         </span>
                                     </div>
 
@@ -406,7 +406,7 @@ const Landing = () => {
                                     <div className="text-5xl font-extrabold mb-8 font-display text-white dark:text-primary">
                                         ₹{billing === "monthly" ? plans[1].monthlyPrice : plans[1].yearlyPrice}
                                         <span className="text-sage/50 dark:text-primary/90 text-lg font-normal">
-                                            /month
+                                            /{billing === "monthly" ? "month" : "year"}
                                         </span>
                                     </div>
 
@@ -443,7 +443,7 @@ const Landing = () => {
                                     <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">
                                         ₹{billing === "monthly" ? plans[2].monthlyPrice : plans[2].yearlyPrice}
                                         <span className="text-slate-400 dark:text-slate-300 text-lg font-normal">
-                                            /month
+                                            /{billing === "monthly" ? "month" : "year"}
                                         </span>
                                     </div>
 

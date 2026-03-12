@@ -68,7 +68,7 @@ const Navbar = () => {
         <header className="fixed top-0 z-50 w-full bg-white dark:bg-background-dark backdrop-blur-xl border-b border-slate-300 dark:border-slate-800/50">
             <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                 <div className="flex items-center gap-3 group">
-                    <div className="p-2 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3">
+                    <div className="p-2">
                         <a href="/">
                             <img
                                 src="/logo/Brand Logo Light.svg"
@@ -87,7 +87,7 @@ const Navbar = () => {
                 </div>
 
                 <nav className="hidden min-[950px]:flex items-center gap-10">
-                    {["Platform", "Solutions", "Resources", "Pricing"].map((item, index) => (
+                    {["View Stores", "Contact Us",].map((item, index) => (
                         <a
                             key={index}
                             href="#"

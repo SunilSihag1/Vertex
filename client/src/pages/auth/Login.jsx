@@ -15,11 +15,12 @@ function Login() {
     });
 
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         setFormData({
             ...formData,
-            [e.target.type === "email" ? "email" : "password"]: e.target.value
+            [e.target.name]: e.target.value
         });
     };
 
@@ -39,7 +40,7 @@ function Login() {
             localStorage.setItem("accessToken", res.data.accessToken);
 
             navigate("/");
-            window.Location.reload();
+            window.location.reload();
 
         } catch (err) {
 
@@ -81,7 +82,7 @@ function Login() {
 
     return (
         <main className="flex-grow flex items-center justify-center p-6 lg:p-12">
-            <div className="w-full max-w-5xl bg-white dark:bg-slate-900 rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
+            <div className="w-full max-w-5xl bg-white dark:bg-primary/30 rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
                 <div className="md:w-5/12 relative bg-primary flex flex-col items-center justify-center p-12 overflow-hidden">
                     <div className="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
                     <div className="absolute -bottom-20 -left-20 size-64 bg-sage/20 rounded-full blur-3xl"></div>
@@ -94,76 +95,82 @@ function Login() {
                         <p className="text-sage text-sm leading-relaxed max-w-[200px]">Your smart dashboard is ready for your next move.</p>
                     </div>
                     <div className="mt-12 text-center z-10 hidden md:block">
-                        <p className="text-sage/60 text-xs uppercase tracking-widest font-bold">Smart Retail SaaS v2.4</p>
+                        <p className="text-sage/60 text-xs uppercase tracking-widest font-bold">My Bizz v1.0</p>
                     </div>
                 </div>
                 <div className="md:w-7/12 p-8 lg:p-16 flex flex-col justify-center">
                     <div className="max-w-md mx-auto w-full">
                         <div className="mb-10">
-                            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Login</h2>
+                            <h2 className="text-3xl font-bold text-primary dark:text-sage mb-2">Login</h2>
                             <p className="text-slate-500 dark:text-slate-400">Log in to manage your smart store and view analytics.</p>
                         </div>
                         <form className="space-y-6" onSubmit={handleSubmit}>
                             <div className="space-y-2">
-                                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Email Address</label>
+                                <label className="text-sm font-semibold text-primary dark:text-slate-300 ml-1">Email Address</label>
                                 <div className="relative group">
-                                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">mail</span>
+                                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 dark:text-sage/50 group-focus-within:text-primary dark:group-focus-within:text-sage transition-colors">mail</span>
                                     <input
+                                        type="email"
                                         name="email"
                                         value={formData.email}
                                         onChange={handleChange}
-                                        className="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-slate-800 border-none rounded-lg ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary transition-all outline-none text-slate-900 dark:text-white"
+                                        className="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/50 border-none rounded-lg ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary dark:focus:ring-slate-500 transition-all outline-none text-primary dark:text-sage"
                                         placeholder="name@company.com"
                                         required
-                                        type="email"
                                     />
                                 </div>
                             </div>
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center px-1">
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
-                                    <a className="text-xs font-semibold text-primary hover:underline" href="#">Forgot Password?</a>
+                                    <a className="text-xs font-semibold text-primary dark:text-slate-400 hover:underline" href="#">Forgot Password?</a>
                                 </div>
                                 <div className="relative group">
-                                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">lock</span>
+                                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 dark:text-sage/50 group-focus-within:text-primary dark:group-focus-within:text-sage transition-colors">lock</span>
                                     <input
+                                        type={showPassword ? "text" : "password"}
                                         name="password"
                                         value={formData.password}
                                         onChange={handleChange}
-                                        className="w-full pl-12 pr-12 py-3.5 bg-background-light dark:bg-slate-800 border-none rounded-lg ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary transition-all outline-none text-slate-900 dark:text-white"
+                                        className="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/50 border-none rounded-lg ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary dark:focus:ring-slate-500 transition-all outline-none text-slate-900 dark:text-white"
                                         placeholder="••••••••"
                                         required
-                                        type="password"
                                     />
 
-                                    <button className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" type="button">visibility</button>
+                                    <button
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-primary/60 hover:text-primary dark:text-sage/50 dark:hover:text-sage transition-colors cursor-pointer"
+                                        type="button"
+                                    >
+                                        {showPassword ? "visibility_off" : "visibility"}
+                                    </button>
                                 </div>
                             </div>
                             <button
-                                className="w-full relative overflow-hidden group py-4 bg-primary text-white rounded-lg font-bold text-lg shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all"
+                                className="w-full shimmer-btn bg-primary text-white py-3.5 rounded-full  font-bold text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 cursor-pointer border border-slate-200 dark:border-slate-700"
                                 type="submit"
                                 disabled={loading}
                             >
 
                                 <span className="relative z-10">{loading ? "Logging in..." : "Log In"}</span>
-                                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+                                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent "></div>
                             </button>
                             <div className="relative flex items-center py-2">
-                                <div className="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
-                                <span className="flex-shrink mx-4 text-slate-400 text-xs font-bold uppercase tracking-wider">or continue with</span>
-                                <div className="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
+                                <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
+                                <span className="flex-shrink mx-4 text-primary/60 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">or continue with</span>
+                                <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
                             </div>
                             <button
                                 type="button"
                                 onClick={handleGoogleLogin}
-                                className="w-full py-3.5 flex items-center justify-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-all font-medium">
+                                className="w-full py-3.5 flex items-center justify-center gap-3 border border-slate-200 dark:border-slate-700 rounded-lg  font-medium shimmer-btn bg-primary text-white px-10 text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 cursor-pointer">
                                 <img alt="Google Logo" className="size-5" data-alt="Google colorful company logo" src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw" />
                                 <span>Google Account</span>
                             </button>
                         </form>
-                        <p className="mt-10 text-center text-sm text-slate-500">
+                        <p className="mt-10 text-center text-sm text-primary/60 dark:text-slate-400">
                             Don't have an account?
-                            <a className="text-primary font-bold hover:underline" href="/signup">Sign Up Now</a>
+                            <a className="text-primary dark:text-sage font-bold hover:underline" href="/signup"> Sign Up Now</a>
                         </p>
                     </div>
                 </div>

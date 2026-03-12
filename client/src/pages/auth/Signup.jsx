@@ -15,6 +15,17 @@ const Signup = () => {
     confirmPassword: ""
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
+
+  const password = formData.password;
+
+  const hasLength = password.length >= 8;
+  const hasCapital = /[A-Z]/.test(password);
+  const hasNumber = /\d/.test(password);
+  const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -69,29 +80,29 @@ const Signup = () => {
     <main className="min-h-screen flex flex-col lg:flex-row">
       <section className="relative hidden lg:flex lg:w-5/12 xl:w-1/2 bg-primary overflow-hidden items-center justify-center p-12">
         <div className="absolute inset-0 grain-overlay pointer-events-none"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-sage/20 rounded-full blur-[120px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-sage/50 rounded-full blur-[120px]"></div>
         <div className="relative z-10 w-full max-w-lg space-y-8">
-          <div className="glass-card rounded-xl p-6 shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-500">
+          <div className="bg-sage blur-l hover:blur-none transition-all rounded-xl p-6 shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-500">
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-sage/30 text-sage">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/90 text-sage">
                 <span className="material-symbols-outlined text-3xl font-bold">check_circle</span>
               </div>
               <div>
-                <p className="text-white font-bold text-lg">Success: Store Created</p>
-                <p className="text-white/60 text-sm">Your online boutique is live!</p>
+                <p className="text-primary font-bold text-lg">Success: Store Created</p>
+                <p className="text-primary text-sm">Your online boutique is live!</p>
               </div>
             </div>
           </div>
-          <div className="glass-card rounded-xl p-8 shadow-2xl ml-8 transform rotate-1 hover:rotate-0 transition-transform duration-500">
+          <div className="bg-sage rounded-xl p-8 shadow-2xl ml-8 transform rotate-1 hover:rotate-0 transition-transform duration-500">
             <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-1 text-sage">
+              <div className="flex items-center gap-1 text-primary">
                 <span className="material-symbols-outlined fill-1">star</span>
                 <span className="material-symbols-outlined fill-1">star</span>
                 <span className="material-symbols-outlined fill-1">star</span>
                 <span className="material-symbols-outlined fill-1">star</span>
                 <span className="material-symbols-outlined fill-1">star</span>
               </div>
-              <p className="text-white text-lg leading-relaxed italic">
+              <p className="text-primary text-lg leading-relaxed italic">
                 "This platform transformed our retail operations in weeks. Managing inventory has never been this intuitive."
               </p>
               <div className="flex items-center gap-4 mt-2">
@@ -122,20 +133,20 @@ const Signup = () => {
         <div className="flex-1 flex items-center justify-center p-6 lg:p-16">
           <div className="w-full max-w-[480px] space-y-8">
             <div className="space-y-2">
-              <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight lg:text-4xl">Get started for free</h1>
-              <p className="text-slate-500 text-base">No credit card required. Build your store in minutes.</p>
+              <h1 className="text-3xl font-black text-primary dark:text-sage tracking-tight lg:text-4xl">Get started for free</h1>
+              <p className="text-slate-500 dark:text-slate-400 text-base">No credit card required. Build your store in minutes.</p>
             </div>
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Full Name</label>
+                <label className="text-sm font-semibold text-primary dark:text-slate-300 ml-1">Full Name</label>
                 <div className="relative group">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">person</span>
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 dark:text-sage/50 group-focus-within:text-primary dark:group-focus-within:text-sage transition-colors">person</span>
                   <input
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-sage/40 focus:border-sage outline-none transition-all placeholder:text-slate-400"
+                    className="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/50 border-none rounded-lg ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary dark:focus:ring-slate-500 text-primary dark:text-sage outline-none transition-all placeholder:text-primary/60 dark:placeholder:text-sage/50"
                     placeholder="Jane Doe"
                     type="text"
                   />
@@ -144,13 +155,13 @@ const Signup = () => {
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Work Email</label>
                 <div className="relative group">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">mail</span>
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 dark:text-sage/50 group-focus-within:text-primary dark:group-focus-within:text-sage transition-colors">mail</span>
                   <input
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-sage/40 focus:border-sage outline-none transition-all placeholder:text-slate-400"
+                    className="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/50 border-none rounded-lg ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary dark:focus:ring-slate-500 text-primary dark:text-sage outline-none transition-all placeholder:text-primary/60 dark:placeholder:text-sage/50"
                     placeholder="jane@company.com"
                     type="email"
                   />
@@ -159,71 +170,93 @@ const Signup = () => {
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Create Password</label>
                 <div className="relative group">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">lock</span>
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 dark:text-sage/50 group-focus-within:text-primary dark:group-focus-within:text-sage transition-colors">lock</span>
                   <input
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    className="w-full pl-12 pr-12 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-sage/40 focus:border-sage outline-none transition-all placeholder:text-slate-400"
+                    className="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/50 border-none rounded-lg ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary dark:focus:ring-slate-500 text-primary dark:text-sage outline-none transition-all placeholder:text-primary/60 dark:placeholder:text-sage/50"
                     placeholder="••••••••"
-                    type="password"
                   />
-                  <button className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" type="button">
-                    <span className="material-symbols-outlined text-xl">visibility</span>
+                  <button
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-primary/60 dark:text-sage/50 group-focus-within:text-primary dark:group-focus-within:text-sage transition-colors cursor-pointer"
+                    type="button"
+                  >
+                    <span className="material-symbols-outlined text-xl">{showPassword ? "visibility_off" : "visibility"}</span>
                   </button>
                 </div>
                 <div className="pt-2 flex flex-wrap gap-x-4 gap-y-2">
-                  <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
-                    <span className="material-symbols-outlined text-xs text-sage">check_circle</span>
+
+                  <div className={`flex items-center gap-1.5 text-[11px] font-medium ${hasLength ? "text-green-500" : "text-red-400"}`}>
+                    <span className="material-symbols-outlined text-xs">
+                      {hasLength ? "check_circle" : "radio_button_unchecked"}
+                    </span>
                     <span>8+ characters</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
-                    <span className="material-symbols-outlined text-xs">radio_button_unchecked</span>
+
+                  <div className={`flex items-center gap-1.5 text-[11px] font-medium ${hasCapital ? "text-green-500" : "text-red-400"}`}>
+                    <span className="material-symbols-outlined text-xs">
+                      {hasCapital ? "check_circle" : "radio_button_unchecked"}
+                    </span>
+                    <span>1 capital character</span>
+                  </div>
+
+                  <div className={`flex items-center gap-1.5 text-[11px] font-medium ${hasNumber ? "text-green-500" : "text-red-400"}`}>
+                    <span className="material-symbols-outlined text-xs">
+                      {hasNumber ? "check_circle" : "radio_button_unchecked"}
+                    </span>
                     <span>1 number</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-400">
-                    <span className="material-symbols-outlined text-xs">radio_button_unchecked</span>
+
+                  <div className={`flex items-center gap-1.5 text-[11px] font-medium ${hasSpecial ? "text-green-500" : "text-red-400"}`}>
+                    <span className="material-symbols-outlined text-xs">
+                      {hasSpecial ? "check_circle" : "radio_button_unchecked"}
+                    </span>
                     <span>1 special character</span>
                   </div>
+
+
                 </div>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Confirm Password</label>
                 <div className="relative group">
-                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">lock_reset</span>
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary/60 dark:text-sage/50 group-focus-within:text-primary dark:group-focus-within:text-sage transition-colors">lock_reset</span>
                   <input
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-sage/40 focus:border-sage outline-none transition-all placeholder:text-slate-400"
+                    className="w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/50 border-none rounded-lg ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary dark:focus:ring-slate-500 text-primary dark:text-sage outline-none transition-all placeholder:text-primary/60 dark:placeholder:text-sage/50"
                     placeholder="••••••••"
                     type="password"
                   />
                 </div>
               </div>
-              <button className="shimmer w-full bg-primary text-white py-4 rounded-lg font-bold text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+              <button className="shimmer w-full bg-primary text-white font-bold text-lg hover:shadow-primary/30 active:scale-[1] flex items-center justify-center gap-2 shimmer-btn py-3.5 rounded-full shadow-2xl shadow-primary/30 transition-all hover:scale-105 cursor-pointer border border-slate-200 dark:border-slate-700">
                 <span>Create Your Store</span>
                 <span className="material-symbols-outlined text-xl">arrow_forward</span>
               </button>
               <div className="relative flex items-center py-2">
-                <div className="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
-                <span className="flex-shrink mx-4 text-slate-400 text-xs font-bold uppercase tracking-widest">or</span>
-                <div className="flex-grow border-t border-slate-200 dark:border-slate-700"></div>
+                <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
+                <span className="flex-shrink mx-4 text-primary/60 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">or continue with</span>
+                <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
               </div>
               <button
                 type="button"
                 onClick={handleGoogleSignup}
-                className="w-full flex items-center justify-center gap-3 py-3.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                className="w-full flex items-center justify-center gap-3 shimmer-btn bg-primary text-white py-3.5 rounded-full  font-bold text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 cursor-pointer border border-slate-200 dark:border-slate-700">
                 <img alt="Google Logo" className="size-5" data-alt="Google colorful company logo" src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw" />
-                <span className="text-slate-700 dark:text-slate-200 font-semibold text-sm">Sign up with Google</span>
+                <span className="text-white font-semibold text-lg">Google Account</span>
               </button>
             </form>
-            <p className="text-[12px] text-slate-400 text-center leading-relaxed">
-              By creating an account, you agree to our
-              <a className="text-slate-600 dark:text-slate-300 font-semibold underline decoration-slate-300" href="#">Terms of Service</a>
-              and
-              <a className="text-slate-600 dark:text-slate-300 font-semibold underline decoration-slate-300" href="#">Privacy Policy</a>.
+            <p className="text-center text-[12px] text-primary/60 dark:text-slate-400">
+              By creating an account, you agree to our 
+              <a className="text-primary dark:text-sage font-bold hover:underline" href="#"> Terms of Service </a>
+              and 
+              <a className="text-primary dark:text-sage font-bold hover:underline" href="#"> Privacy Policy </a>.
             </p>
           </div>
         </div>
