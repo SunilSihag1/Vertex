@@ -183,8 +183,8 @@ const refresh = async (rawToken, context = {}) => {
         throw new Error("Session expired or reuse detected. Please log in again.");
     }
 
-    const activeStore = await Store.findOne({ userId: user._id, isActive: true });
-    if (!activeStore) throw new Error("No active store found");
+    // const activeStore = await Store.findOne({ userId: user._id, isActive: true });
+    // if (!activeStore) throw new Error("No active store found");
 
     const sessionDeviceId = context.deviceId ?? user.sessions[sessionIdx].deviceId;
 
