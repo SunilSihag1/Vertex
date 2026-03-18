@@ -57,11 +57,15 @@ const Navbar = () => {
         }
     }, []);
 
-    const handleLogout = () => {
-        localStorage.removeItem("accessToken");
-        setIsLoggedIn(false);
-        navigate("/");
-        window.location.reload();
+    const handleLogout = async () => {
+        try {
+            await api.post("/auth/logout"); // 🔥 important
+        } catch (err) {
+            console.error("Logout error:", err);
+        } finally {
+            localStorage.removeItem("accessToken");
+            window.location.href = "/login";
+        }
     };
 
     return (

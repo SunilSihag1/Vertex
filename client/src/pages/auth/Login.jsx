@@ -1,85 +1,102 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../../service/api";
+/**
+ * Login.jsx
+ * Location: client/src/pages/auth/Login.jsx
+ *
+ * Change: Instead of manually writing to localStorage,
+ * calls login() from AuthContext which updates global auth state.
+ */
 
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../../firebase";
+import { useState } from "react";
+// import { useNavigate, useLocation } from "react-router-dom";
+import api from "../../service/api";
+// import { signInWithPopup } from "firebase/auth";
+// import { auth, provider } from "../../firebase";
+import { useAuth } from "../../context/AuthContext";
+import useDeviceId from "../../hooks/useDeviceId";
+import GoogleButton from "../../components/auth/GoogleButton";
 
 function Login() {
+    // const navigate = useNavigate();
+    // const location = useLocation();
+    const { login } = useAuth();
+    const deviceId = useDeviceId();
 
-    const navigate = useNavigate();
-
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
-    });
-
+    const [formData, setFormData] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
+    // Where to redirect after login (if coming from a protected route)
+    const redirectTo = location.state?.from?.pathname ?? "/";
+
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
+
+    // ── Email / Password Login ─────────────────────────────────────────────────
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!deviceId) {
+            alert("Unable to identify your device. Please allow localStorage access.");
+            return;
+        }
 
         try {
             setLoading(true);
 
             const res = await api.post("/auth/login", {
                 email: formData.email,
-                password: formData.password
+                password: formData.password,
+                deviceId,
             });
 
-
-            // store tokens
-            localStorage.setItem("accessToken", res.data.accessToken);
-
-            navigate("/");
-            window.location.reload();
+            login(res.data.accessToken); // ← updates AuthContext state
+            navigate(redirectTo, { replace: true });
 
         } catch (err) {
-
             const message = err.response?.data?.message;
 
-            if (message === "Account locked") {
+            console.error(message);
+
+            if (message === "Account locked. Try later.") {
                 alert("Account locked for 15 minutes due to multiple failed attempts.");
             } else if (message === "User not verified") {
                 navigate("/verify-otp", { state: { email: formData.email } });
             } else {
                 alert(message || "Login failed");
             }
-
         } finally {
             setLoading(false);
         }
     };
 
-    // Google Login
-    const handleGoogleLogin = async () => {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
+    // // ── Google Login ───────────────────────────────────────────────────────────
 
-            const res = await api.post("/auth/google", {
-                name: user.displayName,
-                email: user.email,
-                googleId: user.uid
-            });
+    // const handleGoogleLogin = async () => {
+    //     if (!deviceId) {
+    //         alert("Unable to identify your device. Please allow localStorage access.");
+    //         return;
+    //     }
 
-            localStorage.setItem("accessToken", res.data.accessToken);
+    //     try {
+    //         const result = await signInWithPopup(auth, provider);
+    //         const user = result.user;
 
-            navigate("/");
+    //         const res = await api.post("/auth/google", {
+    //             name: user.displayName,
+    //             email: user.email,
+    //             googleId: user.uid,
+    //             deviceId,
+    //         });
 
-        } catch (error) {
-            alert("Google Login Failed");
-        }
-    };
+    //         login(res.data.accessToken); // ← updates AuthContext state
+    //         navigate(redirectTo, { replace: true });
 
+    //     } catch {
+    //         alert("Google Login Failed");
+    //     }
+    // };
     return (
         <main className="flex-grow flex items-center justify-center p-6 lg:p-12">
             <div className="w-full max-w-5xl bg-white dark:bg-primary/30 rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
@@ -160,13 +177,14 @@ function Login() {
                                 <span className="flex-shrink mx-4 text-primary/60 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">or continue with</span>
                                 <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
                             </div>
-                            <button
+                            {/* <button
                                 type="button"
                                 onClick={handleGoogleLogin}
                                 className="w-full py-3.5 flex items-center justify-center gap-3 border border-slate-200 dark:border-slate-700 rounded-lg  font-medium shimmer-btn bg-primary text-white px-10 text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 cursor-pointer">
                                 <img alt="Google Logo" className="size-5" data-alt="Google colorful company logo" src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw" />
                                 <span>Google Account</span>
-                            </button>
+                            </button> */}
+                            <GoogleButton redirectTo={redirectTo} label="Continue with Google" />
                         </form>
                         <p className="mt-10 text-center text-sm text-primary/60 dark:text-slate-400">
                             Don't have an account?

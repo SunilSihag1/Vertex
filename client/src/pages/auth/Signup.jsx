@@ -3,37 +3,34 @@ import { useNavigate } from "react-router-dom";
 import api from "../../service/api";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../firebase";
+import useDeviceId from "../../hooks/useDeviceId";
+import GoogleButton from "../../components/auth/GoogleButton";
 
 const Signup = () => {
-
   const navigate = useNavigate();
+  const deviceId = useDeviceId();
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
-
   const password = formData.password;
-
   const hasLength = password.length >= 8;
   const hasCapital = /[A-Z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Manual Signup
+  // ── Email / Password Signup ────────────────────────────────────────────────
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -44,37 +41,42 @@ const Signup = () => {
 
     try {
       const { confirmPassword, ...dataToSend } = formData;
-
-      await api.post("auth/signup", dataToSend);
-
+      await api.post("/auth/signup", dataToSend);
       navigate("/verify-otp", { state: { email: formData.email } });
-
     } catch (err) {
       alert(err.response?.data?.message || "Signup failed");
     }
   };
 
-  // Google Signup
-  const handleGoogleSignup = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+  // ── Google Signup ──────────────────────────────────────────────────────────
 
-      const res = await api.post("/auth/google", {
-        name: user.displayName,
-        email: user.email,
-        googleId: user.uid
-      });
+  // const handleGoogleSignup = async () => {
+  //   if (!deviceId) {
+  //     alert("Unable to identify your device. Please allow localStorage access.");
+  //     return;
+  //   }
 
-      localStorage.setItem("accessToken", res.data.accessToken);
+  //   try {
+  //     const result = await signInWithPopup(auth, provider);
+  //     const user = result.user;
 
-      navigate("/");
+  //     const res = await api.post("/auth/google", {
+  //       name: user.displayName,
+  //       email: user.email,
+  //       googleId: user.uid,
+  //       deviceId,                // ← new: required for session creation
+  //     });
 
-    } catch (error) {
-      console.error(error);
-      alert("Google Signup Failed");
-    }
-  };
+  //     localStorage.setItem("accessToken", res.data.accessToken);
+
+  //     navigate("/");
+
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("Google Signup Failed");
+  //   }
+  // };
+
 
   return (
     <main className="min-h-screen flex flex-col lg:flex-row">
@@ -244,18 +246,19 @@ const Signup = () => {
                 <span className="flex-shrink mx-4 text-primary/60 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">or continue with</span>
                 <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
               </div>
-              <button
+              {/* <button
                 type="button"
                 onClick={handleGoogleSignup}
                 className="w-full flex items-center justify-center gap-3 shimmer-btn bg-primary text-white py-3.5 rounded-full  font-bold text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 cursor-pointer border border-slate-200 dark:border-slate-700">
                 <img alt="Google Logo" className="size-5" data-alt="Google colorful company logo" src="https://www.gstatic.com/marketing-cms/assets/images/d5/dc/cfe9ce8b4425b410b49b7f2dd3f3/g.webp=s48-fcrop64=1,00000000ffffffff-rw" />
                 <span className="text-white font-semibold text-lg">Google Account</span>
-              </button>
+              </button> */}
+              <GoogleButton redirectTo="/" label="Sign up with Google" />
             </form>
             <p className="text-center text-[12px] text-primary/60 dark:text-slate-400">
-              By creating an account, you agree to our 
+              By creating an account, you agree to our
               <a className="text-primary dark:text-sage font-bold hover:underline" href="#"> Terms of Service </a>
-              and 
+              and
               <a className="text-primary dark:text-sage font-bold hover:underline" href="#"> Privacy Policy </a>.
             </p>
           </div>

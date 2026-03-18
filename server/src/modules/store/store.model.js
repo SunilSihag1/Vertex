@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 
 const storeSchema = new mongoose.Schema({
-    _id: ObjectId,
-
     name: String,
-    ownerId: { type: ObjectId, ref: "User", index: true },
+
+    ownerId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "User",
+        index: true
+    },
 
     status: {
         type: String,
@@ -15,8 +18,8 @@ const storeSchema = new mongoose.Schema({
     currency: { type: String, default: "INR" },
     timezone: String,
 
-    createdAt,
-    updatedAt
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 })
 
-export default mongoose.model("store", storeSchema);
+export default mongoose.model("Store", storeSchema);
