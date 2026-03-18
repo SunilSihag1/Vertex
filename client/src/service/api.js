@@ -70,7 +70,7 @@ api.interceptors.response.use(
         // Skip refresh for the refresh endpoint itself (prevents infinite loop)
         if (originalRequest.url?.includes("/auth/refresh")) {
             localStorage.removeItem("accessToken");
-            window.location.href("/login");
+            window.location.href = "/login";
             return Promise.reject(error);
         }
 

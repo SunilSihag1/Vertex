@@ -51,7 +51,6 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [hovered, setHovered] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const { isAuthenticated, logout } = useAuth();
 
 
@@ -102,7 +101,7 @@ const handleLogout = async () => {
 
                 <div className="flex items-center gap-4">
 
-                    {!isLoggedIn ? (
+                    {!isAuthenticated ? (
                         <a
                             onClick={() => navigate("/login")}
                             className="cursor-pointer hidden min-[950px]:block px-5 py-2.5 text-slate-700 dark:text-slate-400 font-bold text-sm transition-all duration-300 hover:text-primary dark:hover:text-sage hover:scale-105"
@@ -152,7 +151,7 @@ const handleLogout = async () => {
 
                     <div className="border-t border-slate-200 dark:border-slate-700 my-4"></div>
 
-                    {!isLoggedIn ? (
+                    {!isAuthenticated ? (
                         <a
                             onClick={() => {
                                 navigate("/login");

@@ -93,7 +93,6 @@ const useGoogleAuth = ({ redirectTo = "/" } = {}) => {
             // ── Step 4: Update auth state + redirect ──────────────────────────
             login(res.data.accessToken);
             navigate(redirectTo, { replace: true });
-            window.location.reload();
 
         } catch (err) {
 
