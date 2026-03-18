@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 
-const StoreMember = new mongoose.Schema({
-    _id: ObjectId,
+
+const { Schema, Types: { ObjectId } } = mongoose;
+
+const StoreMember = new Schema({
 
     storeId: { type: ObjectId, ref: "Store", index: true },
     userId: { type: ObjectId, ref: "User", index: true },
