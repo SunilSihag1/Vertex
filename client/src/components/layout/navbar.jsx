@@ -44,29 +44,20 @@ const ThemeSwitcher = () => {
     );
 };
 
+
+
 const Navbar = () => {
     const navigate = useNavigate();
     const [hovered, setHovered] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isAuthenticated, logout } = useAuth();
 
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-            setIsLoggedIn(true);
-        }
-    }, []);
 
-    const handleLogout = async () => {
-        try {
-            await api.post("/auth/logout"); // 🔥 important
-        } catch (err) {
-            console.error("Logout error:", err);
-        } finally {
-            localStorage.removeItem("accessToken");
-            window.location.href = "/login";
-        }
-    };
+const handleLogout = async () => {
+    await logout();
+    navigate("/login");
+};
 
     return (
         <header className="fixed top-0 z-50 w-full bg-white dark:bg-background-dark backdrop-blur-xl border-b border-slate-300 dark:border-slate-800/50">

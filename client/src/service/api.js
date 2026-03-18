@@ -16,7 +16,6 @@
  */
 
 import axios from "axios";
-import { Navigate } from "react-router-dom";
 
 // ─── Instance ─────────────────────────────────────────────────────────────────
 
@@ -71,7 +70,7 @@ api.interceptors.response.use(
         // Skip refresh for the refresh endpoint itself (prevents infinite loop)
         if (originalRequest.url?.includes("/auth/refresh")) {
             localStorage.removeItem("accessToken");
-            Navigate("/login")
+            window.location.href("/login");
             return Promise.reject(error);
         }
 

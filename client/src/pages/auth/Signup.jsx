@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../service/api";
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../../firebase";
 import useDeviceId from "../../hooks/useDeviceId";
 import GoogleButton from "../../components/auth/GoogleButton";
 
