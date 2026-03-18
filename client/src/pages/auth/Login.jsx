@@ -7,7 +7,7 @@
  */
 
 import { useState } from "react";
-// import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import api from "../../service/api";
 // import { signInWithPopup } from "firebase/auth";
 // import { auth, provider } from "../../firebase";
@@ -16,8 +16,8 @@ import useDeviceId from "../../hooks/useDeviceId";
 import GoogleButton from "../../components/auth/GoogleButton";
 
 function Login() {
-    // const navigate = useNavigate();
-    // const location = useLocation();
+    const navigate = useNavigate();
+    const location = useLocation();
     const { login } = useAuth();
     const deviceId = useDeviceId();
 

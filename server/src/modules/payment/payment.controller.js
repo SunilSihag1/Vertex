@@ -94,7 +94,7 @@ export const createSubscriptionOrder = async (req, res) => {
     try {
 
         const { planId, billing } = req.body;
-        const UserID = "69a7d0141b2f19af2be24026";
+        const UserID = req.user.userId;
 
         const order = await paymentService.createOrder(
             UserID,
