@@ -4,6 +4,8 @@ import Otp from "./otp.model.js";
 import User from "../auth/auth.model.js";
 import sendEmail from "../../utils/sendEmail.js";
 
+
+
 /* =========================
    GENERATE OTP
 ========================= */
@@ -25,8 +27,8 @@ const generateOtp = async (userId, type) => {
     const user = await User.findById(userId);
 
     if (!user) {
-    throw new Error("User not found");
-}
+        throw new Error("User not found");
+    }
 
     await sendEmail(
         user.email,
@@ -83,11 +85,13 @@ const verifyOtp = async ({ userId, otp, type }) => {
 };
 
 
+
 /* =========================
    EXPORT
 ========================= */
 export {
     generateOtp,
     verifyOtp,
+    
 
 };

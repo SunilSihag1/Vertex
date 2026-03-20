@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#143109",
+                        "accent-sage": "#b5bfa1",
+                        "text-charcoal": "#1f2937",
+                        "background-light": "#fdfdfb",
+                        "background-dark": "#162012",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-display {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(20, 49, 9, 0.05);
+        }
+
+        .dark .glass-card {
+            background: rgba(22, 32, 18, 0.7);
+            border: 1px solid rgba(181, 191, 161, 0.1);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark min-h-screen antialiased text-text-charcoal dark:text-slate-100">
+    <main class="py-12 px-6 lg:py-20">
+        <div class="mx-auto max-w-md lg:ml-24 lg:mr-auto lg:max-w-xl">
+            <!-- Page Header -->
+            <div class="mb-10">
+                <h1 class="font-display text-4xl font-bold tracking-tight text-primary dark:text-accent-sage mb-2">
+                    Settings</h1>
+                <p class="text-text-charcoal/60 dark:text-slate-400 font-medium">Customize your tailoring experience and
+                    shop preferences</p>
+            </div>
+            <!-- Profile Summary Glass Card -->
+            <div class="glass-card rounded-2xl p-6 mb-10 flex items-center gap-5 shadow-sm border-accent-sage/20">
+                <div class="relative">
+                    <img alt="User Profile" class="w-16 h-16 rounded-full object-cover ring-2 ring-accent-sage/30 p-0.5"
+                        data-alt="Close up portrait of a smiling woman"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_kNbSqE-UFiMiHZ6earHno6OfLgso-MileV2_xRZu6xqi_3t2iJyzcd5bgJ6oN79saDF81jO-trU-AgkgOmeGZAPWBqmCzVE_hlVxxEZNaiAbi5qFyCeQViw9VTgarTJjPrhSnVM8E0b_s7oi9HgjFghFwCzWyRxDIl1Ci7KZEsyLMhXh6Pz8RAr9M-8UwqVJJabp6Kudtp-465HpJZshqEVM_lQ3HY3ZyJZmR1pRnoYZ8acgLUi_xRAWEqvw7CcmovHtdzd8J6al" />
+                    <div
+                        class="absolute bottom-0 right-0 w-4 h-4 bg-primary border-2 border-white dark:border-background-dark rounded-full">
+                    </div>
+                </div>
+                <div>
+                    <h2 class="font-display font-bold text-lg">Elena Rostova</h2>
+                    <p class="text-sm text-text-charcoal/50 dark:text-slate-400">Pro Designer &amp; Curated Member</p>
+                </div>
+            </div>
+            <!-- Section: Account Settings -->
+            <section class="mb-10">
+                <div class="space-y-3">
+
+                    <!-- Option Row -->
+                    <a href="../../components/settings/common components/edit-profile.html">
+                        <button
+                            class="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
+                                    <span class="material-symbols-outlined text-[20px]">person_outline</span>
+                                </div>
+                                <span class="font-medium text-text-charcoal dark:text-slate-200">Edit Profile</span>
+                            </div>
+                            <span
+                                class="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                        </button>
+                    </a>
+
+                    <a href="../../components/settings/common components/reset-password.html">
+                    <button
+                        class="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">lock_open</span>
+                            </div>
+                            <span class="font-medium text-text-charcoal dark:text-slate-200">Change Password</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                    </button>
+                </a>
+
+                    <a href="../../components/settings/common components/notification.html">
+                    <button
+                        class="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">notifications_none</span>
+                            </div>
+                            <span class="font-medium text-text-charcoal dark:text-slate-200">Notification
+                                Settings</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                    </button>
+                    </a>
+
+                    <a href="../landing/landing.jsx">
+                    <button
+                        class="w-full glass-card hover:bg-red-50/50 dark:hover:bg-red-900/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-lg bg-red-50 text-red-600 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">logout</span>
+                            </div>
+                            <span class="font-medium text-red-600">Logout</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-red-600/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                    </button>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Section: Shopping -->
+            <section class="mb-10">
+                <div class="space-y-3">
+                    <a href="../../components/settings/role based component/user-role-based-components/my-orders.html">
+                    <button
+                        class="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+                            </div>
+                            <span class="font-medium text-text-charcoal dark:text-slate-200">My Orders</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                    </button>
+                    </a>
+
+                    <a href="../../components/settings/role based component/user-role-based-components/saved-address.html">
+                    <button
+                        class="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">location_on</span>
+                            </div>
+                            <span class="font-medium text-text-charcoal dark:text-slate-200">Saved Addresses</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                    </button>
+                    </a>
+
+                    <a href="../../components/settings/role based component/user-role-based-components/wishlist.html">
+                    <button
+                        class="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">favorite_border</span>
+                            </div>
+                            <span class="font-medium text-text-charcoal dark:text-slate-200">Wishlist</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                    </button>
+                    </a>
+                </div>
+            </section>
+            <!-- Section: Seller Dashboard -->
+            <section class="mb-10">
+                <div class="space-y-3">
+                    <a href="../../components/settings/role based component/shop-owner-components/shop-profile.html">
+                    <button
+                        class="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">storefront</span>
+                            </div>
+                            <span class="font-medium text-text-charcoal dark:text-slate-200">Shop Profile</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                    </button>
+                    </a>
+
+                    <a href="../../components/settings/role based component/shop-owner-components/manage-products.html">
+                    <button
+                        class="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+                            </div>
+                            <span class="font-medium text-text-charcoal dark:text-slate-200">Manage Products</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                    </button>
+                </a>
+
+                <a href="../../components/settings/role based component/shop-owner-components/sales-analytics.html">
+                    <button
+                        class="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">analytics</span>
+                            </div>
+                            <span class="font-medium text-text-charcoal dark:text-slate-200">Sales Analytics</span>
+                        </div>
+                        <span
+                            class="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
+                    </button>
+                    </a>
+                </div>
+            </section>
+            <!-- Footer Small Link -->
+            <div class="text-center lg:text-left mt-8 mb-12">
+                <p class="text-text-charcoal/40 dark:text-slate-500 text-xs">
+                    Tailored version 2.4.0 • Built for Sustainable Fashion
+                </p>
+                <div class="mt-2 flex justify-center lg:justify-start gap-4">
+                    <a class="text-xs font-medium text-primary hover:underline" href="#">Privacy Policy</a>
+                    <a class="text-xs font-medium text-primary hover:underline" href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

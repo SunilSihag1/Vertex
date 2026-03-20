@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
         name: {
             type: String,
             required: true,
-            trim: true // spaces ko hatayega
+            trim: true
         },
 
         email: {
@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
             required: true,
             unique: true,
             lowercase: true,
-            index: true // alphabatical order
+            index: true
         },
 
         password: {
@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema(
             required: function () {
                 return this.authProvider === "local";
             },
-            select: false  // password by default query me nahi aayega
+            select: false
         },
 
         authProvider: {
@@ -61,13 +61,13 @@ const userSchema = new mongoose.Schema(
         lastLoginIP: {
             type: String
         },
+
         refreshToken: {
             type: String,
             select: false
         }
-    },
-    { timestamps: true }
-);
+    } // ✅ yaha object close hoga
+);   // ✅ fir schema close hoga
 
 const User = mongoose.model("User", userSchema);
 export default User;

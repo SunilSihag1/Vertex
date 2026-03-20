@@ -38,6 +38,7 @@ function Login() {
 
             // store tokens
             localStorage.setItem("accessToken", res.data.accessToken);
+            console.log("LOGIN RESPONSE:", res.data);
 
             navigate("/");
             window.location.reload();
