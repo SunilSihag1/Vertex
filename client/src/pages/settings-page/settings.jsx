@@ -1,295 +1,237 @@
-import { useNavigate, Outlet } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import { useState, useEffect } from "react";
 
+const NAV = [
+  {
+    section: "Account",
+    items: [
+      { path: "edit-profile",   icon: "manage_accounts",   label: "Edit Profile"     },
+      { path: "reset-password", icon: "lock_reset",        label: "Change Password"  },
+      { path: "notifications",  icon: "notifications",     label: "Notifications"    },
+    ],
+  },
+  {
+    section: "Shopping",
+    items: [
+      { path: "my-orders",     icon: "receipt_long",       label: "My Orders"        },
+      { path: "saved-address", icon: "location_on",        label: "Saved Addresses"  },
+      { path: "wishlist",      icon: "favorite",           label: "Wishlist"         },
+    ],
+  },
+  {
+    section: "My Shop",
+    items: [
+      { path: "shop-profile",    icon: "storefront",       label: "Shop Profile"     },
+      { path: "manage-products", icon: "inventory_2",      label: "Manage Products"  },
+      { path: "sales-analytics", icon: "bar_chart_4_bars", label: "Sales Analytics"  },
+    ],
+  },
+];
 
+/* ── Sidebar ──────────────────────────────────────────────── */
+const Sidebar = ({ active, onNav, onClose }) => (
+  <div
+    className="flex flex-col h-full"
+    style={{ background: "#143109" }}
+  >
+    {/* Top: logo + close */}
+    <div className="flex items-center justify-between px-5 pt-6 pb-4 shrink-0">
+      <img src="/logo/Brand Logo Dark.svg" alt="Vertex" className="h-7 w-auto" />
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="lg:hidden w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
+          style={{ color: "rgba(181,191,161,0.5)" }}
+          onMouseEnter={e => e.currentTarget.style.color = "#fff"}
+          onMouseLeave={e => e.currentTarget.style.color = "rgba(181,191,161,0.5)"}
+        >
+          <span className="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      )}
+    </div>
+
+    {/* User card */}
+    <div
+      className="mx-3 mb-5 rounded-2xl p-3.5 flex items-center gap-3 shrink-0"
+      style={{ background: "rgba(181,191,161,0.1)", border: "1px solid rgba(181,191,161,0.12)" }}
+    >
+      <div className="relative shrink-0">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_kNbSqE-UFiMiHZ6earHno6OfLgso-MileV2_xRZu6xqi_3t2iJyzcd5bgJ6oN79saDF81jO-trU-AgkgOmeGZAPWBqmCzVE_hlVxxEZNaiAbi5qFyCeQViw9VTgarTJjPrhSnVM8E0b_s7oi9HgjFghFwCzWyRxDIl1Ci7KZEsyLMhXh6Pz8RAr9M-8UwqVJJabp6Kudtp-465HpJZshqEVM_lQ3HY3ZyJZmR1pRnoYZ8acgLUi_xRAWEqvw7CcmovHtdzd8J6al"
+          alt="Avatar"
+          className="w-9 h-9 rounded-full object-cover"
+          style={{ border: "2px solid rgba(181,191,161,0.35)" }}
+        />
+        <span
+          className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400"
+          style={{ border: "2px solid #143109" }}
+        />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-bold text-white truncate leading-tight">Elena Rostova</p>
+        <p className="text-[11px] mt-0.5 truncate" style={{ color: "rgba(181,191,161,0.55)" }}>
+          Pro Designer · Active
+        </p>
+      </div>
+    </div>
+
+    {/* Nav sections */}
+    <nav className="flex-1 overflow-y-auto px-3 space-y-4 pb-3">
+      {NAV.map(({ section, items }) => (
+        <div key={section}>
+          <p
+            className="px-2.5 mb-1.5 text-[9px] font-black uppercase tracking-[0.25em]"
+            style={{ color: "rgba(181,191,161,0.3)" }}
+          >
+            {section}
+          </p>
+          <div className="space-y-0.5">
+            {items.map(({ path, icon, label }) => {
+              const isActive = active === path;
+              return (
+                <button
+                  key={path}
+                  onClick={() => onNav(path)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all duration-150"
+                  style={
+                    isActive
+                      ? { background: "rgba(181,191,161,0.16)", color: "#ffffff" }
+                      : { color: "rgba(181,191,161,0.6)" }
+                  }
+                  onMouseEnter={e => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = "rgba(255,255,255,0.05)";
+                      e.currentTarget.style.color = "#fff";
+                    }
+                  }}
+                  onMouseLeave={e => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = "transparent";
+                      e.currentTarget.style.color = "rgba(181,191,161,0.6)";
+                    }
+                  }}
+                >
+                  <span
+                    className="material-symbols-outlined text-[17px] shrink-0"
+                    style={{
+                      color: isActive ? "#b5bfa1" : "rgba(181,191,161,0.38)",
+                      fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0",
+                    }}
+                  >
+                    {icon}
+                  </span>
+                  <span className="flex-1 truncate">{label}</span>
+                  {isActive && (
+                    <span
+                      className="w-1.5 h-1.5 rounded-full shrink-0"
+                      style={{ background: "#b5bfa1" }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </nav>
+
+    {/* Bottom: logout */}
+    <div
+      className="mx-3 mb-4 pt-3 shrink-0"
+      style={{ borderTop: "1px solid rgba(181,191,161,0.1)" }}
+    >
+      <button
+        onClick={() => onNav("/")}
+        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+        style={{ color: "rgba(239,68,68,0.65)" }}
+        onMouseEnter={e => { e.currentTarget.style.background = "rgba(239,68,68,0.07)"; e.currentTarget.style.color = "rgb(239,68,68)"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(239,68,68,0.65)"; }}
+      >
+        <span className="material-symbols-outlined text-[17px] shrink-0">logout</span>
+        <span>Sign out</span>
+      </button>
+      <p
+        className="text-center text-[9px] mt-3 font-medium"
+        style={{ color: "rgba(181,191,161,0.18)" }}
+      >
+        Vertex v2.4.0 · Built for Retail
+      </p>
+    </div>
+  </div>
+);
+
+/* ── Layout ───────────────────────────────────────────────── */
 const Settings = () => {
+  const navigate    = useNavigate();
+  const location    = useLocation();
+  const [open, setOpen] = useState(false);
 
-  const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const seg    = location.pathname.split("/").filter(Boolean);
+  const active = seg[seg.length - 1] ?? "settings";
+  const label  = NAV.flatMap(s => s.items).find(i => i.path === active)?.label ?? "Settings";
+
+  const go = (path) => {
+    if (path === "/") { navigate("/"); return; }
+    navigate(path);
+    setOpen(false);
+  };
+
+  useEffect(() => { setOpen(false); }, [location.pathname]);
 
   return (
-    <main className="py-12 px-6 lg:py-20">
+    <div className="flex min-h-screen" style={{ background: "#f7f6f2" }}>
 
-      <div className="lg:hidden mb-6 flex items-center justify-between">
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:flex lg:flex-col w-60 xl:w-64 shrink-0 sticky top-20 h-[calc(100vh-5rem)] overflow-hidden shadow-xl shadow-[#143109]/20">
+        <Sidebar active={active} onNav={go} />
+      </aside>
 
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="p-2 rounded-lg bg-primary text-white"
-        >
-          <span className="material-symbols-outlined">menu</span>
-        </button>
-
-        <h2 className="text-xl font-bold">Settings</h2>
-
-      </div>
-
-      {/* FLEX CONTAINER */}
-      <div className="flex gap-12 max-w-7xl mx-auto">
-
-        {/* LEFT SIDE */}
-        <div className={`
-                w-[380px] bg-white lg:block
-                ${menuOpen ? "block" : "hidden"}
-                fixed lg:static top-16 left-0 h-[calc(100vh-1rem)] overflow-y-auto z-40 p-6
-                `}>
-
-          <div className="mx-auto max-w-md lg:ml-24 lg:mr-auto lg:max-w-xl">
-
-            <div className="mb-10">
-              <h1 className="font-display text-4xl font-bold tracking-tight text-primary dark:text-accent-sage mb-2">
-                Settings</h1>
-              <p className="text-text-charcoal/60 dark:text-slate-400 font-medium">Customize your tailoring experience and
-                shop preferences</p>
-            </div>
-
-            <div className="glass-card rounded-2xl p-6 mb-10 flex items-center gap-5 shadow-sm border-accent-sage/20">
-              <div className="relative">
-                <img alt="User Profile" className="w-16 h-16 rounded-full object-cover ring-2 ring-accent-sage/30 p-0.5"
-                  data-alt="Close up portrait of a smiling woman"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_kNbSqE-UFiMiHZ6earHno6OfLgso-MileV2_xRZu6xqi_3t2iJyzcd5bgJ6oN79saDF81jO-trU-AgkgOmeGZAPWBqmCzVE_hlVxxEZNaiAbi5qFyCeQViw9VTgarTJjPrhSnVM8E0b_s7oi9HgjFghFwCzWyRxDIl1Ci7KZEsyLMhXh6Pz8RAr9M-8UwqVJJabp6Kudtp-465HpJZshqEVM_lQ3HY3ZyJZmR1pRnoYZ8acgLUi_xRAWEqvw7CcmovHtdzd8J6al" />
-                <div
-                  className="absolute bottom-0 right-0 w-4 h-4 bg-primary border-2 border-white dark:border-background-dark rounded-full">
-                </div>
-              </div>
-              <div>
-                <h2 className="font-display font-bold text-lg">Elena Rostova</h2>
-                <p className="text-sm text-text-charcoal/50 dark:text-slate-400">Pro Designer &amp; Curated Member</p>
-              </div>
-            </div>
-
-            {/* ---- TUMHARA POORA CODE SAME RAHEGA ---- */}
-
-            <section className="mb-10">
-              <div className="space-y-3">
-
-                <button
-                  onClick={() => {
-                    navigate("edit-profile");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">person_outline</span>
-                    </div>
-                    <span className="font-medium text-text-charcoal dark:text-slate-200">Edit Profile</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-
-
-                <button
-                  onClick={() => {
-                    navigate("reset-password");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">lock_open</span>
-                    </div>
-                    <span className="font-medium text-text-charcoal dark:text-slate-200">Change Password</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    navigate("notifications");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">notifications_none</span>
-                    </div>
-                    <span className="font-medium text-text-charcoal dark:text-slate-200">Notification
-                      Settings</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-
-
-                <button
-                  onClick={() => {
-                    navigate("/");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-red-50/50 dark:hover:bg-red-900/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-red-50 text-red-600 group-hover:bg-red-600 group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">logout</span>
-                    </div>
-                    <span className="font-medium text-red-600">Logout</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-red-600/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-              </div></section>
-
-            <section className="mb-10">
-              <div className="space-y-3">
-
-                <button
-                  onClick={() => {
-                    navigate("my-orders");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
-                    </div>
-                    <span className="font-medium text-text-charcoal dark:text-slate-200">My Orders</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-
-
-
-                <button
-                  onClick={() => {
-                    navigate("saved-address");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">location_on</span>
-                    </div>
-                    <span className="font-medium text-text-charcoal dark:text-slate-200">Saved Addresses</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-
-
-
-                <button
-                  onClick={() => {
-                    navigate("wishlist");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">favorite_border</span>
-                    </div>
-                    <span className="font-medium text-text-charcoal dark:text-slate-200">Wishlist</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-
-              </div>
-            </section>
-
-
-            <section className="mb-10">
-              <div className="space-y-3">
-
-                <button
-                  onClick={() => {
-                    navigate("shop-profile");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">storefront</span>
-                    </div>
-                    <span className="font-medium text-text-charcoal dark:text-slate-200">Shop Profile</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-
-
-
-                <button
-                  onClick={() => {
-                    navigate("manage-products");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">inventory_2</span>
-                    </div>
-                    <span className="font-medium text-text-charcoal dark:text-slate-200">Manage Products</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-
-
-
-                <button
-                  onClick={() => {
-                    navigate("sales-analytics");
-                    setMenuOpen(false);
-                  }}
-                  className="w-full glass-card hover:bg-white/90 dark:hover:bg-primary/10 group flex items-center justify-between p-4 rounded-xl transition-all duration-300">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary dark:text-accent-sage group-hover:bg-primary group-hover:text-white transition-colors">
-                      <span className="material-symbols-outlined text-[20px]">analytics</span>
-                    </div>
-                    <span className="font-medium text-text-charcoal dark:text-slate-200">Sales Analytics</span>
-                  </div>
-                  <span
-                    className="material-symbols-outlined text-text-charcoal/30 group-hover:translate-x-1 transition-transform">chevron_right</span>
-                </button>
-
-              </div>
-
-            </section>
-
-
-
-            {/* baki saara code unchanged */}
-
-            <div className="text-center lg:text-left mt-8 mb-12">
-              <p className="text-text-charcoal/40 dark:text-slate-500 text-xs">
-                Tailored version 2.4.0 • Built for Sustainable Fashion
-              </p>
-              <div className="mt-2 flex justify-center lg:justify-start gap-4">
-                <a className="text-xs font-medium text-primary hover:underline" href="#">Privacy Policy</a>
-                <a className="text-xs font-medium text-primary hover:underline" href="#">Terms of Service</a>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-        {menuOpen && (
+      {/* Mobile backdrop + drawer */}
+      {open && (
+        <>
           <div
-            onClick={() => setMenuOpen(false)}
-            className="fixed inset-0 bg-black/40 lg:hidden"
+            className="fixed inset-0 z-40 lg:hidden"
+            style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)" }}
+            onClick={() => setOpen(false)}
           />
-        )}
+          <aside className="fixed inset-y-0 left-0 w-64 z-50 lg:hidden overflow-y-auto shadow-2xl">
+            <Sidebar active={active} onNav={go} onClose={() => setOpen(false)} />
+          </aside>
+        </>
+      )}
 
-        {/* RIGHT SIDE CONTENT */}
-        <div className="flex-1 pt-6">
-          <Outlet />
-        </div>
-
+      {/* Mobile topbar */}
+      <div
+        className="lg:hidden fixed top-20 inset-x-0 z-30 flex items-center justify-between px-4 py-3"
+        style={{
+          background: "rgba(247,246,242,0.96)",
+          backdropFilter: "blur(12px)",
+          borderBottom: "1px solid rgba(20,49,9,0.07)",
+        }}
+      >
+        <button
+          onClick={() => setOpen(true)}
+          className="flex items-center gap-2 text-sm font-bold"
+          style={{ color: "#143109" }}
+        >
+          <span className="material-symbols-outlined text-[20px]">menu</span>
+          <span className="hidden sm:inline">Menu</span>
+        </button>
+        <span
+          className="text-[10px] font-black uppercase tracking-[0.18em]"
+          style={{ color: "rgba(20,49,9,0.35)" }}
+        >
+          {label}
+        </span>
+        <div className="w-12" />
       </div>
 
-    </main>
+      {/* Page content */}
+      <main className="flex-1 min-w-0 px-5 sm:px-8 lg:px-12 py-8 lg:py-10 mt-14 lg:mt-0">
+        <Outlet />
+      </main>
+
+    </div>
   );
 };
 

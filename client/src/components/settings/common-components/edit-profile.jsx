@@ -1,241 +1,227 @@
 import { useState, useEffect } from "react";
 import api from "../../../service/api";
 
-/* ─────────────────────────────────────────────────────────────
-   Helpers
-───────────────────────────────────────────────────────────── */
-const PHONE_REGEX = /^\+?[1-9]\d{6,14}$/;
+const PHONE_RE = /^\+?[1-9]\d{6,14}$/;
 
-const initialForm = {
-  name: "",
-  email: "",
-  phone: "",
-  dob: ""
-};
+/* ── Design tokens ────────────────────────────────────────── */
+const fieldBase =
+  "w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-150 " +
+  "bg-white text-[#143109] placeholder:text-slate-300 " +
+  "dark:bg-[#143109]/20 dark:text-[#b5bfa1] dark:placeholder:text-slate-600";
 
-/* ─────────────────────────────────────────────────────────────
-   Component
-───────────────────────────────────────────────────────────── */
-function EditProfile() {
-  const [form, setForm] = useState(initialForm);
-  const [loading, setLoading] = useState(true);   // page-load fetch
-  const [saving, setSaving] = useState(false);  // PUT in-flight
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+const fieldNormal = `${fieldBase} border border-[rgba(20,49,9,0.12)] focus:border-[#143109] focus:ring-3 focus:ring-[rgba(20,49,9,0.06)]`;
+const fieldErr    = `${fieldBase} border border-red-300 focus:border-red-400 focus:ring-3 focus:ring-red-50`;
 
-  /* ── 1. Pre-fill on mount ──────────────────────────────── */
+/* ── Sub-components ───────────────────────────────────────── */
+const PageHeader = ({ title, subtitle }) => (
+  <div className="mb-8">
+    <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: "#143109" }}>{title}</h1>
+    <p className="mt-1 text-sm" style={{ color: "rgba(31,41,55,0.45)" }}>{subtitle}</p>
+  </div>
+);
+
+const Card = ({ children, className = "" }) => (
+  <div
+    className={`rounded-2xl bg-white overflow-hidden ${className}`}
+    style={{ border: "1px solid rgba(20,49,9,0.08)", boxShadow: "0 1px 8px rgba(20,49,9,0.04)" }}
+  >
+    {children}
+  </div>
+);
+
+const CardSection = ({ title, children }) => (
+  <div>
+    <div
+      className="px-5 py-3 flex items-center gap-2"
+      style={{ borderBottom: "1px solid rgba(20,49,9,0.06)", background: "rgba(20,49,9,0.02)" }}
+    >
+      <p className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: "rgba(20,49,9,0.35)" }}>
+        {title}
+      </p>
+    </div>
+    <div className="p-5 space-y-4">{children}</div>
+  </div>
+);
+
+const Field = ({ label, icon, error, children }) => (
+  <div className="space-y-1.5">
+    <label className="flex items-center gap-1.5 text-xs font-semibold" style={{ color: "rgba(20,49,9,0.5)" }}>
+      <span className="material-symbols-outlined text-[13px]">{icon}</span>
+      {label}
+    </label>
+    {children}
+    {error && (
+      <p className="flex items-center gap-1 text-xs text-red-500">
+        <span className="material-symbols-outlined text-[12px]">error</span>
+        {error}
+      </p>
+    )}
+  </div>
+);
+
+const Feedback = ({ type, msg }) => (
+  <div
+    className="mb-6 flex items-start gap-3 p-4 rounded-xl text-sm font-medium"
+    style={
+      type === "success"
+        ? { background: "rgba(16,185,129,0.07)", border: "1px solid rgba(16,185,129,0.2)", color: "#059669" }
+        : { background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.18)", color: "#dc2626" }
+    }
+  >
+    <span className="material-symbols-outlined text-[17px] mt-0.5 shrink-0">
+      {type === "success" ? "check_circle" : "error"}
+    </span>
+    {msg}
+  </div>
+);
+
+/* ── Main ─────────────────────────────────────────────────── */
+export default function EditProfile() {
+  const [form,     setForm]     = useState({ name: "", email: "", phone: "", dob: "" });
+  const [loading,  setLoading]  = useState(true);
+  const [saving,   setSaving]   = useState(false);
+  const [errors,   setErrors]   = useState({});
+  const [feedback, setFeedback] = useState(null);
+
   useEffect(() => {
-    const fetchProfile = async () => {
+    (async () => {
       try {
-        setLoading(true);
-        setError(null);
-
         const res = await api.get("/profile", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
+          headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` },
         });
-
         const { name, email, phone, dob } = res.data.data;
-
         setForm({
-          name: name ?? "",
+          name:  name  ?? "",
           email: email ?? "",
           phone: phone ?? "",
-          // Convert ISO date to "yyyy-MM-dd" for <input type="date">
-          dob: dob ? new Date(dob).toISOString().split("T")[0] : "",
+          dob:   dob ? new Date(dob).toISOString().split("T")[0] : "",
         });
-
-      } catch (err) {
-        setError(err.response?.data?.message ?? "Failed to load profile.");
+      } catch {
+        setFeedback({ type: "error", msg: "Could not load profile. Please refresh." });
       } finally {
         setLoading(false);
       }
-    };
-
-    fetchProfile();
+    })();
   }, []);
 
-  /* ── 2. Controlled input handler ───────────────────────── */
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    // Clear stale feedback when the user starts editing
-    setError(null);
-    setSuccess(null);
+  const handleChange = ({ target: { name, value } }) => {
+    setForm(p => ({ ...p, [name]: value }));
+    setErrors(p => ({ ...p, [name]: undefined }));
+    setFeedback(null);
   };
 
-  /* ── 3. Client-side validation ─────────────────────────── */
   const validate = () => {
-    if (!form.name.trim()) return "Name is required.";
-    if (form.phone && !PHONE_REGEX.test(form.phone))
-      return "Phone must be in a valid format (e.g. +919876543210).";
-    return null;
+    const e = {};
+    if (!form.name.trim())                            e.name  = "Name is required.";
+    if (form.phone && !PHONE_RE.test(form.phone))     e.phone = "Use international format e.g. +919876543210.";
+    return e;
   };
 
-  /* ── 4. Submit ─────────────────────────────────────────── */
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const validationError = validate();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
     try {
       setSaving(true);
-      setError(null);
-      setSuccess(null);
-
-      const payload = {
-        name: form.name.trim(),
-        email: form.email.trim(),
-        phone: form.phone.trim() || null,
-        dob: form.dob || null
-      };
-
-      const res = await api.put("/profile", payload, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` }
-      });
-
-      setSuccess(res.data.message ?? "Profile updated successfully.");
+      await api.put("/profile",
+        { name: form.name.trim(), email: form.email.trim(), phone: form.phone.trim() || null, dob: form.dob || null },
+        { headers: { Authorization: `Bearer ${localStorage.getItem("accessToken")}` } }
+      );
+      setFeedback({ type: "success", msg: "Profile updated successfully." });
     } catch (err) {
-      setError(err.response?.data?.message ?? "Failed to update profile.");
+      setFeedback({ type: "error", msg: err.response?.data?.message ?? "Failed to update profile." });
     } finally {
       setSaving(false);
     }
   };
 
-  /* ── 5. Render ─────────────────────────────────────────── */
   if (loading) {
     return (
-      <main className="flex-grow flex items-center justify-center p-6">
-        <span className="material-symbols-outlined animate-spin text-4xl text-primary">
-          progress_activity
-        </span>
-      </main>
+      <div className="max-w-lg space-y-5 animate-pulse">
+        <div className="h-7 rounded-xl w-40" style={{ background: "rgba(20,49,9,0.07)" }} />
+        <div className="h-4 rounded-lg w-64" style={{ background: "rgba(20,49,9,0.05)" }} />
+        {[1,2,3,4].map(n => <div key={n} className="h-12 rounded-xl" style={{ background: "rgba(20,49,9,0.05)" }} />)}
+      </div>
     );
   }
 
   return (
-    <main className="flex-grow flex items-center justify-center p-6 lg:p-12">
-      <div className="w-full max-w-2xl bg-white dark:bg-primary/30 rounded-xl shadow-2xl overflow-hidden">
+    <div className="max-w-lg">
+      <PageHeader title="Edit Profile" subtitle="Keep your personal information current." />
+      {feedback && <Feedback type={feedback.type} msg={feedback.msg} />}
 
-        {/* Header */}
-        <div className="bg-primary px-8 py-6">
-          <h2 className="text-2xl font-bold text-white">Edit Profile</h2>
-          <p className="text-sage/70 text-sm mt-1">
-            Update your personal information below.
-          </p>
-        </div>
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
 
-        {/* Form */}
-        <form className="p-8 space-y-6" onSubmit={handleSubmit} noValidate>
-
-          {/* Feedback banners */}
-          {error && (
-            <div className="flex items-center gap-3 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-400 text-sm">
-              <span className="material-symbols-outlined text-xl flex-shrink-0">error</span>
-              {error}
+        {/* Avatar */}
+        <Card>
+          <div className="p-5 flex items-center gap-5">
+            <div
+              className="shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
+              style={{ background: "rgba(20,49,9,0.08)", border: "2px solid rgba(20,49,9,0.1)" }}
+            >
+              <span
+                className="material-symbols-outlined text-3xl"
+                style={{ color: "#143109", fontVariationSettings: "'FILL' 1" }}
+              >
+                storefront
+              </span>
             </div>
-          )}
-
-          {success && (
-            <div className="flex items-center gap-3 p-4 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-400 text-sm">
-              <span className="material-symbols-outlined text-xl flex-shrink-0">check_circle</span>
-              {success}
+            <div>
+              <p className="text-sm font-bold" style={{ color: "#143109" }}>
+                {form.name || "Your Name"}
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: "rgba(31,41,55,0.4)" }}>
+                {form.email || "your@email.com"}
+              </p>
             </div>
-          )}
+          </div>
+        </Card>
 
-          {/* Name */}
-          <Field label="Full Name" icon="person" required>
-            <input
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="Jane Doe"
-              required
-              className={inputClass}
-            />
-          </Field>
+        {/* Personal info */}
+        <Card>
+          <CardSection title="Personal Information">
+            <Field label="Full Name" icon="person" error={errors.name}>
+              <input type="text" name="name" value={form.name} onChange={handleChange}
+                placeholder="Jane Doe" maxLength={80} required
+                className={errors.name ? fieldErr : fieldNormal}
+              />
+            </Field>
+            <Field label="Email Address" icon="mail" error={errors.email}>
+              <input type="email" name="email" value={form.email} onChange={handleChange}
+                placeholder="jane@company.com"
+                className={errors.email ? fieldErr : fieldNormal}
+              />
+            </Field>
+          </CardSection>
+          <CardSection title="Additional Details">
+            <Field label="Phone Number" icon="phone" error={errors.phone}>
+              <input type="tel" name="phone" value={form.phone} onChange={handleChange}
+                placeholder="+91 98765 43210"
+                className={errors.phone ? fieldErr : fieldNormal}
+              />
+            </Field>
+            <Field label="Date of Birth" icon="cake" error={errors.dob}>
+              <input type="date" name="dob" value={form.dob} onChange={handleChange}
+                max={new Date().toISOString().split("T")[0]}
+                className={errors.dob ? fieldErr : fieldNormal}
+              />
+            </Field>
+          </CardSection>
+        </Card>
 
-          {/* Email */}
-          <Field label="Email Address" icon="mail">
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="jane@company.com"
-              className={inputClass}
-            />
-          </Field>
-
-          {/* Phone */}
-          <Field label="Phone Number" icon="phone">
-            <input
-              type="tel"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="+919876543210"
-              className={inputClass}
-            />
-          </Field>
-
-          {/* Date of Birth */}
-          <Field label="Date of Birth" icon="cake">
-            <input
-              type="date"
-              name="dob"
-              value={form.dob}
-              onChange={handleChange}
-              max={new Date().toISOString().split("T")[0]}
-              className={inputClass}
-            />
-          </Field>
-
-          
-
-          {/* Submit */}
+        {/* Actions */}
+        <div className="pt-1">
           <button
-            type="submit"
-            disabled={saving}
-            className="w-full shimmer-btn bg-primary text-white py-3.5 rounded-full font-bold text-lg shadow-2xl shadow-primary/30 transition-all hover:scale-105 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer"
+            type="submit" disabled={saving}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-6 rounded-xl text-sm font-bold text-white shadow-sm transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ background: "#143109" }}
           >
+            {saving && <span className="material-symbols-outlined text-[15px] animate-spin">progress_activity</span>}
             {saving ? "Saving…" : "Save Changes"}
           </button>
+        </div>
 
-        </form>
-      </div>
-    </main>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
-   Sub-components
-───────────────────────────────────────────────────────────── */
-const inputClass =
-  "w-full pl-12 pr-4 py-3.5 bg-background-light dark:bg-primary/50 border-none rounded-lg " +
-  "ring-1 ring-slate-200 dark:ring-slate-700 focus:ring-2 focus:ring-primary " +
-  "dark:focus:ring-slate-500 transition-all outline-none text-primary dark:text-sage " +
-  "placeholder:text-primary/40 dark:placeholder:text-sage/40";
-
-function Field({ label, icon, required = false, children }) {
-  return (
-    <div className="space-y-2">
-      <label className="text-sm font-semibold text-primary dark:text-slate-300 ml-1">
-        {label}
-        {required && <span className="text-red-500 ml-0.5">*</span>}
-      </label>
-      <div className="relative group">
-        <span className="material-symbols-outlined absolute left-4 top-3.5 text-primary/60 dark:text-sage/50 group-focus-within:text-primary dark:group-focus-within:text-sage transition-colors">
-          {icon}
-        </span>
-        {children}
-      </div>
+      </form>
     </div>
   );
 }
-
-export default EditProfile;

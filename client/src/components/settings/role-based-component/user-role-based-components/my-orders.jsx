@@ -1,143 +1,124 @@
-const MyOrders = () => {
-  return (
-    <div className="min-h-screen py-12 px-4 sm:px-6">
+import { useState } from "react";
 
-      <div className="max-w-md mx-auto lg:max-w-xl lg:ml-24 lg:mr-auto">
-
-        <div className="mb-10">
-          <h1 className="font-display text-4xl font-extrabold text-primary dark:text-accent-sage tracking-tight mb-2 text-[#143109]">
-            My Orders
-          </h1>
-          <p className="text-[#1f2937]/70 text-lg">
-            Track and review your previous grocery purchases.
-          </p>
-        </div>
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div className="relative inline-block w-full sm:w-auto">
-            <button className="flex items-center justify-between gap-2 w-full sm:w-auto px-5 py-2.5 bg-white border border-[#143109]/10 rounded-xl shadow-sm hover:border-[#143109]/30 transition-colors">
-              <span className="font-semibold text-[#143109] text-sm">Filter by status</span>
-              <span className="font-semibold text-[#143109] text-sm">expand_more</span>
-            </button>
-          </div>
-
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-            <button className="whitespace-nowrap px-4 py-1.5 rounded-full bg-[#143109] text-white text-xs font-semibold">
-              All Orders
-            </button>
-            <button className="whitespace-nowrap px-4 py-1.5 rounded-full bg-[#b5bfa1]/20 text-[#143109] text-xs font-semibold hover:bg-[#b5bfa1]/40 transition-colors">
-              Delivered
-            </button>
-            <button className="whitespace-nowrap px-4 py-1.5 rounded-full bg-[#b5bfa1]/20 text-[#143109] text-xs font-semibold hover:bg-[#b5bfa1]/40 transition-colors">
-              Shipped
-            </button>
-          </div>
-        </div>
-
-        <div className="space-y-6">
-
-          {/* Order 1 */}
-          <div className="group relative bg-white border border-[#143109]/5 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300">
-            <div className="flex flex-col sm:flex-row gap-5">
-              <div
-                className="w-full sm:w-32 h-32 rounded-lg bg-cover bg-center shrink-0 border border-primary/5"
-                style={{
-                  backgroundImage:
-                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D')",
-                }}
-              ></div>
-
-              <div className="flex-grow flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-start mb-1">
-                    <h3 className="font-display font-bold text-lg text-primary dark:text-white leading-tight text-[#143109]">
-                      Basmati Rice (5kg)
-                    </h3>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                      Delivered
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-charcoal/50 font-medium uppercase tracking-wider">
-                    ID: KR-2045 • 12 June 2026
-                  </p>
-
-                  <p className="mt-2 font-display font-bold text-[#143109] text-xl">
-                    ₹899
-                  </p>
-                </div>
-
-                <div className="mt-4 flex items-center justify-between border-t border-primary/5 pt-4">
-                  <button className="text-[#143109] text-sm font-bold flex items-center gap-1 hover:underline">
-                    View Details
-                    <span className="material-symbols-outlined text-sm">
-                      arrow_forward
-                    </span>
-                  </button>
-
-                  <button className="p-2 text-charcoal/40 hover:text-primary transition-colors">
-                    <span className="material-symbols-outlined">more_vert</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Order 2 */}
-          <div className="group relative bg-white border border-[#143109]/5 rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300">
-            <div className="flex flex-col sm:flex-row gap-5">
-              <div
-                className="w-full sm:w-32 h-32 rounded-lg bg-cover bg-center shrink-0 border border-primary/5"
-                style={{ backgroundImage: "url('https://lh3.googleusercontent.com/...')" }}
-              ></div>
-
-              <div className="flex-grow flex flex-col justify-between">
-                <div>
-                  <div className="flex justify-between items-start mb-1">
-                    <h3 className="font-display font-bold text-lg text-[#143109]">
-                      Organic Moong Dal
-                    </h3>
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      Shipped
-                    </span>
-                  </div>
-
-                  <p className="text-xs uppercase tracking-wider">
-                    ID: KR-2081 • 18 June 2026
-                  </p>
-
-                  <p className="mt-2 font-display font-bold text-[#143109] text-xl">
-                    ₹450
-                  </p>
-                </div>
-
-                <div className="mt-4 flex items-center justify-between border-t pt-4">
-                  <button className="text-[#143109] text-sm font-bold flex items-center gap-1 hover:underline">
-                    View Details
-                    <span className="material-symbols-outlined text-sm">
-                      arrow_forward
-                    </span>
-                  </button>
-
-                  <button className="p-2 text-charcoal/40 hover:text-primary transition-colors">
-                    <span className="material-symbols-outlined">more_vert</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div className="mt-12 text-center">
-          <button className="px-8 py-3 border border-[#143109]/20 rounded-xl font-bold text-[#143109] hover:bg-[#b5bfa1]/10 transition-colors">
-            Load more orders
-          </button>
-        </div>
-
-      </div>
-    </div>
-  );
+const STATUS = {
+  Delivered:  { bg: "rgba(16,185,129,0.08)",  text: "#059669",  dot: "#10b981" },
+  Shipped:    { bg: "rgba(59,130,246,0.08)",   text: "#3b82f6",  dot: "#3b82f6" },
+  Processing: { bg: "rgba(245,158,11,0.09)",   text: "#d97706",  dot: "#f59e0b" },
+  Cancelled:  { bg: "rgba(239,68,68,0.08)",    text: "#ef4444",  dot: "#ef4444" },
 };
 
-export default MyOrders;
+const ORDERS = [
+  { id: "CW-2041", name: "Basmati Rice (5kg)",          variant: "Premium · White",  date: "12 Jun 2025", amount: "₹899",   status: "Delivered",  img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D" },
+  { id: "CW-2081", name: "Organic Moong Dal",            variant: "500g · Washed",   date: "18 Jun 2025", amount: "₹450",   status: "Shipped",    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D" },
+  { id: "CW-2094", name: "Cold-Pressed Coconut Oil",     variant: "1L · Glass",      date: "22 Jun 2025", amount: "₹720",   status: "Processing", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D" },
+];
+
+const FILTERS = ["All", "Delivered", "Shipped", "Processing", "Cancelled"];
+
+const Card = ({ children, className = "" }) => (
+  <div
+    className={`rounded-2xl bg-white overflow-hidden group hover:shadow-md transition-shadow ${className}`}
+    style={{ border: "1px solid rgba(20,49,9,0.08)", boxShadow: "0 1px 8px rgba(20,49,9,0.03)" }}
+  >
+    {children}
+  </div>
+);
+
+export default function MyOrders() {
+  const [filter, setFilter] = useState("All");
+
+  const visible = filter === "All" ? ORDERS : ORDERS.filter(o => o.status === filter);
+
+  return (
+    <div className="max-w-lg">
+
+      <div className="mb-6">
+        <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: "#143109" }}>My Orders</h1>
+        <p className="mt-1 text-sm" style={{ color: "rgba(31,41,55,0.45)" }}>Track and review your purchases.</p>
+      </div>
+
+      {/* Filters */}
+      <div className="flex gap-1.5 overflow-x-auto pb-1 mb-6">
+        {FILTERS.map(f => (
+          <button
+            key={f}
+            onClick={() => setFilter(f)}
+            className="px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all"
+            style={
+              filter === f
+                ? { background: "#143109", color: "#fff" }
+                : { background: "#fff", color: "rgba(20,49,9,0.55)", border: "1px solid rgba(20,49,9,0.1)" }
+            }
+          >
+            {f}
+          </button>
+        ))}
+      </div>
+
+      {/* Cards */}
+      <div className="space-y-3">
+        {visible.length === 0 && (
+          <div className="py-16 text-center rounded-2xl bg-white" style={{ border: "1px solid rgba(20,49,9,0.08)" }}>
+            <div className="inline-flex w-12 h-12 items-center justify-center rounded-full mb-3" style={{ background: "rgba(20,49,9,0.07)" }}>
+              <span className="material-symbols-outlined" style={{ color: "#143109" }}>receipt_long</span>
+            </div>
+            <p className="text-sm font-semibold" style={{ color: "rgba(20,49,9,0.4)" }}>No orders found</p>
+          </div>
+        )}
+
+        {visible.map(o => {
+          const s = STATUS[o.status] ?? STATUS.Processing;
+          return (
+            <Card key={o.id}>
+              <div className="flex gap-4 p-4">
+                <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-slate-50">
+                  <img src={o.img} alt={o.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold truncate leading-tight" style={{ color: "#143109" }}>{o.name}</p>
+                      <p className="text-xs mt-0.5" style={{ color: "rgba(31,41,55,0.4)" }}>{o.variant}</p>
+                    </div>
+                    <span
+                      className="shrink-0 flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold"
+                      style={{ background: s.bg, color: s.text }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.dot }} />
+                      {o.status}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between mt-3">
+                    <div>
+                      <p className="text-[11px]" style={{ color: "rgba(31,41,55,0.4)" }}>#{o.id} · {o.date}</p>
+                      <p className="text-sm font-extrabold mt-0.5" style={{ color: "#143109" }}>{o.amount}</p>
+                    </div>
+                    <button
+                      className="flex items-center gap-1 text-xs font-semibold transition-opacity hover:opacity-70"
+                      style={{ color: "#143109" }}
+                    >
+                      Details
+                      <span className="material-symbols-outlined text-[13px]">arrow_forward</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          );
+        })}
+      </div>
+
+      {visible.length > 0 && (
+        <button
+          className="w-full mt-4 py-3 rounded-xl text-sm font-semibold transition-all"
+          style={{ border: "1px solid rgba(20,49,9,0.12)", color: "rgba(20,49,9,0.5)", background: "#fff" }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = "rgba(20,49,9,0.3)"; e.currentTarget.style.color = "#143109"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = "rgba(20,49,9,0.12)"; e.currentTarget.style.color = "rgba(20,49,9,0.5)"; }}
+        >
+          Load more
+        </button>
+      )}
+
+    </div>
+  );
+}
