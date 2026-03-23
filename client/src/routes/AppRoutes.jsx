@@ -29,12 +29,20 @@ import Pricing from "../pages/landing/pricing";
 import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 import Otp from "../pages/auth/Otp";
+import Pricing from "../pages/landing/pricing";
+import Settings from "../pages/settings-page/settings";
+import EditProfile from "../components/settings/common-components/edit-profile";
+import ResetPassword from "../components/settings/common-components/reset-password";
+import Notification from "../components/settings/common-components/notification";
+import MyOrders from "../components/settings/role-based-component/user-role-based-components/my-orders";
+import SavedAddress from "../components/settings/role-based-component/user-role-based-components/saved-address";
+import Wishlist from "../components/settings/role-based-component/user-role-based-components/wishlist";
+import ManageProducts from "../components/settings/role-based-component/shop-owner-components/manage-products";
+import SalesAnalytics from "../components/settings/role-based-component/shop-owner-components/sales-analytics";
+import ShopProfile from "../components/settings/role-based-component/shop-owner-components/shop-profile";
 
-// Route Guards
-import { ProtectedRoute, PublicOnlyRoute } from "../components/auth/ProtectedRoutes";
-
-// Protected pages (create these as you build the app)
-// import Dashboard from "../pages/dashboard/Dashboard";
+/* Create-shop flow */
+import CreateShop from "../pages/create-shop/CreateShop";
 
 const AppRoutes = () => {
     return (
@@ -54,6 +62,21 @@ const AppRoutes = () => {
             {/* ── Protected Routes (redirect to /login if not logged in) ───── */}
             <Route element={<ProtectedRoute />}>
                 {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+                <Route path="/create-shop" element={<CreateShop />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="edit-profile" element={<EditProfile />} />
+                <Route path="reset-password" element={<ResetPassword />} />
+                <Route path="notifications" element={<Notification />} />
+                
+                <Route path="my-orders" element={<MyOrders />} />
+                <Route path="wishlist" element={<Wishlist />} />
+                <Route path="saved-address" element={<SavedAddress />} />
+                
+                <Route path="manage-products" element={<ManageProducts />} />
+                <Route path="sales-analytics" element={<SalesAnalytics />} />
+                <Route path="shop-profile" element={<ShopProfile />} />
+
+
                 {/* Add more protected routes here */}
             </Route>
 

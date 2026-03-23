@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import api from "../../service/api";
+import api from "../../service/api"
 import useRazorpay from "../../hooks/useRazorpay";
-
+import { useNavigate } from "react-router-dom";
 const Landing = () => {
+    const navigate = useNavigate();
+
     const [plans, setPlans] = useState([]);
     const [billing, setBilling] = useState("monthly");
 

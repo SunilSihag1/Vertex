@@ -113,7 +113,7 @@ const userSchema = new mongoose.Schema(
         name: {
             type:     String,
             required: true,
-            trim:     true,
+            trim: true
         },
 
         email: {
@@ -121,14 +121,16 @@ const userSchema = new mongoose.Schema(
             required:  true,
             unique:    true,
             lowercase: true,
-            index:     true,
+            index: true
         },
 
         password: {
             type:      String,
             minlength: 8,
-            required:  function () { return this.authProvider === "local"; },
-            select:    false,  // never returned in queries unless explicitly asked
+            required: function () {
+                return this.authProvider === "local";
+            },
+            select: false
         },
 
         authProvider: {
