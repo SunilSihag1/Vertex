@@ -1,16 +1,27 @@
+/**
+ * main.jsx
+ * Location: client/src/main.jsx
+ *
+ * Change: Wrap app with <AuthProvider> so useAuth() works everywhere.
+ * AuthProvider must be INSIDE BrowserRouter (it uses useLocation internally).
+ */
+
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import { AuthProvider } from "./context/AuthContext";
 import "./index.css";
 import { initTheme } from "./utils/theme";
 
 initTheme();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>
+    <React.StrictMode>
+        <BrowserRouter>
+            <AuthProvider>
+                <App />
+            </AuthProvider>
+        </BrowserRouter>
+    </React.StrictMode>
 );

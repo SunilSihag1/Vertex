@@ -1,92 +1,72 @@
 import { useEffect, useState } from "react";
-import api from "../../service/api";
-import { useNavigate } from "react-router-dom";
-const Landing = () => {
+import api from "../../service/api"
+import useRazorpay from "../../hooks/useRazorpay";
 
-    const navigate = useNavigate();
+const Landing = () => {
     const [plans, setPlans] = useState([]);
     const [billing, setBilling] = useState("monthly");
 
-    const getRazorpayKey = async () => {
+    // ── All payment logic lives in this hook ──────────────────────────────────
+    const {
+        initiatePurchase,
+        isLoading: isPaymentLoading,
+        error: paymentError,
+        isSuccess: paymentSuccess,
+        subscription,
+        reset: resetPayment,
+    } = useRazorpay();
 
-        const res = await api.get("/subscription/razorpay-key");
-
-        return res.data.key;
-
-    };
-
-    const handleSelectPlan = async (planId) => {
-
-        const res = await api.post("/subscription/create-order", {
-            planId,
-            billing
-        });
-
-        const order = res.data.order;
-
-        const razorpaykey = await getRazorpayKey();
-
-        const options = {
-
-            key: razorpaykey,
-
-            order_id: order.id,
-            amount: order.amount,
-            currency: order.currency,
-
-            name: "My Bizz",
-
-            handler: async function (response) {
-                await api.post("/subscription/verify-payment", response);
-                const selectedPlan = plans.find(p => p._id === planId);
-                const planKey = selectedPlan?.name?.toLowerCase() ?? "basic";
-                navigate(`/create-shop?plan=${planKey}`);
-            },
-
-            theme: {
-                color: "#143109"
-            }
-
-        };
-
-        const rzp = new window.Razorpay(options);
-
-        // ✅ ERROR HANDLER YAHAN HOGA
-        rzp.on("payment.failed", function (response) {
-
-            alert("Payment Failed: " + response.error.description);
-
-            fetch("/api/payment/payment-failed", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    razorpay_order_id: response.error.metadata.order_id,
-                    error_code: response.error.code,
-                    error_reason: response.error.description
-                })
-            });
-
-        });
-
-        rzp.open();
-    };
+    // ── Fetch plans on mount ──────────────────────────────────────────────────
     useEffect(() => {
         const fetchPlans = async () => {
             try {
                 const res = await api.get("/plans");
                 setPlans(res.data.data);
             } catch (err) {
-                console.error(err);
+                console.error("Failed to fetch plans:", err);
             }
         };
-
         fetchPlans();
     }, []);
+
+    const handleSelectPlan = (planId) => {
+        resetPayment();              // clear any previous error/success
+        initiatePurchase(planId, billing);
+    };
+
+
+
     return (
         <>
             <main>
+                {/* {
+                    paymentError && (
+                        <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-300 text-sm text-center">
+                            {paymentError}
+                            <button onClick={resetPayment} className="ml-3 underline">Dismiss</button>
+                        </div>
+                    )
+                }
+
+                SUCCESS BANNER — show after subscription activates:
+
+                {
+                    paymentSuccess && subscription && (
+                        <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-green-700 dark:text-green-300 text-sm text-center">
+                            ✓ Subscription activated! Your plan is active until {new Date(subscription.end_date).toLocaleDateString()}.
+                        </div>
+                    )
+                }
+
+                LOADING STATE on plan buttons — add`disabled` + spinner:
+
+                <button
+                    onClick={() => handleSelectPlan(plans[0]._id)}
+                    disabled={isPaymentLoading}
+                    className="... disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                    {isPaymentLoading ? "Processing..." : "Start Free Trial"}
+                </button> */}
 
                 <section className="relative pt-20 pb-20 md:pt-14 md:pb-14 overflow-hidden bg-background-light dark:bg-background-dark">
                     <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-sage/20 rounded-full blur-[120px]"></div>

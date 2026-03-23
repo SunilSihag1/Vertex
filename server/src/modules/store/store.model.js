@@ -42,7 +42,7 @@ const storeSchema = new mongoose.Schema(
             default: "Asia/Kolkata",
         },
     },
-    { timestamps: true }
+    { timestamps: true } // automatically adds createdAt & updatedAt
 );
 
 export default mongoose.model("Store", storeSchema);

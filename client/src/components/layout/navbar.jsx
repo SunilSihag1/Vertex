@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { setTheme } from "../../utils/theme";
 import { useNavigate } from "react-router-dom";
 import { Settings } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 const SunIcon = () => (
     <svg className="w-5 h-5 text-primary dark:text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -45,24 +46,18 @@ const ThemeSwitcher = () => {
     );
 };
 
+
+
 const Navbar = () => {
     const navigate = useNavigate();
     const [hovered, setHovered] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { isAuthenticated, logout } = useAuth();
 
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-            setIsLoggedIn(true);
-        }
-    }, []);
 
-    const handleLogout = () => {
-        localStorage.removeItem("accessToken");
-        setIsLoggedIn(false);
-        navigate("/");
-        window.location.reload();
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login");
     };
 
     return (
@@ -117,7 +112,7 @@ const Navbar = () => {
                         <Settings size={18} />
                     </button>
 
-                    {!isLoggedIn ? (
+                    {!isAuthenticated ? (
                         <a
                             onClick={() => navigate("/login")}
                             className="cursor-pointer hidden min-[950px]:block px-5 py-2.5 text-slate-700 dark:text-slate-400 font-bold text-sm transition-all duration-300 hover:text-primary dark:hover:text-sage hover:scale-105"
@@ -179,7 +174,7 @@ const Navbar = () => {
                         Settings
                     </a>
 
-                    {!isLoggedIn ? (
+                    {!isAuthenticated ? (
                         <a
                             onClick={() => {
                                 navigate("/login");
