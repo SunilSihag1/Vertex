@@ -24,11 +24,11 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Pages
-import Landing    from "../pages/landing/landing";
-import Pricing    from "../pages/landing/pricing";
-import Login      from "../pages/auth/Login";
-import Signup     from "../pages/auth/Signup";
-import Otp        from "../pages/auth/Otp";
+import Landing from "../pages/landing/landing";
+import Pricing from "../pages/landing/pricing";
+import Login from "../pages/auth/Login";
+import Signup from "../pages/auth/Signup";
+import Otp from "../pages/auth/Otp";
 
 // Route Guards
 import { ProtectedRoute, PublicOnlyRoute } from "../components/auth/ProtectedRoutes";
@@ -41,13 +41,13 @@ const AppRoutes = () => {
         <Routes>
 
             {/* ── Public Routes (accessible to everyone) ──────────────────── */}
-            <Route path="/"           element={<Landing />} />
-            <Route path="/pricing"    element={<Pricing />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/verify-otp" element={<Otp />} />
 
             {/* ── Public Only Routes (redirect to / if already logged in) ─── */}
             <Route element={<PublicOnlyRoute />}>
-                <Route path="/login"  element={<Login />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
             </Route>
 
