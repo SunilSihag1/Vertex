@@ -55,10 +55,10 @@ const Navbar = () => {
     const { isAuthenticated, logout } = useAuth();
 
 
-const handleLogout = async () => {
-    await logout();
-    navigate("/login");
-};
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login");
+    };
 
     return (
         <header className="fixed top-0 z-50 w-full bg-white dark:bg-background-dark backdrop-blur-xl border-b border-slate-300 dark:border-slate-800/50">
