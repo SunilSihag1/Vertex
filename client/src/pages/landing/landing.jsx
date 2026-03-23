@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import api from "../../service/api"
+import api from "../../service/api";
+import { useNavigate } from "react-router-dom";
 const Landing = () => {
 
-
+    const navigate = useNavigate();
     const [plans, setPlans] = useState([]);
     const [billing, setBilling] = useState("monthly");
 
@@ -36,11 +37,10 @@ const Landing = () => {
             name: "My Bizz",
 
             handler: async function (response) {
-
                 await api.post("/subscription/verify-payment", response);
-
-                alert("Subscription activated");
-
+                const selectedPlan = plans.find(p => p._id === planId);
+                const planKey = selectedPlan?.name?.toLowerCase() ?? "basic";
+                navigate(`/create-shop?plan=${planKey}`);
             },
 
             theme: {

@@ -1,22 +1,48 @@
 import mongoose from "mongoose";
 
-const storeSchema = new mongoose.Schema({
-    _id: ObjectId,
+const storeSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+        },
 
-    name: String,
-    ownerId: { type: ObjectId, ref: "User", index: true },
+        tagline: {
+            type: String,
+            trim: true,
+            default: "",
+        },
 
-    status: {
-        type: String,
-        enum: ["trial", "active", "expired", "suspended"],
-        default: "trial"
+        category: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+
+        ownerId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            index: true,
+        },
+
+        status: {
+            type: String,
+            enum: ["trial", "active", "expired", "suspended"],
+            default: "trial",
+        },
+
+        currency: {
+            type: String,
+            default: "INR",
+        },
+
+        timezone: {
+            type: String,
+            default: "Asia/Kolkata",
+        },
     },
+    { timestamps: true }
+);
 
-    currency: { type: String, default: "INR" },
-    timezone: String,
-
-    createdAt,
-    updatedAt
-})
-
-export default mongoose.model("store", storeSchema);
+export default mongoose.model("Store", storeSchema);
