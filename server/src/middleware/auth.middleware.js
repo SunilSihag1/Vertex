@@ -9,61 +9,46 @@ if (!ACCESS_SECRET) {
 
 const authMiddleware = async (req, res, next) => {
     try {
-
         const authHeader = req.headers.authorization;
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401).json({
-                message: "Access token missing"
-            });
+            return res.status(401).json({ message: "Access token missing" });
         }
 
         const token = authHeader.split(" ")[1];
 
         let decoded;
-
         try {
             decoded = jwt.verify(token, ACCESS_SECRET);
         } catch {
-            return res.status(401).json({
-                message: "Invalid or expired token"
-            });
+            return res.status(401).json({ message: "Invalid or expired token" });
         }
 
-        //  Fetch user from DB (never trust JWT blindly)
-        const user = await User.findById(decoded.userId);
+        const user = await User.findById(decoded.userId).select("email role isActive lockUntil");
 
         if (!user) {
-            return res.status(401).json({
-                message: "User not found"
-            });
+            return res.status(401).json({ message: "User not found" });
         }
 
         if (!user.isActive) {
-            return res.status(403).json({
-                message: "Account disabled"
-            });
+            return res.status(403).json({ message: "Account disabled" });
         }
 
         if (user.lockUntil && user.lockUntil > Date.now()) {
-            return res.status(423).json({
-                message: "Account locked"
-            });
+            return res.status(423).json({ message: "Account locked" });
         }
 
-        // Attach safe data
         req.user = {
-            userId: user._id,
-            email: user.email,
+            userId:  user._id,
+            email:   user.email,
+            role:    user.role,
             storeId: decoded.storeId
         };
 
         next();
 
-    } catch (err) {
-        return res.status(500).json({
-            message: "Authentication error"
-        });
+    } catch {
+        return res.status(500).json({ message: "Authentication error" });
     }
 };
 

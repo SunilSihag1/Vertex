@@ -35,6 +35,13 @@ const userSchema = new mongoose.Schema(
             type: String
         },
 
+        role: {
+            type: String,
+            enum: ["user", "shop-owner", "admin"],
+            default: "user",
+            index: true
+        },
+
         isVerified: {
             type: Boolean,
             default: false
@@ -66,8 +73,8 @@ const userSchema = new mongoose.Schema(
             type: String,
             select: false
         }
-    } // ✅ yaha object close hoga
-);   // ✅ fir schema close hoga
+    }
+);
 
 const User = mongoose.model("User", userSchema);
 export default User;
