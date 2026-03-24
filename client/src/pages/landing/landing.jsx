@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../service/api";
 import { useNavigate } from "react-router-dom";
+
 const Landing = () => {
 
     const navigate = useNavigate();
@@ -8,82 +9,124 @@ const Landing = () => {
     const [billing, setBilling] = useState("monthly");
 
     const getRazorpayKey = async () => {
-
         const res = await api.get("/subscription/razorpay-key");
-
         return res.data.key;
+    };
 
+    /**
+     * After a successful payment the backend upgrades the user's role to
+     * "shop-owner" in the database.  The existing access token was issued
+     * BEFORE the role changed, so we must exchange the refresh token for a
+     * new access token that the auth middleware will read the updated role
+     * from the DB — the middleware already reads role from DB, not the JWT,
+     * but the Settings page calls /profile which correctly returns the DB
+     * role.  Refreshing the token is still good practice so any future
+     * role-embedded JWT claim stays consistent.
+     */
+    const refreshAccessToken = async () => {
+        try {
+            const res = await api.post("/auth/refresh");
+            if (res.data?.accessToken) {
+                localStorage.setItem("accessToken", res.data.accessToken);
+            }
+        } catch {
+            // Non-critical — the DB role is already updated.
+            // The user will see the correct role on next profile fetch.
+        }
     };
 
     const handleSelectPlan = async (planId) => {
+        const token = localStorage.getItem("accessToken");
 
-        const res = await api.post("/subscription/create-order", {
-            planId,
-            billing
-        });
+        if (!token) {
+            navigate("/login");
+            return;
+        }
 
-        const order = res.data.order;
+        try {
+            const [orderRes, razorpayKey] = await Promise.all([
+                api.post(
+                    "/subscription/create-order",
+                    { planId, billing },
+                    { headers: { Authorization: `Bearer ${token}` } }
+                ),
+                getRazorpayKey()
+            ]);
 
-        const razorpaykey = await getRazorpayKey();
+            const order = orderRes.data.order;
 
-        const options = {
+            const options = {
+                key: razorpayKey,
+                order_id: order.id,
+                amount: order.amount,
+                currency: order.currency,
+                name: "Vertex",
 
-            key: razorpaykey,
+                handler: async (response) => {
+                    try {
+                        await api.post(
+                            "/subscription/verify-payment",
+                            response,
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
 
-            order_id: order.id,
-            amount: order.amount,
-            currency: order.currency,
+                        // Refresh token so subsequent requests reflect the
+                        // updated role stored in the DB
+                        await refreshAccessToken();
 
-            name: "My Bizz",
+                        const selectedPlan = plans.find(p => p._id === planId);
+                        const planKey = selectedPlan?.name?.toLowerCase() ?? "basic";
+                        navigate(`/create-shop?plan=${planKey}`);
 
-            handler: async function (response) {
-                await api.post("/subscription/verify-payment", response);
-                const selectedPlan = plans.find(p => p._id === planId);
-                const planKey = selectedPlan?.name?.toLowerCase() ?? "basic";
-                navigate(`/create-shop?plan=${planKey}`);
-            },
-
-            theme: {
-                color: "#143109"
-            }
-
-        };
-
-        const rzp = new window.Razorpay(options);
-
-        // ✅ ERROR HANDLER YAHAN HOGA
-        rzp.on("payment.failed", function (response) {
-
-            alert("Payment Failed: " + response.error.description);
-
-            fetch("/api/payment/payment-failed", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
+                    } catch {
+                        alert("Payment verified but session update failed. Please log out and log back in.");
+                    }
                 },
-                body: JSON.stringify({
-                    razorpay_order_id: response.error.metadata.order_id,
-                    error_code: response.error.code,
-                    error_reason: response.error.description
-                })
+
+                theme: { color: "#143109" }
+            };
+
+            const rzp = new window.Razorpay(options);
+
+            rzp.on("payment.failed", async (response) => {
+                alert("Payment Failed: " + response.error.description);
+
+                try {
+                    await api.post(
+                        "/subscription/payment-failed",
+                        {
+                            razorpay_order_id: response.error.metadata.order_id,
+                            error_code:        response.error.code,
+                            error_reason:      response.error.description
+                        },
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                } catch {
+                    // Swallow — failure is already logged client-side
+                }
             });
 
-        });
+            rzp.open();
 
-        rzp.open();
+        } catch (err) {
+            const message = err.response?.data?.message ?? "Failed to initiate payment";
+            alert(message);
+        }
     };
+
     useEffect(() => {
         const fetchPlans = async () => {
             try {
                 const res = await api.get("/plans");
                 setPlans(res.data.data);
             } catch (err) {
-                console.error(err);
+                console.error("Failed to load plans:", err);
             }
         };
 
         fetchPlans();
     }, []);
+
     return (
         <>
             <main>
@@ -152,7 +195,7 @@ const Landing = () => {
                                         </div>
                                         <div className="h-4 w-32 bg-slate-200 rounded-full"></div>
                                     </div>
-                                    <div className="p-4 bg-white" data-alt="Dashboard Hero Image"
+                                    <div className="p-4 bg-white"
                                         style={{
                                             backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDgikHaY7hFTfMEKgLF5fdS5G0XJFwoiCVSimYibdYfT4XkCPL2bTz2-ssvgCLwp_4tv-N5owRBzGY3-T5Dgax96IKIxOTw9Jt1MNMX0QOkiVTuTRVDE3F8xrszjphivu64rFj6yeYLqZiGeVDkFX3tqDZ2033L5eQ_R7mEIh0sMbEzh6KJWa1nkidVkbz2zLx5FqGLEs3f6fh0OzI94O4klE4ORZMocUkSsDVKlgqaG7SMGuZqkn4LDkXwxoEUxd6nJWAYRuHgHjk')",
                                             backgroundSize: "cover",
@@ -182,60 +225,41 @@ const Landing = () => {
                             <div className="pb-2">
                                 <a className="group text-primary dark:text-sage font-bold flex items-center gap-2 text-lg" href="#">
                                     View all modules
-                                    <span
-                                        className="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_right_alt</span>
+                                    <span className="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_right_alt</span>
                                 </a>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-                            <div
-                                className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200  dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
-                                <div
-                                    className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150">
-                                </div>
-                                <div
-                                    className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
+                            <div className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200 dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
+                                <div className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150"></div>
+                                <div className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
                                     <span className="material-symbols-outlined text-primary text-3xl">inventory_2</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Stock Intelligence</h3>
-                                <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">Predictive restocking and multi-channel
-                                    synchronization powered by neural supply chains.</p>
-                                <div
-                                    className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 transition-opacity">
+                                <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">Predictive restocking and multi-channel synchronization powered by neural supply chains.</p>
+                                <div className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 transition-opacity">
                                     <a href="#">Explore module</a> <span className="material-symbols-outlined text-base">chevron_right</span>
                                 </div>
                             </div>
-                            <div
-                                className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200 dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
-                                <div
-                                    className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary rounded-full transition-all group-hover:scale-150">
-                                </div>
-                                <div
-                                    className="w-16 h-16 bg-gradient-to-br from-primary to-primary rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-primary/10 relative z-10">
+                            <div className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200 dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
+                                <div className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary rounded-full transition-all group-hover:scale-150"></div>
+                                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-primary/10 relative z-10">
                                     <span className="material-symbols-outlined text-sage text-3xl">storefront</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Store Experience</h3>
-                                <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">Next-gen storefront builder with headless
-                                    capabilities and 0.2s load times for maximum conversion.</p>
-                                <div
-                                    className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 transition-opacity">
+                                <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">Next-gen storefront builder with headless capabilities and 0.2s load times for maximum conversion.</p>
+                                <div className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 transition-opacity">
                                     <a href="#">Explore module</a> <span className="material-symbols-outlined text-base">chevron_right</span>
                                 </div>
                             </div>
-                            <div
-                                className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200  dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
-                                <div
-                                    className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150">
-                                </div>
-                                <div
-                                    className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
+                            <div className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200 dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
+                                <div className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150"></div>
+                                <div className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
                                     <span className="material-symbols-outlined text-primary text-3xl">monitoring</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Unified Analytics</h3>
-                                <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">A single source of truth for revenue,
-                                    customer lifetime value, and operational overheads.</p>
-                                <div
-                                    className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 transition-opacity">
+                                <p className="text-slate-500 dark:text-primary leading-relaxed font-medium">A single source of truth for revenue, customer lifetime value, and operational overheads.</p>
+                                <div className="mt-8 flex items-center gap-2 text-primary font-bold text-sm opacity-0 max-[768px]:opacity-100 group-hover:opacity-100 transition-opacity">
                                     <a href="#">Explore module</a> <span className="material-symbols-outlined text-base">chevron_right</span>
                                 </div>
                             </div>
@@ -250,50 +274,40 @@ const Landing = () => {
                     <div className="max-w-7xl mx-auto px-6 relative z-10">
                         <div className="grid lg:grid-cols-2 gap-20 items-center">
                             <div>
-                                <span className="text-sage font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Deep
-                                    Insights</span>
+                                <span className="text-sage font-black text-[10px] tracking-[0.4em] uppercase mb-6 block">Deep Insights</span>
                                 <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tight font-display">
                                     Retail clarity <br /><span className="text-sage">without the noise.</span></h2>
                                 <p className="text-sage/70 text-lg leading-relaxed mb-12 font-medium">
-                                    Replace spreadsheets with living data. Our dashboard aggregates every signal from your
-                                    supply chain into actionable growth strategies.
+                                    Replace spreadsheets with living data. Our dashboard aggregates every signal from your supply chain into actionable growth strategies.
                                 </p>
                                 <div className="grid gap-6">
-                                    <div
-                                        className="flex items-center gap-5 p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 group hover:bg-white/10 transition-colors">
+                                    <div className="flex items-center gap-5 p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 group hover:bg-white/10 transition-colors">
                                         <div className="w-14 h-14 bg-sage/10 rounded-xl flex items-center justify-center text-sage">
                                             <span className="material-symbols-outlined">analytics</span>
                                         </div>
                                         <div>
                                             <h4 className="text-white font-bold text-lg">Predictive Forecasting</h4>
-                                            <p className="text-sage/60 text-sm">Know your next month's sales today with 94%
-                                                accuracy.</p>
+                                            <p className="text-sage/60 text-sm">Know your next month's sales today with 94% accuracy.</p>
                                         </div>
                                     </div>
-                                    <div
-                                        className="flex items-center gap-5 p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 group hover:bg-white/10 transition-colors">
-                                        <div
-                                            className="w-14 h-14 bg-red-400/10 rounded-xl flex items-center justify-center text-red-400">
+                                    <div className="flex items-center gap-5 p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 group hover:bg-white/10 transition-colors">
+                                        <div className="w-14 h-14 bg-red-400/10 rounded-xl flex items-center justify-center text-red-400">
                                             <span className="material-symbols-outlined">radar</span>
                                         </div>
                                         <div>
                                             <h4 className="text-white font-bold text-lg">Real-time Anomaly Detection</h4>
-                                            <p className="text-sage/60 text-sm">Instant alerts on shipping delays or inventory
-                                                shrinkage.</p>
+                                            <p className="text-sage/60 text-sm">Instant alerts on shipping delays or inventory shrinkage.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="relative">
                                 <div className="absolute -inset-10 bg-sage/5 rounded-full blur-[80px]"></div>
-                                <div
-                                    className="glass-card rounded-[2rem] p-4 border-white/20 shadow-2xl relative z-10 overflow-hidden">
+                                <div className="glass-card rounded-[2rem] p-4 border-white/20 shadow-2xl relative z-10 overflow-hidden">
                                     <div className="absolute inset-0 grainy-bg opacity-10"></div>
                                     <div className="aspect-video bg-cover bg-center rounded-2xl"
                                         style={{
-                                            backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDflMkxqgOld8VMuYqpqGww7UEbPFBwnWlNPlcHPY-5UQmZzgo6X79pNPZi_pjgYagbwnD0_PfRU-tybG4D7ZuB0Jr2Cs5JlIHLVxC-iIp_y6zOecqvFQnnElSX7eOprJJ9rDs4Zh8w41F5lyObHhcA03JxAZr6Ds14R8_M75a7FldAwmDS4iU4muxtq0JDXLawiEqMpHnGilmqO1bADP4P8Wvs_T1Bs4kzj9Gp7XNrZnj9NwJVzpjeonWCCvlojvZc8uym_7gF4Ps')",
-                                            backgroundSize: "cover",
-                                            backgroundPosition: "center"
+                                            backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDflMkxqgOld8VMuYqpqGww7UEbPFBwnWlNPlcHPY-5UQmZzgo6X79pNPZi_pjgYagbwnD0_PfRU-tybG4D7ZuB0Jr2Cs5JlIHLVxC-iIp_y6zOecqvFQnnElSX7eOprJJ9rDs4Zh8w41F5lyObHhcA03JxAZr6Ds14R8_M75a7FldAwmDS4iU4muxtq0JDXLawiEqMpHnGilmqO1bADP4P8Wvs_T1Bs4kzj9Gp7XNrZnj9NwJVzpjeonWCCvlojvZc8uym_7gF4Ps')"
                                         }}>
                                         <div className="w-full h-full bg-primary/20 backdrop-blur-[2px]"></div>
                                     </div>
@@ -314,113 +328,72 @@ const Landing = () => {
                             </p>
                         </div>
 
-
                         <div className="flex justify-center mb-14">
                             <div className="flex items-center bg-slate-100 dark:bg-primary border border-slate-200 dark:border-slate-500 rounded-full p-1">
-
                                 <button
                                     onClick={() => setBilling("monthly")}
-                                    className={`px-6 py-2 rounded-full text-sm font-semibold transition cursor-pointer ${billing === "monthly"
-                                        ? "bg-white dark:bg-sage text-primary"
-                                        : "text-slate-500 dark:text-slate-300"
-                                        }`}
+                                    className={`px-6 py-2 rounded-full text-sm font-semibold transition cursor-pointer ${billing === "monthly" ? "bg-white dark:bg-sage text-primary" : "text-slate-500 dark:text-slate-300"}`}
                                 >
                                     Monthly
                                 </button>
-
                                 <button
                                     onClick={() => setBilling("yearly")}
-                                    className={`px-6 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2 cursor-pointer ${billing === "yearly"
-                                        ? "bg-white dark:bg-sage text-primary"
-                                        : "text-slate-500 dark:text-slate-300"
-                                        }`}
+                                    className={`px-6 py-2 rounded-full text-sm font-semibold transition flex items-center gap-2 cursor-pointer ${billing === "yearly" ? "bg-white dark:bg-sage text-primary" : "text-slate-500 dark:text-slate-300"}`}
                                 >
                                     Yearly
-                                    <span className="bg-sage text-primary text-xs px-2 py-0.5 rounded-full">
-                                        Save 20%
-                                    </span>
+                                    <span className="bg-sage text-primary text-xs px-2 py-0.5 rounded-full">Save 20%</span>
                                 </button>
-
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {plans[0] && (
                                 <div className="bg-slate-50 dark:bg-primary border border-slate-100 dark:border-slate-500 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
-                                    <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">
-                                        {plans[0].name}
-                                    </h3>
-
-                                    <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">
-                                        For solo creators
-                                    </p>
-
+                                    <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">{plans[0].name}</h3>
+                                    <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">For solo creators</p>
                                     <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">
                                         ₹{billing === "monthly" ? plans[0].monthlyPrice : plans[0].yearlyPrice}
-                                        <span className="text-slate-400 dark:text-slate-300 text-lg font-normal">
-                                            /{billing === "monthly" ? "month" : "year"}
-                                        </span>
+                                        <span className="text-slate-400 dark:text-slate-300 text-lg font-normal">/{billing === "monthly" ? "month" : "year"}</span>
                                     </div>
-
                                     <ul className="space-y-5 mb-10">
                                         {plans[0].features?.map((feature, i) => (
                                             <li key={i} className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
-                                                <span className="material-symbols-outlined text-sage text-xl">
-                                                    check_circle
-                                                </span>
+                                                <span className="material-symbols-outlined text-sage text-xl">check_circle</span>
                                                 {feature}
                                             </li>
                                         ))}
                                     </ul>
-
                                     <button
                                         onClick={() => handleSelectPlan(plans[0]._id)}
                                         className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white dark:hover:bg-sage/80 transition-all cursor-pointer"
                                     >
-                                        {plans[0].monthlyPrice === 0
-                                            ? "Get Started"
-                                            : `Start ${plans[0].trialDays}-Day Trial`}
+                                        {plans[0].monthlyPrice === 0 ? "Get Started" : `Start ${plans[0].trialDays}-Day Trial`}
                                     </button>
                                 </div>
                             )}
 
                             {plans[1] && (
                                 <div className="bg-primary dark:bg-sage text-white dark:text-primary dark:border dark:border-slate-500 p-10 rounded-[2.5rem] relative shadow-[0_30px_60px_-15px_rgba(20,49,9,0.3)] hover:-translate-y-2 transition-all">
-
                                     <div className="grainy-bg absolute inset-0 opacity-10"></div>
-
                                     {plans[1].isPopular && (
                                         <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-sage dark:bg-primary dark:border dark:border-slate-500 text-primary dark:text-sage text-[10px] font-black px-5 py-1.5 rounded-full uppercase tracking-widest shadow-xl">
                                             Best Value
                                         </div>
                                     )}
-
-                                    <h3 className="text-xl font-bold mb-1 text-sage dark:text-primary">
-                                        {plans[1].name}
-                                    </h3>
-
-                                    <p className="text-sage/60 dark:text-primary/90 text-sm mb-8 font-medium italic">
-                                        For scaling teams
-                                    </p>
-
+                                    <h3 className="text-xl font-bold mb-1 text-sage dark:text-primary">{plans[1].name}</h3>
+                                    <p className="text-sage/60 dark:text-primary/90 text-sm mb-8 font-medium italic">For scaling teams</p>
                                     <div className="text-5xl font-extrabold mb-8 font-display text-white dark:text-primary">
                                         ₹{billing === "monthly" ? plans[1].monthlyPrice : plans[1].yearlyPrice}
-                                        <span className="text-sage/50 dark:text-primary/90 text-lg font-normal">
-                                            /{billing === "monthly" ? "month" : "year"}
-                                        </span>
+                                        <span className="text-sage/50 dark:text-primary/90 text-lg font-normal">/{billing === "monthly" ? "month" : "year"}</span>
                                     </div>
-
                                     <ul className="space-y-5 mb-10">
                                         {plans[1].features?.map((feature, i) => (
                                             <li key={i} className="flex items-center gap-3 font-medium">
-                                                <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">
-                                                    verified
-                                                </span>
+                                                <span className="material-symbols-outlined text-sage dark:text-primary/90 text-xl">verified</span>
                                                 {feature}
                                             </li>
                                         ))}
                                     </ul>
-
                                     <button
                                         onClick={() => handleSelectPlan(plans[1]._id)}
                                         className="shimmer-btn w-full py-4 bg-sage dark:bg-primary text-primary dark:text-sage rounded-full font-bold text-lg shadow-xl shadow-black/20 hover:scale-[1.02] transition-transform cursor-pointer"
@@ -432,32 +405,20 @@ const Landing = () => {
 
                             {plans[2] && (
                                 <div className="bg-slate-50 dark:bg-primary border border-slate-100 dark:border-slate-500 p-10 rounded-3xl transition-all hover:shadow-2xl hover:-translate-y-2">
-                                    <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">
-                                        {plans[2].name}
-                                    </h3>
-
-                                    <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">
-                                        For global operations
-                                    </p>
-
+                                    <h3 className="text-xl font-bold mb-1 text-primary dark:text-sage">{plans[2].name}</h3>
+                                    <p className="text-slate-400 dark:text-slate-300 text-sm mb-8 font-medium italic">For global operations</p>
                                     <div className="text-5xl font-extrabold mb-8 text-primary dark:text-sage font-display">
                                         ₹{billing === "monthly" ? plans[2].monthlyPrice : plans[2].yearlyPrice}
-                                        <span className="text-slate-400 dark:text-slate-300 text-lg font-normal">
-                                            /{billing === "monthly" ? "month" : "year"}
-                                        </span>
+                                        <span className="text-slate-400 dark:text-slate-300 text-lg font-normal">/{billing === "monthly" ? "month" : "year"}</span>
                                     </div>
-
                                     <ul className="space-y-5 mb-10">
                                         {plans[2].features?.map((feature, i) => (
                                             <li key={i} className="flex items-center gap-3 text-slate-500 dark:text-slate-300 font-medium">
-                                                <span className="material-symbols-outlined text-sage text-xl">
-                                                    check_circle
-                                                </span>
+                                                <span className="material-symbols-outlined text-sage text-xl">check_circle</span>
                                                 {feature}
                                             </li>
                                         ))}
                                     </ul>
-
                                     <button
                                         onClick={() => handleSelectPlan(plans[2]._id)}
                                         className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white dark:hover:bg-sage/80 transition-all cursor-pointer"
@@ -466,15 +427,12 @@ const Landing = () => {
                                     </button>
                                 </div>
                             )}
-
                         </div>
                     </div>
                 </section>
 
-
                 <section className="px-6 pb-32">
-                    <div
-                        className="max-w-6xl mx-auto rounded-[3.5rem] p-16 md:p-32 text-center relative overflow-hidden bg-primary shadow-3xl">
+                    <div className="max-w-6xl mx-auto rounded-[3.5rem] p-16 md:p-32 text-center relative overflow-hidden bg-primary shadow-3xl">
                         <div className="grainy-bg absolute inset-0 opacity-10"></div>
                         <div className="absolute top-0 right-0 w-96 h-96 bg-sage/10 blur-[100px] rounded-full"></div>
                         <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 blur-[80px] rounded-full"></div>
@@ -485,23 +443,18 @@ const Landing = () => {
                                 Join the 5,000+ merchants who transitioned from manual chaos to automated growth.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-5 w-full justify-center">
-                                <button
-                                    className="shimmer-btn bg-white text-primary px-12 py-6 rounded-full max-[426px]:rounded-3xl max-[426px]:px-6 font-black text-xl max-[426px]:text-sm hover:scale-105 transition-transform shadow-2xl cursor-pointer
-                                    ">
+                                <button className="shimmer-btn bg-white text-primary px-12 py-6 rounded-full max-[426px]:rounded-3xl max-[426px]:px-6 font-black text-xl max-[426px]:text-sm hover:scale-105 transition-transform shadow-2xl cursor-pointer">
                                     Build My Store
                                 </button>
-                                <button
-                                    className="bg-primary border border-white/20 text-white px-12 py-6 rounded-full max-[426px]:rounded-3xl max-[426px]:px-6 font-bold text-xl max-[426px]:text-sm hover:bg-white/5 transition-colors cursor-pointer">
+                                <button className="bg-primary border border-white/20 text-white px-12 py-6 rounded-full max-[426px]:rounded-3xl max-[426px]:px-6 font-bold text-xl max-[426px]:text-sm hover:bg-white/5 transition-colors cursor-pointer">
                                     Request Pricing
                                 </button>
                             </div>
-                            <p className="text-sage/40 text-sm font-bold uppercase tracking-widest">No credit card required •
-                                Instant setup</p>
+                            <p className="text-sage/40 text-sm font-bold uppercase tracking-widest">No credit card required • Instant setup</p>
                         </div>
                     </div>
                 </section>
-            </main >
-
+            </main>
         </>
     );
 };

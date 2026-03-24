@@ -1,15 +1,64 @@
 import * as paymentService from "./payment.service.js";
 import { verifyRazorpaySignature } from "../../utils/payment.utils.js";
 
-export const verifyPayment = async (req, res) => {
-
+/* =========================
+   CREATE SUBSCRIPTION ORDER
+========================= */
+export const createSubscriptionOrder = async (req, res) => {
     try {
+        const { planId, billing } = req.body;
 
+        if (!planId || !billing) {
+            return res.status(400).json({
+                success: false,
+                message: "planId and billing are required"
+            });
+        }
+
+        if (!["monthly", "yearly"].includes(billing)) {
+            return res.status(400).json({
+                success: false,
+                message: "billing must be 'monthly' or 'yearly'"
+            });
+        }
+
+        // Use the authenticated user's ID — never hardcode
+        const order = await paymentService.createOrder(
+            req.user.userId,
+            planId,
+            billing
+        );
+
+        return res.status(201).json({
+            success: true,
+            order
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+/* =========================
+   VERIFY PAYMENT
+========================= */
+export const verifyPayment = async (req, res) => {
+    try {
         const {
             razorpay_order_id,
             razorpay_payment_id,
             razorpay_signature
         } = req.body;
+
+        if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+            return res.status(400).json({
+                success: false,
+                message: "razorpay_order_id, razorpay_payment_id and razorpay_signature are required"
+            });
+        }
 
         const isValid = verifyRazorpaySignature(
             razorpay_order_id,
@@ -18,18 +67,16 @@ export const verifyPayment = async (req, res) => {
         );
 
         if (!isValid) {
-
             await paymentService.failPayment(
                 razorpay_order_id,
                 "SIGNATURE_VERIFICATION_FAILED",
-                "Payment verification failed"
+                "Payment signature mismatch"
             );
 
             return res.status(400).json({
                 success: false,
                 message: "Payment verification failed"
             });
-
         }
 
         const payment = await paymentService.activatePayment(
@@ -38,90 +85,69 @@ export const verifyPayment = async (req, res) => {
             razorpay_signature
         );
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             payment
         });
 
     } catch (error) {
-
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
-
     }
-
 };
 
-
-
+/* =========================
+   PAYMENT FAILED
+========================= */
 export const paymentFailed = async (req, res) => {
-
     try {
-
         const {
             razorpay_order_id,
             error_code,
             error_reason
         } = req.body;
 
+        if (!razorpay_order_id) {
+            return res.status(400).json({
+                success: false,
+                message: "razorpay_order_id is required"
+            });
+        }
+
         const payment = await paymentService.failPayment(
             razorpay_order_id,
-            error_code,
-            error_reason
+            error_code   ?? "UNKNOWN_ERROR",
+            error_reason ?? "No reason provided"
         );
 
-        res.json({
+        return res.status(200).json({
             success: false,
-            message: "Payment failed",
+            message: "Payment failure recorded",
             payment
         });
 
     } catch (error) {
-
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: error.message
         });
-
     }
-
 };
 
-export const createSubscriptionOrder = async (req, res) => {
+/* =========================
+   GET RAZORPAY KEY
+========================= */
+export const getRazorpayKey = (_req, res) => {
+    const key = process.env.RAZORPAY_KEY_ID;
 
-    try {
-
-        const { planId, billing } = req.body;
-        const UserID = "69a7d0141b2f19af2be24026";
-
-        const order = await paymentService.createOrder(
-            UserID,
-            planId,
-            billing
-        );
-
-        res.json({
-            success: true,
-            order
-        });
-
-    } catch (error) {
-
-        res.status(500).json({
+    if (!key) {
+        return res.status(500).json({
             success: false,
-            message: error.message
+            message: "Razorpay key not configured"
         });
-
     }
 
-};
-
-export const getRazorpayKey = async (req, res) => {
-
-    res.json({
-        key: process.env.RAZORPAY_KEY_ID
-    });
-
+    return res.status(200).json({ key });
 };

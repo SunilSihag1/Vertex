@@ -15,6 +15,12 @@ dotenv.config();
 
 const app = express();
 
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true,
+}));
+
+
 // ── Middleware ─────────────────────────────────────────────────────────────
 app.use(cors());
 app.use(express.json());
