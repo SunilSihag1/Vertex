@@ -3,7 +3,7 @@ const Pricing = () => {
         <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
             <div class="layout-container flex h-full grow flex-col">
                 <main class="px-6 lg:px-40 flex flex-1 justify-center py-12">
-                    <div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+                    <div class="layout-content-container flex flex-col max-w-300 flex-1">
                         <div class="flex flex-col items-center text-center gap-4 mb-12">
                             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 dark:bg-primary/30 text-primary dark:text-accent-green font-bold text-sm">
                                 <span class="material-symbols-outlined text-sm">auto_awesome</span>

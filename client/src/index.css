@@ -7,6 +7,23 @@
   --color-charcoal: #1f2937;
   --color-background-light: #fdfdfb;
   --color-background-dark: #0b1c04;
+  --color-secondary-fixed: #d9eaa3;
+  --color-on-surface: #191c1d;
+  --color-surface-container: #edeeef;
+  --color-outline: #73796e;
+  --color-secondary: #56642b;
+  --color-error: #ba1a1a;
+  --color-surface-variant: #e1e3e4;
+  --color-on-surface-variant: #43483f;
+  --color-surface-container-highest: #e1e3e4;
+  --color-secondary-fixed-dim: #bdce89;
+  --color-surface: #f8f9fa;
+  --color-on-primary-container: #799b68;
+  --color-surface-container-lowest: #ffffff;
+  --color-outline-variant: #c3c8bb;
+  --color-surface-container-high: #e7e8e9;
+  --color-surface-container-low: #f3f4f5;
+  --color-primary-container: #143109;
 
   --font-display: "Plus Jakarta Sans", sans-serif;
   --font-sans: "Inter", sans-serif;

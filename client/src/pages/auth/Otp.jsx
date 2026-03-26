@@ -83,7 +83,7 @@ function Otp() {
     };
 
     return (
-        <main className="flex-grow flex items-center justify-center px-6 py-12 relative z-10">
+        <main className="grow flex items-center justify-center px-6 py-12 relative z-10">
             <div className="w-full max-w-md bg-background-light dark:bg-primary/30 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-300 dark:border-slate-800 p-8 md:p-10 flex flex-col items-center text-center">
                 <div className="w-14 h-14 bg-sage/60 text-primary rounded-full flex items-center justify-center mb-6">
                     <span className="material-symbols-outlined text-3xl font-light">verified_user</span>

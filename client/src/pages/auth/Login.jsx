@@ -122,8 +122,8 @@ function Login() {
 
   return (
     <>
-      <main className="flex-grow flex items-center justify-center p-6 lg:p-12">
-        <div className="w-full max-w-5xl bg-white dark:bg-primary/30 rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[600px]">
+      <main className="grow flex items-center justify-center p-6 lg:p-12">
+        <div className="w-full max-w-5xl bg-white dark:bg-primary/30 rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-150">
           <div className="md:w-5/12 relative bg-primary flex flex-col items-center justify-center p-12 overflow-hidden">
             <div className="absolute inset-0 opacity-20 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
             <div className="absolute -bottom-20 -left-20 size-64 bg-sage/20 rounded-full blur-3xl"></div>
@@ -133,7 +133,7 @@ function Login() {
                 <span className="material-symbols-outlined text-4xl">vitals</span>
               </div>
               <h3 className="text-white text-2xl font-bold">Welcome Back</h3>
-              <p className="text-sage text-sm leading-relaxed max-w-[200px]">Your smart dashboard is ready for your next move.</p>
+              <p className="text-sage text-sm leading-relaxed max-w-50]">Your smart dashboard is ready for your next move.</p>
             </div>
             <div className="mt-12 text-center z-10 hidden md:block">
               <p className="text-sage/60 text-xs uppercase tracking-widest font-bold">My Bizz v1.0</p>
@@ -194,12 +194,12 @@ function Login() {
                 >
 
                   <span className="relative z-10">{loading ? "Logging in..." : "Log In"}</span>
-                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent "></div>
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-linear-to-r from-transparent via-white/10 to-transparent "></div>
                 </button>
                 <div className="relative flex items-center py-2">
-                  <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
-                  <span className="flex-shrink mx-4 text-primary/60 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">or continue with</span>
-                  <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
+                  <div className="grow border-t border-primary/60 dark:border-slate-500"></div>
+                  <span className="shrink mx-4 text-primary/60 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">or continue with</span>
+                  <div className="grow border-t border-primary/60 dark:border-slate-500"></div>
                 </div>
                 {/* <button
                                 type="button"

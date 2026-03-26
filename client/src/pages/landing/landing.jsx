@@ -29,6 +29,13 @@ const Landing = () => {
         fetchPlans();
     }, []);
 
+    const handleSelectPlan = (planId, planName) => {
+        resetPayment();              // clear any previous error/success
+        initiatePurchase(planId, billing, planName);
+    };
+
+
+
     return (
         <>
             <main>
@@ -90,7 +97,7 @@ const Landing = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="relative lg:h-[600px] flex items-center justify-center">
+                        <div className="relative lg:h-150 flex items-center justify-center">
                             <div className="absolute top-10 -right-4 z-20 float-1">
                                 <div className="glass-card p-4 rounded-2xl shadow-2xl w-48 border-l-4 border-l-primary">
                                     <div className="flex items-center gap-3 mb-2">
@@ -132,7 +139,7 @@ const Landing = () => {
                                             backgroundPosition: "center"
                                         }}
                                     >
-                                        <div className="aspect-[4/3] flex items-center justify-center bg-white/40 backdrop-blur-[2px] rounded-xl border border-white/40">
+                                        <div className="aspect-4/3 flex items-center justify-center bg-white/40 backdrop-blur-[2px] rounded-xl border border-white/40">
                                             <span className="material-symbols-outlined text-primary/10 text-8xl">data_exploration</span>
                                         </div>
                                     </div>
@@ -294,7 +301,7 @@ const Landing = () => {
                                         ))}
                                     </ul>
                                     <button
-                                        onClick={() => handleSelectPlan(plans[0]._id)}
+                                        onClick={() => handleSelectPlan(plans[0]._id, plans[0].name)}
                                         className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white dark:hover:bg-sage/80 transition-all cursor-pointer"
                                     >
                                         {plans[0].monthlyPrice === 0 ? "Get Started" : `Start ${plans[0].trialDays}-Day Trial`}
@@ -325,7 +332,7 @@ const Landing = () => {
                                         ))}
                                     </ul>
                                     <button
-                                        onClick={() => handleSelectPlan(plans[1]._id)}
+                                        onClick={() => handleSelectPlan(plans[1]._id, plans[1].name)}
                                         className="shimmer-btn w-full py-4 bg-sage dark:bg-primary text-primary dark:text-sage rounded-full font-bold text-lg shadow-xl shadow-black/20 hover:scale-[1.02] transition-transform cursor-pointer"
                                     >
                                         {`Start ${plans[1].trialDays}-Day Trial`}
@@ -350,7 +357,7 @@ const Landing = () => {
                                         ))}
                                     </ul>
                                     <button
-                                        onClick={() => handleSelectPlan(plans[2]._id)}
+                                        onClick={() => handleSelectPlan(plans[2]._id, plans[2].name)}
                                         className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white dark:hover:bg-sage/80 transition-all cursor-pointer"
                                     >
                                         Talk to Sales
