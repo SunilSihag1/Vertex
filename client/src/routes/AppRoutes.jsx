@@ -29,7 +29,6 @@ import Pricing from "../pages/landing/pricing";
 import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 import Otp from "../pages/auth/Otp";
-import Pricing from "../pages/landing/pricing";
 import Settings from "../pages/settings-page/settings";
 import EditProfile from "../components/settings/common-components/edit-profile";
 import ResetPassword from "../components/settings/common-components/reset-password";
@@ -40,6 +39,8 @@ import Wishlist from "../components/settings/role-based-component/user-role-base
 import ManageProducts from "../components/settings/role-based-component/shop-owner-components/manage-products";
 import SalesAnalytics from "../components/settings/role-based-component/shop-owner-components/sales-analytics";
 import ShopProfile from "../components/settings/role-based-component/shop-owner-components/shop-profile";
+import { PublicOnlyRoute } from "../components/auth/ProtectedRoutes";
+import { ProtectedRoute } from "../components/auth/ProtectedRoutes";
 
 /* Create-shop flow */
 import CreateShop from "../pages/create-shop/CreateShop";
@@ -64,24 +65,24 @@ const AppRoutes = () => {
                 {/* <Route path="/dashboard" element={<Dashboard />} /> */}
                 <Route path="/create-shop" element={<CreateShop />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="edit-profile" element={<EditProfile />} />
-                <Route path="reset-password" element={<ResetPassword />} />
-                <Route path="notifications" element={<Notification />} />
+                <Route path="settings/edit-profile" element={<EditProfile />} />
+                <Route path="settings/reset-password" element={<ResetPassword />} />
+                <Route path="settings/notifications" element={<Notification />} />
                 
-                <Route path="my-orders" element={<MyOrders />} />
-                <Route path="wishlist" element={<Wishlist />} />
-                <Route path="saved-address" element={<SavedAddress />} />
+                <Route path="settings/my-orders" element={<MyOrders />} />
+                <Route path="settings/wishlist" element={<Wishlist />} />
+                <Route path="settings/saved-address" element={<SavedAddress />} />
                 
-                <Route path="manage-products" element={<ManageProducts />} />
-                <Route path="sales-analytics" element={<SalesAnalytics />} />
-                <Route path="shop-profile" element={<ShopProfile />} />
+                <Route path="settings/manage-products" element={<ManageProducts />} />
+                <Route path="settings/sales-analytics" element={<SalesAnalytics />} />
+                <Route path="settings/shop-profile" element={<ShopProfile />} />
 
 
                 {/* Add more protected routes here */}
             </Route>
 
             {/* ── 404 Fallback ─────────────────────────────────────────────── */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
 
         </Routes>
     );

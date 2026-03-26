@@ -37,7 +37,7 @@ import { useAuth } from "../context/AuthContext";
  * }}
  */
 const useRazorpay = () => {
-    
+
     const navigate = useNavigate();
     const location = useLocation();
     const { user } = useAuth();
@@ -75,7 +75,7 @@ const useRazorpay = () => {
      * @param {string} planId
      * @param {"monthly"|"yearly"} billing
      */
-    const initiatePurchase = useCallback(async (planId, billing) => {
+    const initiatePurchase = useCallback(async (planId, billing, planName) => {
         if (!user) {
             navigate("/login", {
                 state: { from: location },
@@ -103,6 +103,7 @@ const useRazorpay = () => {
 
             // ── Step 3: Open Razorpay modal ────────────────────────────────────
             await new Promise((resolve, reject) => {
+                console.log("Redirecting......................... to create shop.................................")
                 const options = {
                     key,
                     order_id: order.id,
@@ -121,7 +122,6 @@ const useRazorpay = () => {
                     // ── Success handler ────────────────────────────────────────
                     handler: async (response) => {
                         try {
-                            // Verify payment on our server → creates Subscription
                             const verifyRes = await api.post("/subscription/verify-payment", {
                                 razorpay_order_id: response.razorpay_order_id,
                                 razorpay_payment_id: response.razorpay_payment_id,
@@ -130,13 +130,16 @@ const useRazorpay = () => {
 
                             setSubscription(verifyRes.data.subscription);
                             setIsSuccess(true);
+
+                            // ✅ SAFE redirect (no dependency on undefined plans)
+                            const planKey = planName?.toLowerCase() ?? "basic";
+
+                            navigate(`/create-shop?plan=${planKey}`);
+
                             resolve();
 
-                        } catch (verifyErr) {
-                            reject(new Error(
-                                verifyErr.response?.data?.message
-                                ?? "Payment was received but verification failed. Please contact support."
-                            ));
+                        } catch (err) {
+                            reject(new Error("Payment verification failed"));
                         }
                     },
 

@@ -14,18 +14,15 @@
  * Install: npm install cookie-parser
  */
 
-import "dotenv/config";
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
-import connectDB from "./config/db.js";
 import authRoutes from "./modules/auth/auth.routes.js";
-import router from "./modules/plan/plan.routes.js";
 import subscriptionRoutes from "./modules/payment/payment.routes.js";
 import connectDB from "./config/db.js";
 import otpRoutes from "./modules/otp/otp.routes.js";
-
+import router from "./modules/plan/plan.routes.js";
 import profileRoutes from "./modules/profile/profile.routes.js";
 import storeRoutes from "./modules/store/store.routes.js";
 
@@ -57,7 +54,7 @@ connectDB()
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use("/api/auth", authRoutes);
 app.use("/api/otp", otpRoutes);
-app.use("/api/plans", planRoutes);
+app.use("/api/plans", router);
 app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/stores", storeRoutes);

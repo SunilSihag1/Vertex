@@ -20,7 +20,7 @@ import axios from "axios";
 // ─── Instance ─────────────────────────────────────────────────────────────────
 
 const api = axios.create({
-    baseURL:         import.meta.env.VITE_API_URL ?? "http://localhost:5000/api",
+    baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:5000/api",
     withCredentials: true,  // REQUIRED: sends HttpOnly refresh token cookie automatically
 });
 
@@ -28,8 +28,8 @@ const api = axios.create({
 // If multiple requests fail with 401 at the same time (e.g. on page load),
 // we only want ONE refresh call — the rest queue up and wait for it.
 
-let isRefreshing  = false;
-let refreshQueue  = []; // [{ resolve, reject }]
+let isRefreshing = false;
+let refreshQueue = []; // [{ resolve, reject }]
 
 const processQueue = (error, token = null) => {
     refreshQueue.forEach(({ resolve, reject }) => {
@@ -93,7 +93,7 @@ api.interceptors.response.use(
         isRefreshing = true;
 
         try {
-            const res      = await api.post("/auth/refresh");
+            const res = await api.post("/auth/refresh");
             const newToken = res.data.accessToken;
 
             localStorage.setItem("accessToken", newToken);

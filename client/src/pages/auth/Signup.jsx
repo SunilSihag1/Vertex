@@ -80,9 +80,9 @@ const Signup = () => {
     <main className="min-h-screen flex flex-col lg:flex-row">
       <section className="relative hidden lg:flex lg:w-5/12 xl:w-1/2 bg-primary overflow-hidden items-center justify-center p-12">
         <div className="absolute inset-0 grain-overlay pointer-events-none"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-sage/50 rounded-full blur-[120px]"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-sage/50 rounded-full blur-[120px]"></div>
         <div className="relative z-10 w-full max-w-lg space-y-8">
-          <div className="bg-sage blur-l hover:blur-none transition-all rounded-xl p-6 shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform duration-500">
+          <div className="bg-sage blur-l hover:blur-none transition-transform rounded-xl p-6 shadow-2xl transform -rotate-2 hover:rotate-0 duration-500">
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/90 text-sage">
                 <span className="material-symbols-outlined text-3xl font-bold">check_circle</span>
@@ -131,7 +131,7 @@ const Signup = () => {
       </section>
       <section className="flex-1 flex flex-col bg-background-light dark:bg-background-dark">
         <div className="flex-1 flex items-center justify-center p-6 lg:p-16">
-          <div className="w-full max-w-[480px] space-y-8">
+          <div className="w-full max-w-120 space-y-8">
             <div className="space-y-2">
               <h1 className="text-3xl font-black text-primary dark:text-sage tracking-tight lg:text-4xl">Get started for free</h1>
               <p className="text-slate-500 dark:text-slate-400 text-base">No credit card required. Build your store in minutes.</p>
@@ -240,9 +240,9 @@ const Signup = () => {
                 <span className="material-symbols-outlined text-xl">arrow_forward</span>
               </button>
               <div className="relative flex items-center py-2">
-                <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
-                <span className="flex-shrink mx-4 text-primary/60 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">or continue with</span>
-                <div className="flex-grow border-t border-primary/60 dark:border-slate-500"></div>
+                <div className="grow border-t border-primary/60 dark:border-slate-500"></div>
+                <span className="shrink mx-4 text-primary/60 dark:text-slate-400 text-xs font-bold uppercase tracking-wider">or continue with</span>
+                <div className="grow border-t border-primary/60 dark:border-slate-500"></div>
               </div>
               {/* <button
                 type="button"

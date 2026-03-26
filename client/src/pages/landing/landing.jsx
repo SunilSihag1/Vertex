@@ -29,9 +29,9 @@ const Landing = () => {
         fetchPlans();
     }, []);
 
-    const handleSelectPlan = (planId) => {
+    const handleSelectPlan = (planId, planName) => {
         resetPayment();              // clear any previous error/success
-        initiatePurchase(planId, billing);
+        initiatePurchase(planId, billing, planName);
     };
 
 
@@ -97,7 +97,7 @@ const Landing = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="relative lg:h-[600px] flex items-center justify-center">
+                        <div className="relative lg:h-150 flex items-center justify-center">
                             <div className="absolute top-10 -right-4 z-20 float-1">
                                 <div className="glass-card p-4 rounded-2xl shadow-2xl w-48 border-l-4 border-l-primary">
                                     <div className="flex items-center gap-3 mb-2">
@@ -139,7 +139,7 @@ const Landing = () => {
                                             backgroundPosition: "center"
                                         }}
                                     >
-                                        <div className="aspect-[4/3] flex items-center justify-center bg-white/40 backdrop-blur-[2px] rounded-xl border border-white/40">
+                                        <div className="aspect-4/3 flex items-center justify-center bg-white/40 backdrop-blur-[2px] rounded-xl border border-white/40">
                                             <span className="material-symbols-outlined text-primary/10 text-8xl">data_exploration</span>
                                         </div>
                                     </div>
@@ -174,7 +174,7 @@ const Landing = () => {
                                     className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150">
                                 </div>
                                 <div
-                                    className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
+                                    className="w-16 h-16 bg-linear-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
                                     <span className="material-symbols-outlined text-primary text-3xl">inventory_2</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Stock Intelligence</h3>
@@ -191,7 +191,7 @@ const Landing = () => {
                                     className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary rounded-full transition-all group-hover:scale-150">
                                 </div>
                                 <div
-                                    className="w-16 h-16 bg-gradient-to-br from-primary to-primary rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-primary/10 relative z-10">
+                                    className="w-16 h-16 bg-linear-to-br from-primary to-primary rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-primary/10 relative z-10">
                                     <span className="material-symbols-outlined text-sage text-3xl">storefront</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Store Experience</h3>
@@ -208,7 +208,7 @@ const Landing = () => {
                                     className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150">
                                 </div>
                                 <div
-                                    className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
+                                    className="w-16 h-16 bg-linear-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
                                     <span className="material-symbols-outlined text-primary text-3xl">monitoring</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Unified Analytics</h3>
@@ -267,7 +267,7 @@ const Landing = () => {
                             <div className="relative">
                                 <div className="absolute -inset-10 bg-sage/5 rounded-full blur-[80px]"></div>
                                 <div
-                                    className="glass-card rounded-[2rem] p-4 border-white/20 shadow-2xl relative z-10 overflow-hidden">
+                                    className="glass-card rounded-4xl p-4 border-white/20 shadow-2xl relative z-10 overflow-hidden">
                                     <div className="absolute inset-0 grainy-bg opacity-10"></div>
                                     <div className="aspect-video bg-cover bg-center rounded-2xl"
                                         style={{
@@ -354,7 +354,7 @@ const Landing = () => {
                                     </ul>
 
                                     <button
-                                        onClick={() => handleSelectPlan(plans[0]._id)}
+                                        onClick={() => handleSelectPlan(plans[0]._id, plans[0].name)}
                                         className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white dark:hover:bg-sage/80 transition-all cursor-pointer"
                                     >
                                         {plans[0].monthlyPrice === 0
@@ -365,7 +365,7 @@ const Landing = () => {
                             )}
 
                             {plans[1] && (
-                                <div className="bg-primary dark:bg-sage text-white dark:text-primary dark:border dark:border-slate-500 p-10 rounded-[2.5rem] relative shadow-[0_30px_60px_-15px_rgba(20,49,9,0.3)] hover:-translate-y-2 transition-all">
+                                <div className="bg-primary dark:bg-sage text-white dark:text-primary dark:border dark:border-slate-500 p-10 rounded-2xl relative shadow-[0_30px_60px_-15px_rgba(20,49,9,0.3)] hover:-translate-y-2 transition-all">
 
                                     <div className="grainy-bg absolute inset-0 opacity-10"></div>
 
@@ -402,7 +402,7 @@ const Landing = () => {
                                     </ul>
 
                                     <button
-                                        onClick={() => handleSelectPlan(plans[1]._id)}
+                                        onClick={() => handleSelectPlan(plans[1]._id, plans[1].name)}
                                         className="shimmer-btn w-full py-4 bg-sage dark:bg-primary text-primary dark:text-sage rounded-full font-bold text-lg shadow-xl shadow-black/20 hover:scale-[1.02] transition-transform cursor-pointer"
                                     >
                                         {`Start ${plans[1].trialDays}-Day Trial`}
@@ -439,7 +439,7 @@ const Landing = () => {
                                     </ul>
 
                                     <button
-                                        onClick={() => handleSelectPlan(plans[2]._id)}
+                                        onClick={() => handleSelectPlan(plans[2]._id, plans[2].name)}
                                         className="w-full py-4 border-2 border-slate-200 dark:border-slate-400 dark:bg-sage rounded-full font-bold text-primary hover:bg-white dark:hover:bg-sage/80 transition-all cursor-pointer"
                                     >
                                         Talk to Sales

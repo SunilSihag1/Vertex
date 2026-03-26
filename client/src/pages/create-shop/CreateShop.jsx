@@ -12,15 +12,13 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ShopOwnerWelcomeModal from "../../components/shop/ShopOwnerWelcomeModal";
-import BasicShopSetup from "./BasicShopSetup";
-import ProShopSetup from "./ProShopSetup";
-import EnterpriseShopSetup from "./EnterpriseShopSetup";
+import ShopSetup from "./shopSetup";
 
 /* Map URL ?plan= value → { component, label } */
 const PLAN_MAP = {
-    basic: { Component: BasicShopSetup, label: "Basic" },
-    pro: { Component: ProShopSetup, label: "Pro" },
-    enterprise: { Component: EnterpriseShopSetup, label: "Enterprise" },
+    basic: { Component: ShopSetup, label: "Basic" }
+    // pro: { Component: ProShopSetup, label: "Pro" },
+    // enterprise: { Component: EnterpriseShopSetup, label: "Enterprise" },
 };
 
 const CreateShop = () => {
@@ -28,10 +26,8 @@ const CreateShop = () => {
     const [isRevealed, setRevealed] = useState(false);
     const [showModal, setModal] = useState(true);
 
-    /* Resolve plan — default to "basic" if missing or unknown */
+    // Optional: still read plan (for display only)
     const planKey = searchParams.get("plan")?.toLowerCase() ?? "basic";
-    const planEntry = PLAN_MAP[planKey] ?? PLAN_MAP.basic;
-    const { Component, label } = planEntry;
 
     const handleConfirm = () => {
         setModal(false);
@@ -40,16 +36,15 @@ const CreateShop = () => {
 
     return (
         <div
-            className="min-h-screen px-5 sm:px-8 lg:px-16 py-12"
+            className="min-h-screen"
             style={{ background: "#f7f6f2" }}
         >
-            {/* Blurred setup form — always rendered, blur controlled by isRevealed */}
-            <Component isRevealed={isRevealed} />
+            {/* ✅ Always same component */}
+            <ShopSetup isRevealed={isRevealed} plan={planKey} />
 
-            {/* Welcome modal — rendered on top while showModal is true */}
             {showModal && (
                 <ShopOwnerWelcomeModal
-                    planName={label}
+                    planName={planKey}
                     onConfirm={handleConfirm}
                 />
             )}
