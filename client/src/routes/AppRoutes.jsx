@@ -1,26 +1,3 @@
-/**
- * AppRoutes.jsx
- * Location: client/src/routes/AppRoutes.jsx
- *
- * Route structure:
- *
- *  Public (anyone):
- *    /              → Landing
- *    /pricing       → Pricing
- *    /verify-otp    → OTP page
- *
- *  Public Only (logged-out users only):
- *    /login         → Login   (redirects to / if already logged in)
- *    /signup        → Signup  (redirects to / if already logged in)
- *
- *  Protected (logged-in users only):
- *    /dashboard     → Dashboard  (redirects to /login if not logged in)
- *    ... add more protected routes here
- *
- *  Fallback:
- *    *              → 404
- */
-
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Pages
@@ -29,7 +6,6 @@ import Pricing from "../pages/landing/pricing";
 import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 import Otp from "../pages/auth/Otp";
-import Pricing from "../pages/landing/pricing";
 import Settings from "../pages/settings-page/settings";
 import EditProfile from "../components/settings/common-components/edit-profile";
 import ResetPassword from "../components/settings/common-components/reset-password";

@@ -177,47 +177,27 @@ const userSchema = new mongoose.Schema(
             type: String,
         },
 
-    }
-);
-        // ── Token Security ─────────────────────────────────────────────────────
+// ── Token Security ─────────────────────────────────────────────────────
 
-        /**
-         * Array of active sessions (max 5).
-         * Each session = one logged-in device.
-         * Hashed refresh token stored per session.
-         * `select: false` → never included in queries unless .select("+sessions")
-         */
-        sessions: {
-            type:    [sessionSchema],
-            select:  false,
-            default: [],
-        },
+sessions: {
+    type: [sessionSchema],
+    select: false,
+    default: [],
+},
 
-        /**
-         * Incremented when:
-         *  - User changes password
-         *  - User hits "Logout from all devices"
-         *
-         * Access tokens embed this value.
-         * Auth middleware rejects any token where tokenVersion !== user.tokenVersion.
-         * This invalidates ALL outstanding access tokens instantly — no DB blacklist needed.
-         */
-        tokenVersion: {
-            type:    Number,
-            default: 0,
-            select:  false,
-        },
+tokenVersion: {
+    type: Number,
+    default: 0,
+    select: false,
+},
 
-        /**
-         * Set to Date.now() when user resets/changes their password.
-         * Auth middleware rejects access tokens issued before this timestamp.
-         */
-        passwordChangedAt: {
-            type:   Date,
-            select: false,
-        },
-    },
-    { timestamps: true }
+passwordChangedAt: {
+    type: Date,
+    select: false,
+},
+
+},
+{ timestamps: true }
 );
 
 // ─── Indexes ──────────────────────────────────────────────────────────────────

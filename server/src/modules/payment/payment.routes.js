@@ -14,7 +14,6 @@ import {
     verifyPayment,
     paymentFailed,
 } from "./payment.controller.js";
-import authMiddleware from "../../middleware/auth.middleware.js";
 
 const router = express.Router();
 
