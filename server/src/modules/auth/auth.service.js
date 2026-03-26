@@ -21,6 +21,7 @@ const MAX_SESSIONS       = 5;
 const BCRYPT_ROUNDS      = 12;
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCK_DURATION_MS   = 15 * 60 * 1000;
+const ADMIN_EMAIL        = process.env.ADMIN_EMAIL;
 
 // ─── Password Validation ──────────────────────────────────────────────────────
 
@@ -85,7 +86,7 @@ const signup = async ({ name, email, password }) => {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
-    const role = email === ADMIN_EMAIL ? "admin" : "user";
+     const role = ADMIN_EMAIL && email === ADMIN_EMAIL ? "admin" : "user";
 
     const user = await User.create({
         name,

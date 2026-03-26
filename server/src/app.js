@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-
+import cookieParser from "cookie-parser"; 
 import authRoutes from "./modules/auth/auth.routes.js";
 import planRoutes from "./modules/plan/plan.routes.js";
 import subscriptionRoutes from "./modules/payment/payment.routes.js";
@@ -16,8 +16,14 @@ dotenv.config();
 const app = express();
 
 // ── Middleware ─────────────────────────────────────────────────────────────
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
 
 // ── DB Connection ──────────────────────────────────────────────────────────
 connectDB();

@@ -23,7 +23,6 @@ const authMiddleware = async (req, res, next) => {
         const authHeader = req.headers.authorization;
 
         if (!authHeader?.startsWith("Bearer ")) {
-            console.log("User Not Found0");
             return res.status(401).json({ message: "Access token missing" });
         }
 
@@ -52,18 +51,16 @@ const authMiddleware = async (req, res, next) => {
             .select("+tokenVersion +passwordChangedAt");
 
         if (!user) {
-            window.location.replace("/login");
-            console.log("User Not Found1");
             return res.status(401).json({ message: "User not found" });
         }
         
         if (!user.isActive) {
-            console.log("User Not Found2");
+            
             return res.status(403).json({ message: "Account disabled" });
         }
         
         if (user.lockUntil && user.lockUntil > Date.now()) {
-            console.log("User Not Found3");
+            
             return res.status(423).json({ message: "Account locked" });
         }
         
@@ -74,7 +71,7 @@ const authMiddleware = async (req, res, next) => {
         // instantly rejected — no blacklist needed.
         
         if (decoded.tokenVersion !== user.tokenVersion) {
-            console.log("User Not Found4");
+            
             return res.status(401).json({ message: "Token has been invalidated. Please log in again." });
         }
         
@@ -86,7 +83,7 @@ const authMiddleware = async (req, res, next) => {
         if (user.passwordChangedAt) {
             const changedAtSecs = Math.floor(user.passwordChangedAt.getTime() / 1000);
             if (decoded.iat < changedAtSecs) {
-                console.log("User Not Found5");
+
                 return res.status(401).json({
                     message: "Password was changed. Please log in again.",
                 });
@@ -103,7 +100,7 @@ const authMiddleware = async (req, res, next) => {
         next();
         
     } catch (err) {
-        console.log("User Not Found6");
+        
         console.error("[authMiddleware]", err);
         return res.status(500).json({ message: "Authentication error" });
     }
