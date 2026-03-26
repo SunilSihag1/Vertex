@@ -22,6 +22,9 @@ const BCRYPT_ROUNDS      = 12;
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCK_DURATION_MS   = 15 * 60 * 1000;
 
+// BUG FIX: ADMIN_EMAIL was used in signup() but never defined — caused ReferenceError on every signup
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? null;
+
 // ─── Password Validation ──────────────────────────────────────────────────────
 
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
@@ -85,13 +88,16 @@ const signup = async ({ name, email, password }) => {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
-    const role = email === ADMIN_EMAIL ? "admin" : "user";
+    // BUG FIX 1: ADMIN_EMAIL was referenced but never defined (ReferenceError)
+    // BUG FIX 2: role was computed but never passed into User.create
+    const role = ADMIN_EMAIL && email === ADMIN_EMAIL ? "admin" : "user";
 
     const user = await User.create({
         name,
         email,
         password:     hashedPassword,
         authProvider: "local",
+        role,          // ← was missing: role was computed but discarded
     });
 
     await otpService.generateOtp(user._id, "email_verification");
@@ -205,82 +211,40 @@ const refresh = async (rawToken, context = {}) => {
 
 // ─── GOOGLE AUTH ──────────────────────────────────────────────────────────────
 
-/**
- * Industrial-standard Google OAuth flow:
- *
- * ❌ Old way (INSECURE):
- *    Client sends { name, email, googleId } → Server trusts it blindly
- *    → Anyone can fake any user's email and get logged in
- *
- * ✅ New way (SECURE):
- *    Client sends { idToken } → Server verifies with Google → extracts data
- *    → idToken is cryptographically signed by Google, cannot be faked
- *
- * @param {{ idToken: string, deviceId: string }} data
- * @param {{ ip: string, userAgent: string }} context
- */
 const googleAuth = async ({ idToken, deviceId }, context = {}) => {
-
-    // ── Validate inputs ────────────────────────────────────────────────────────
-
     if (!idToken)  throw new Error("Google ID token is required");
     if (!deviceId) throw new Error("Device ID is required");
-
-    // ── Step 1: Verify idToken with Google ────────────────────────────────────
-    // admin.auth().verifyIdToken() sends the token to Google's servers.
-    // Google checks: is it signed by us? is it expired? is it for this project?
-    // If anything is wrong, it throws — we catch and convert to a clean error.
 
     let googleUser;
     try {
         googleUser = await admin.auth().verifyIdToken(idToken);
-    } catch (err) {
-        // Common reasons: token expired (>1hr), wrong project, tampered token
+    } catch {
         throw new Error("Invalid Google token");
     }
 
-    // ── Step 2: Extract VERIFIED data ─────────────────────────────────────────
-    // ONLY trust what Google confirmed — never the client's raw payload.
+    const { uid: googleId, email, name } = googleUser;
 
-    const { uid: googleId, email, name, picture } = googleUser;
-
-    if (!email) {
-        // Rare: Google accounts without verified email (shouldn't happen for consumer accounts)
-        throw new Error("Google account has no verified email");
-    }
+    if (!email) throw new Error("Google account has no verified email");
 
     const normalizedEmail = email.toLowerCase();
-
-    // ── Step 3: Find or create user ───────────────────────────────────────────
 
     let user = await User.findOne({ email: normalizedEmail })
         .select("+sessions +tokenVersion");
 
     if (!user) {
-        // First time Google login → create account
-        // Name fallback: use part before @ if Google doesn't provide a name
         user = await User.create({
             name:         name ?? normalizedEmail.split("@")[0],
             email:        normalizedEmail,
             googleId,
             authProvider: "google",
-            isVerified:   true,  // Google already verified their email
+            isVerified:   true,
         });
-        // Re-fetch with select fields (create() doesn't return select: false fields)
         user = await User.findById(user._id).select("+sessions +tokenVersion");
-
     } else if (!user.googleId) {
-        // User already has an account (signed up with email/password) but
-        // is now logging in with Google for the first time → link accounts
         user.googleId = googleId;
-        // Keep authProvider as "local" so they can still use password login too
     }
 
     if (!user.isActive) throw new Error("Account disabled");
-
-    // ── Step 4: Issue our own JWT pair ────────────────────────────────────────
-    // Same as normal login — Google auth just gave us a verified identity.
-    // From here on, we use our own access/refresh tokens.
 
     const accessToken = await signAccessToken({
         userId:       user._id.toString(),

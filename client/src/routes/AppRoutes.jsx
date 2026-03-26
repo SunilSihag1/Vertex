@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+// BUG FIX: ProtectedRoute and PublicOnlyRoute were imported twice — duplicate named imports
+// cause module binding errors. Consolidated to a single import statement.
 import { ProtectedRoute, PublicOnlyRoute } from "../components/auth/ProtectedRoutes";
 
 import Landing from "../pages/landing/landing";
@@ -16,10 +18,6 @@ import Wishlist from "../components/settings/role-based-component/user-role-base
 import ManageProducts from "../components/settings/role-based-component/shop-owner-components/manage-products";
 import SalesAnalytics from "../components/settings/role-based-component/shop-owner-components/sales-analytics";
 import ShopProfile from "../components/settings/role-based-component/shop-owner-components/shop-profile";
-import { PublicOnlyRoute } from "../components/auth/ProtectedRoutes";
-import { ProtectedRoute } from "../components/auth/ProtectedRoutes";
-
-/* Create-shop flow */
 import CreateShop from "../pages/create-shop/CreateShop";
 
 const AppRoutes = () => {
@@ -56,8 +54,6 @@ const AppRoutes = () => {
                 </Route>
             </Route>
 
-            {/* ── 404 Fallback ─────────────────────────────────────────────── */}
-            {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
             {/* ── 404 Fallback ──────────────────────────────────── */}
             <Route path="*" element={<Navigate to="/" replace />} />
 
