@@ -159,8 +159,8 @@ export const paymentFailed = async (req, res) => {
 
         await paymentService.failPayment(
             razorpay_order_id,
-            error_code,
-            error_reason
+            error_code   ?? "UNKNOWN_ERROR",
+            error_reason ?? "No reason provided"
         );
 
         // Return 200 — this is an expected event, not a server error

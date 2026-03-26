@@ -23,6 +23,7 @@ import mongoose from "mongoose";
 import razorpay from "../../config/razorpay.js";
 import planModel from "../plan/plan.model.js";
 import paymentModel from "./payment.model.js";
+import User from "../auth/auth.model.js";
 import subscriptionModel from "./subscription.model.js";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

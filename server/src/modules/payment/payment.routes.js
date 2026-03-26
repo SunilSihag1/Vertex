@@ -8,16 +8,16 @@
  */
 
 import express from "express";
+import authMiddleware from "../../middleware/auth.middleware.js";
 import {
     createSubscriptionOrder,
     verifyPayment,
     paymentFailed,
 } from "./payment.controller.js";
-import authMiddleware from "../../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-// All payment routes require authentication
+// Protected — all payment actions require an authenticated user
 router.post("/create-order",    authMiddleware, createSubscriptionOrder);
 router.post("/verify-payment",  authMiddleware, verifyPayment);
 router.post("/payment-failed",  authMiddleware, paymentFailed);

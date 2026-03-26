@@ -85,6 +85,8 @@ const signup = async ({ name, email, password }) => {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
+    const role = email === ADMIN_EMAIL ? "admin" : "user";
+
     const user = await User.create({
         name,
         email,

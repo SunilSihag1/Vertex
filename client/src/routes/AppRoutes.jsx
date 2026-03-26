@@ -1,29 +1,6 @@
-/**
- * AppRoutes.jsx
- * Location: client/src/routes/AppRoutes.jsx
- *
- * Route structure:
- *
- *  Public (anyone):
- *    /              → Landing
- *    /pricing       → Pricing
- *    /verify-otp    → OTP page
- *
- *  Public Only (logged-out users only):
- *    /login         → Login   (redirects to / if already logged in)
- *    /signup        → Signup  (redirects to / if already logged in)
- *
- *  Protected (logged-in users only):
- *    /dashboard     → Dashboard  (redirects to /login if not logged in)
- *    ... add more protected routes here
- *
- *  Fallback:
- *    *              → 404
- */
-
 import { Routes, Route, Navigate } from "react-router-dom";
+import { ProtectedRoute, PublicOnlyRoute } from "../components/auth/ProtectedRoutes";
 
-// Pages
 import Landing from "../pages/landing/landing";
 import Pricing from "../pages/landing/pricing";
 import Login from "../pages/auth/Login";
@@ -49,40 +26,40 @@ const AppRoutes = () => {
     return (
         <Routes>
 
-            {/* ── Public Routes (accessible to everyone) ──────────────────── */}
+            {/* ── Public Routes ─────────────────────────────────── */}
             <Route path="/" element={<Landing />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/verify-otp" element={<Otp />} />
 
-            {/* ── Public Only Routes (redirect to / if already logged in) ─── */}
+            {/* ── Public Only (redirect to / if logged in) ──────── */}
             <Route element={<PublicOnlyRoute />}>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
             </Route>
 
-            {/* ── Protected Routes (redirect to /login if not logged in) ───── */}
+            {/* ── Protected Routes ──────────────────────────────── */}
             <Route element={<ProtectedRoute />}>
-                {/* <Route path="/dashboard" element={<Dashboard />} /> */}
                 <Route path="/create-shop" element={<CreateShop />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="settings/edit-profile" element={<EditProfile />} />
-                <Route path="settings/reset-password" element={<ResetPassword />} />
-                <Route path="settings/notifications" element={<Notification />} />
-                
-                <Route path="settings/my-orders" element={<MyOrders />} />
-                <Route path="settings/wishlist" element={<Wishlist />} />
-                <Route path="settings/saved-address" element={<SavedAddress />} />
-                
-                <Route path="settings/manage-products" element={<ManageProducts />} />
-                <Route path="settings/sales-analytics" element={<SalesAnalytics />} />
-                <Route path="settings/shop-profile" element={<ShopProfile />} />
 
-
-                {/* Add more protected routes here */}
+                {/* Settings with nested children */}
+                <Route path="/settings" element={<Settings />}>
+                    <Route index element={<Navigate to="edit-profile" replace />} />
+                    <Route path="edit-profile" element={<EditProfile />} />
+                    <Route path="reset-password" element={<ResetPassword />} />
+                    <Route path="notifications" element={<Notification />} />
+                    <Route path="my-orders" element={<MyOrders />} />
+                    <Route path="wishlist" element={<Wishlist />} />
+                    <Route path="saved-address" element={<SavedAddress />} />
+                    <Route path="manage-products" element={<ManageProducts />} />
+                    <Route path="sales-analytics" element={<SalesAnalytics />} />
+                    <Route path="shop-profile" element={<ShopProfile />} />
+                </Route>
             </Route>
 
             {/* ── 404 Fallback ─────────────────────────────────────────────── */}
             {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+            {/* ── 404 Fallback ──────────────────────────────────── */}
+            <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>
     );
