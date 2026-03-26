@@ -36,7 +36,7 @@ const sessionSchema = new mongoose.Schema(
          * IP-based matching is WRONG (shared NAT, VPN, mobile networks).
          */
         deviceId: {
-            type:     String,
+            type: String,
             required: true,
         },
 
@@ -48,7 +48,7 @@ const sessionSchema = new mongoose.Schema(
          * If DB is breached, hashed tokens are useless.
          */
         tokenHash: {
-            type:     String,
+            type: String,
             required: true,
         },
 
@@ -56,10 +56,10 @@ const sessionSchema = new mongoose.Schema(
 
         device: {
             browser: { type: String, default: "Unknown" },  // e.g. "Chrome 124"
-            os:      { type: String, default: "Unknown" },  // e.g. "Windows 11"
+            os: { type: String, default: "Unknown" },  // e.g. "Windows 11"
             type: {
-                type:    String,
-                enum:    ["desktop", "mobile", "tablet", "unknown"],
+                type: String,
+                enum: ["desktop", "mobile", "tablet", "unknown"],
                 default: "unknown",
             },
         },
@@ -67,7 +67,7 @@ const sessionSchema = new mongoose.Schema(
         // ── Network Info ───────────────────────────────────────────────────────
 
         ip: {
-            type:    String,
+            type: String,
             default: null,
         },
 
@@ -76,7 +76,7 @@ const sessionSchema = new mongoose.Schema(
          * e.g. "IN", "US", "GB", "Local" (private IP), "Unknown"
          */
         country: {
-            type:    String,
+            type: String,
             default: "Unknown",
         },
 
@@ -87,7 +87,7 @@ const sessionSchema = new mongoose.Schema(
          * Use this to display "Last active 2 hours ago" in a session management UI.
          */
         lastSeenAt: {
-            type:    Date,
+            type: Date,
             default: Date.now,
         },
 
@@ -96,12 +96,12 @@ const sessionSchema = new mongoose.Schema(
          * expired sessions at DB level — no cron job needed.
          */
         expiresAt: {
-            type:     Date,
+            type: Date,
             required: true,
         },
     },
     {
-        _id:        true,                                   // each session has its own _id
+        _id: true,                                   // each session has its own _id
         timestamps: { createdAt: true, updatedAt: false }, // track when session was first created
     }
 );
@@ -111,21 +111,21 @@ const sessionSchema = new mongoose.Schema(
 const userSchema = new mongoose.Schema(
     {
         name: {
-            type:     String,
+            type: String,
             required: true,
             trim: true
         },
 
         email: {
-            type:      String,
-            required:  true,
-            unique:    true,
+            type: String,
+            required: true,
+            unique: true,
             lowercase: true,
             index: true
         },
 
         password: {
-            type:      String,
+            type: String,
             minlength: 8,
             required: function () {
                 return this.authProvider === "local";
@@ -134,8 +134,8 @@ const userSchema = new mongoose.Schema(
         },
 
         authProvider: {
-            type:    String,
-            enum:    ["local", "google"],
+            type: String,
+            enum: ["local", "google"],
             default: "local",
         },
 
@@ -151,17 +151,17 @@ const userSchema = new mongoose.Schema(
         },
 
         isVerified: {
-            type:    Boolean,
+            type: Boolean,
             default: false,
         },
 
         isActive: {
-            type:    Boolean,
+            type: Boolean,
             default: true,
         },
 
         loginAttempts: {
-            type:    Number,
+            type: Number,
             default: 0,
         },
 
@@ -177,27 +177,27 @@ const userSchema = new mongoose.Schema(
             type: String,
         },
 
-// ── Token Security ─────────────────────────────────────────────────────
+        // ── Token Security ─────────────────────────────────────────────────────
 
-sessions: {
-    type: [sessionSchema],
-    select: false,
-    default: [],
-},
+        sessions: {
+            type: [sessionSchema],
+            select: false,
+            default: [],
+        },
 
-tokenVersion: {
-    type: Number,
-    default: 0,
-    select: false,
-},
+        tokenVersion: {
+            type: Number,
+            default: 0,
+            select: false,
+        },
 
-passwordChangedAt: {
-    type: Date,
-    select: false,
-},
+        passwordChangedAt: {
+            type: Date,
+            select: false,
+        },
 
-},
-{ timestamps: true }
+    },
+    { timestamps: true }
 );
 
 // ─── Indexes ──────────────────────────────────────────────────────────────────

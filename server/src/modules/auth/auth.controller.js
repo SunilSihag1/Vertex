@@ -11,14 +11,14 @@ import * as authService from "./auth.service.js";
 
 const COOKIE_OPTIONS = {
     httpOnly: true,                                      // JS cannot read this cookie
-    secure:   process.env.NODE_ENV === "production",    // HTTPS only in prod
+    secure: process.env.NODE_ENV === "production",    // HTTPS only in prod
     sameSite: "strict",                                  // No cross-site sending
-    maxAge:   7 * 24 * 60 * 60 * 1000,                 // 7 days in ms
+    maxAge: 7 * 24 * 60 * 60 * 1000,                 // 7 days in ms
 };
 
 const CLEAR_COOKIE_OPTIONS = {
     httpOnly: true,
-    secure:   process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
 };
 
@@ -43,7 +43,7 @@ const login = async (req, res) => {
         const { email, password, deviceId } = req.body;
 
         const context = {
-            ip:        req.ip,
+            ip: req.ip,
             userAgent: req.headers["user-agent"] ?? "unknown",
         };
 
@@ -56,11 +56,11 @@ const login = async (req, res) => {
 
     } catch (err) {
         const statusMap = {
-            "Invalid credentials":        401,
-            "User not verified":           401,
-            "Account disabled":            403,
+            "Invalid credentials": 401,
+            "User not verified": 401,
+            "Account disabled": 403,
             "Account locked. Try later.": 423,
-            "Device ID is required":       400,
+            "Device ID is required": 400,
         };
         return res.status(statusMap[err.message] ?? 400).json({ message: err.message });
     }
@@ -77,9 +77,9 @@ const refresh = async (req, res) => {
         }
 
         const context = {
-            ip:        req.ip,
+            ip: req.ip,
             userAgent: req.headers["user-agent"] ?? "unknown",
-            deviceId:  req.headers["x-device-id"] ?? undefined,
+            deviceId: req.headers["x-device-id"] ?? undefined,
         };
 
         const { accessToken, refreshToken } =
@@ -112,7 +112,7 @@ const googleAuth = async (req, res) => {
         }
 
         const context = {
-            ip:        req.ip,
+            ip: req.ip,
             userAgent: req.headers["user-agent"] ?? "unknown",
         };
 
@@ -126,11 +126,11 @@ const googleAuth = async (req, res) => {
 
     } catch (err) {
         const statusMap = {
-            "Invalid Google token":                  401,
-            "Google account has no verified email":  400,
-            "Account disabled":                      403,
-            "Device ID is required":                 400,
-            "Google ID token is required":           400,
+            "Invalid Google token": 401,
+            "Google account has no verified email": 400,
+            "Account disabled": 403,
+            "Device ID is required": 400,
+            "Google ID token is required": 400,
         };
         return res.status(statusMap[err.message] ?? 400).json({ message: err.message });
     }
