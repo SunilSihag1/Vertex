@@ -6,25 +6,32 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser"; 
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+
+import connectDB from "./config/db.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import planRoutes from "./modules/plan/plan.routes.js";
 import subscriptionRoutes from "./modules/payment/payment.routes.js";
 import otpRoutes from "./modules/otp/otp.routes.js";
-import profileRoutes from "./modules/profile/profile.routes.js";
+import profileRoutes from "./modules/profile/Profile.routes.js";
 import storeRoutes from "./modules/store/store.routes.js";
 
 const app = express();
 
-// ── Middleware ─────────────────────────────────────────────────────────────
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
+// ── Trust proxy ────────────────────────────────────────────────────────────────
+// Required so req.ip shows the real client IP instead of the proxy IP (Nginx/cloud LB).
+// Without this, geoip lookups and rate-limiting by IP are broken.
+app.set("trust proxy", 1);
+
+// ── Core Middleware ────────────────────────────────────────────────────────────
+app.use(cors({
+    origin: process.env.CLIENT_URL ?? "http://localhost:5173",
+    credentials: true,  // Required: allows browser to send HttpOnly cookies cross-origin
+}));
 app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser()); // CRITICAL: without this, req.cookies is undefined and refresh token is never read
+app.use(morgan("dev"));
 
 // ── DB Connection ──────────────────────────────────────────────────────────────
 connectDB();
