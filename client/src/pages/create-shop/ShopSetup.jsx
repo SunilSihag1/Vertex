@@ -1,67 +1,4 @@
-/* BasicShopSetup.jsx
- *
- * Create-shop form rendered for BASIC plan owners.
- * All three plan pages share the same structure right now,
- * but are kept separate so each can diverge independently.
- *
- * Props:
- *   isRevealed {boolean} — controls blur filter on the form
- */
-import { useCreateShop, CATEGORIES, CURRENCIES } from "./useCreateShop";
-
-/* ── Shared field styling ───────────────────────────────────── */
-const base =
-    "w-full px-4 py-3 rounded-xl text-sm outline-none transition-all bg-white text-[#143109] " +
-    "placeholder:text-slate-300 border border-[rgba(20,49,9,0.12)] " +
-    "focus:border-[#143109] focus:ring-2 focus:ring-[rgba(20,49,9,0.07)]";
-const errBase =
-    "w-full px-4 py-3 rounded-xl text-sm outline-none transition-all bg-white text-[#143109] " +
-    "placeholder:text-slate-300 border border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-50";
-
-const Card = ({ children }) => (
-    <div
-        className="rounded-2xl bg-white overflow-hidden"
-        style={{ border: "1px solid rgba(20,49,9,0.08)", boxShadow: "0 1px 8px rgba(20,49,9,0.04)" }}
-    >
-        {children}
-    </div>
-);
-
-const Section = ({ title, icon, children }) => (
-    <div>
-        <div
-            className="flex items-center gap-2 px-5 py-3"
-            style={{ borderBottom: "1px solid rgba(20,49,9,0.06)", background: "rgba(20,49,9,0.02)" }}
-        >
-            <span className="material-symbols-outlined text-[15px]" style={{ color: "rgba(20,49,9,0.4)" }}>{icon}</span>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: "rgba(20,49,9,0.35)" }}>
-                {title}
-            </p>
-        </div>
-        <div className="p-5 space-y-4">{children}</div>
-    </div>
-);
-
-const Field = ({ label, error, required, children }) => (
-    <div className="space-y-1.5">
-        <label className="flex items-center gap-1 text-xs font-semibold" style={{ color: "rgba(20,49,9,0.5)" }}>
-            {label}
-            {required && <span className="text-red-400">*</span>}
-        </label>
-        {children}
-        {error && (
-            <p className="flex items-center gap-1 text-xs text-red-500">
-                <span className="material-symbols-outlined text-[12px]">error</span>
-                {error}
-            </p>
-        )}
-    </div>
-);
-
-/* ── Component ──────────────────────────────────────────────── */
 const ShopSetup = ({ isRevealed }) => {
-    const { form, errors, saving, apiError, handleChange, handleSubmit } = useCreateShop();
-
     return (
         <>
             <div className="flex h-screen w-full">
@@ -118,7 +55,7 @@ const ShopSetup = ({ isRevealed }) => {
                     </div>
                 </aside>
                 <main className="flex-1 bg-background-light dark:bg-background-dark flex flex-col relative">
-                    <header className="w-full pt-10 px-8 lg:px-16 space-y-8 sticky bg-primary dark:bg-sage top-0 z-20 p-8">
+                    <div className="w-full pt-10 px-8 lg:px-16 space-y-8 sticky bg-primary dark:bg-sage/50 top-0 z-20 p-8">
                         <div className="flex items-center justify-between">
                             <span className="text-label-sm font-bold tracking-widest uppercase text-sage dark:text-primary opacity-60">Step 01 / 04</span>
                             <span className="text-label-sm font-semibold text-sage dark:text-primary underline underline-offset-4 cursor-pointer hover:opacity-70 transition-opacity">Need Help?</span>
@@ -141,7 +78,7 @@ const ShopSetup = ({ isRevealed }) => {
                                 <p className="text-[11px] font-bold uppercase tracking-wider text-sage/50 dark:text-primary/50">Complete</p>
                             </div>
                         </div>
-                    </header>
+                    </div>
                     <div className="flex-1 overflow-y-auto px-8 lg:px-16 py-12 justify-items-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                         <form className="max-w-3xl space-y-16 pb-32">
                             <section className="space-y-8">
@@ -159,20 +96,17 @@ const ShopSetup = ({ isRevealed }) => {
                                             <div className=" bg-primary/10 dark:bg-sage/10  h-full w-full flex items-center justify-center">
                                                 <span className="material-symbols-outlined text-primary dark:text-sage">storefront</span>
                                             </div>
-                                            {/* <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                                <span className="material-symbols-outlined text-white text-sm">edit</span>
-                                            </div> */}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16 pt-6">
                                     <div className="space-y-2">
                                         <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Shop Name <span className="text-error">*</span></label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50 border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" placeholder="e.g. Green Leaf Organics" type="text" />
+                                        <input className="w-full bg-background-light dark:bg-primary/50 border-none rounded-xl p-4 text-sm focus:ring-2 transition-all shadow-sm text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage" placeholder="e.g. Green Leaf Organics" type="text" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Business Type</label>
-                                        <select className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm appearance-none">
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Business Type <span className="text-error">*</span></label>
+                                        <select className="w-full bg-background-light dark:bg-[#112b08] border-none rounded-xl p-4 text-sm focus:ring-2 transition-all shadow-sm appearance-none text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage">
                                             <option>Select Industry</option>
                                             <option>Grocery</option>
                                             <option>Pharmacy</option>
@@ -182,98 +116,110 @@ const ShopSetup = ({ isRevealed }) => {
                                         </select>
                                     </div>
                                     <div className="md:col-span-2 space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Shop Tagline</label>
-                                        <textarea className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" placeholder="Tell customers what makes you special..." rows="2"></textarea>
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Shop Tagline</label>
+                                        <textarea className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage transition-all shadow-sm [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" placeholder="Tell customers what makes you special..." rows="2"></textarea>
                                     </div>
                                 </div>
                             </section>
                             <section className="space-y-8">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-on-surface tracking-tight">Owner Details</h2>
-                                    <p className="text-on-surface-variant text-sm mt-1">Verification details for account security.</p>
+                                    <h2 className="text-2xl font-bold text-primary dark:text-sage tracking-tight">Owner Details</h2>
+                                    <p className="text-primary/70 dark:text-sage/70 text-sm mt-1">Verification details for account security.</p>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Full Name</label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" type="text" />
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Full Name <span className="text-error">*</span></label>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage transition-all shadow-sm" type="text" placeholder="Full Name" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Mobile Number</label>
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Mobile Number <span className="text-error">*</span></label>
                                         <div className="relative">
-                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-on-surface-variant">+91</span>
-                                            <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 pl-14 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" type="tel" />
+                                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-primary dark:text-sage">+91</span>
+                                            <input className="w-full bg-background-light dark:bg-primary/50 border-none rounded-xl p-4 pl-14 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage transition-all shadow-sm" type="tel" placeholder="9016XXXXXX" />
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Personal Email</label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" type="email" />
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Personal Email <span className="text-error">*</span></label>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage transition-all shadow-sm" type="email" placeholder="email@domain.com" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Aadhaar/PAN (Optional)</label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" type="text" />
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Aadhaar/PAN (Optional)</label>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage transition-all shadow-sm" type="text" placeholder="180012XXXXXX" />
                                     </div>
                                 </div>
                             </section>
                             <section className="space-y-8">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-on-surface tracking-tight">Shop Contact</h2>
-                                    <p className="text-on-surface-variant text-sm mt-1">Where customers can reach your business.</p>
+                                    <h2 className="text-2xl font-bold text-primary dark:text-sage tracking-tight">Shop Contact</h2>
+                                    <p className="text-primary/70 dark:text-sage/70 text-sm mt-1">Where customers can reach your business.</p>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     <div className="md:col-span-3 space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Official Business Email</label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" type="email" />
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Official Business Email <span className="text-error">*</span></label>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage transition-all shadow-sm" type="email" placeholder="email@domain.com" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Receptionist No.</label>
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Receptionist No. <span className="text-error">*</span></label>
                                         <div className="relative">
                                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold text-on-surface-variant">+91</span>
-                                            <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 pl-14 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" type="tel" />
+                                            <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 pl-14 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage transition-all shadow-sm" type="tel" placeholder="9327XXXXXX" />
                                         </div>
                                     </div>
                                     <div className="md:col-span-2 space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">WhatsApp Business (Optional)</label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" placeholder="Same as receptionist?" type="tel" />
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">WhatsApp Business (Optional)</label>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage transition-all shadow-sm" placeholder="Same as receptionist?" type="tel" />
                                     </div>
                                 </div>
                             </section>
-                            <section className="space-y-8 p-8 bg-surface-container-low rounded-2xl">
+                            <section className="space-y-8 p-8 bg-sage/10 dark:bg-primary/50 rounded-2xl border border-primary/10 dark-border-sage/50">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <h2 className="text-xl font-bold text-on-surface">Operating Hours</h2>
-                                        <p className="text-on-surface-variant text-xs mt-0.5">Define your store's availability.</p>
+                                        <h2 className="text-xl font-bold text-primary dark:text-sage">Operating Hours</h2>
+                                        <p className="text-primary/70 dark:text-sage/70 text-xs mt-0.5">Define your store's availability.</p>
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <span className="text-xs font-bold text-on-surface-variant">HOLIDAY TODAY</span>
-                                        <button className="w-12 h-6 bg-surface-container-highest rounded-full relative p-1 transition-colors hover:bg-outline-variant" type="button">
-                                            <div className="w-4 h-4 bg-white rounded-full shadow-sm"></div>
+                                        <span className="text-xs font-bold text-primary dark:text-sage">HOLIDAY TODAY</span>
+                                        <button className="w-12 h-6 bg-primary dark:bg-sage/50 rounded-full relative p-1 transition-colors hover:bg-primary/50 dark:hover:bg-sage hover:cursor-pointer" type="button">
+                                            <div className="w-4 h-4 bg-sage dark:bg-primary rounded-full shadow-sm"></div>
                                         </button>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="flex items-center gap-4">
                                         <div className="flex-1 space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Open Time</label>
-                                            <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-secondary-fixed-dim" type="time" />
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-primary dark:text-sage">Open Time</label>
+                                            <input className="w-full bg-background-light dark:bg-primary/50 border-none rounded-lg p-3 text-sm focus:ring-2 text-primary dark:text-sage" type="time" />
                                         </div>
                                         <span className="mt-6 text-on-surface-variant">to</span>
                                         <div className="flex-1 space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Close Time</label>
-                                            <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-lg p-3 text-sm focus:ring-2 focus:ring-secondary-fixed-dim" type="time" />
+                                            <input className="w-full bg-background-light dark:bg-primary/50 border-none rounded-lg p-3 text-sm focus:ring-2 text-primary dark:text-sage" type="time" />
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4">
                                         <div className="flex-1 space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">From Day</label>
-                                            <select className="w-full bg-background-light dark:bg-primary/50  border-none rounded-lg p-3 text-sm appearance-none focus:ring-2 focus:ring-secondary-fixed-dim">
+                                            <select className="w-full bg-background-light dark:bg-[#112b08]  border-none rounded-lg p-3 text-sm appearance-none focus:ring-2 text-primary dark:text-sage">
                                                 <option>Monday</option>
+                                                <option>Tuesday</option>
+                                                <option>Wednesday</option>
+                                                <option>Thursday</option>
+                                                <option>Friday</option>
+                                                <option>Saturday</option>
+                                                <option>Sunday</option>
                                             </select>
                                         </div>
                                         <span className="mt-6 text-on-surface-variant">to</span>
                                         <div className="flex-1 space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">To Day</label>
-                                            <select className="w-full bg-background-light dark:bg-primary/50  border-none rounded-lg p-3 text-sm appearance-none focus:ring-2 focus:ring-secondary-fixed-dim">
+                                            <select className="w-full bg-background-light dark:bg-[#112b08]  border-none rounded-lg p-3 text-sm appearance-none focus:ring-2 text-primary dark:text-sage">
+                                                <option>Monday</option>
+                                                <option>Tuesday</option>
+                                                <option>Wednesday</option>
+                                                <option>Thursday</option>
+                                                <option>Friday</option>
                                                 <option>Saturday</option>
+                                                <option>Sunday</option>
                                             </select>
                                         </div>
                                     </div>
@@ -281,32 +227,32 @@ const ShopSetup = ({ isRevealed }) => {
                             </section>
                             <section className="space-y-8">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-on-surface tracking-tight">Shop Address</h2>
-                                    <p className="text-on-surface-variant text-sm mt-1">Where is your physical storefront located?</p>
+                                    <h2 className="text-2xl font-bold text-primary dark:text-sage tracking-tight">Shop Address</h2>
+                                    <p className="text-primary/70 dark:text-sage/70 text-sm mt-1">Where is your physical storefront located?</p>
                                 </div>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                                     <div className="col-span-2 md:col-span-3 space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Street Address</label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim transition-all shadow-sm" placeholder="Building No, Street Name, Landmark" type="text" />
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Street Address</label>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage transition-all shadow-sm" placeholder="Building No, Street Name, Landmark" type="text" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">City</label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim shadow-sm" type="text" />
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">City</label>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage" type="text" placeholder="City" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">State</label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim shadow-sm" type="text" />
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">State</label>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage" type="text" placeholder="State" />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant">Pincode</label>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 focus:ring-secondary-fixed-dim shadow-sm" type="text" />
+                                        <label className="text-xs font-bold uppercase tracking-widest text-primary dark:text-sage">Pincode</label>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage" type="text" placeholder="360XXX" />
                                     </div>
                                     <div className="col-span-2 md:col-span-3">
-                                        <div className="w-full h-48 rounded-2xl bg-surface-container-highest relative overflow-hidden group">
-                                            <div className="absolute inset-0 bg-zinc-200 flex items-center justify-center">
+                                        <div className="w-full h-48 rounded-2xl bg-sage/10 dark:bg-primary relative overflow-hidden group">
+                                            <div className="absolute inset-0 bg-sage/10 dark:bg-primary flex items-center justify-center">
                                                 <img className="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Stylized map showing shop location pin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpRvAT4DCp4G86sfDsi59NxXUrLZQSlaakgzNW86Cct22wOXgG3TYXmSl2aFD3oqgAw1d_9Au65FAyYsTFC-qgeB3g0ym7Frr0wAjVVCAFeq5oBCSTG742V4YMJCbNa7RjFRIfriWCUaeOms-lJOwkEdyVQJ_LG7gzvKQwQACrGsO7xSh4Dj-Yls8yjV8AFsmPCdRRFGpUXTxrNNaqnwB5-_ZMT7EFBywP8APi-65j1HuZDa9eMXai_bPfMJV0eibWj-BUvbqpASU" />
                                                 <div className="absolute inset-0 flex items-center justify-center">
-                                                    <div className="bg-white/90 backdrop-blur px-6 py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:scale-105 transition-transform">
+                                                    <div className="bg-white/90 dark:bg-sage backdrop-blur px-6 py-3 rounded-full shadow-lg flex items-center gap-3 cursor-pointer hover:scale-105 transition-transform">
                                                         <span className="material-symbols-outlined text-primary">location_on</span>
                                                         <span className="text-sm font-bold text-primary">Pin on Google Maps</span>
                                                     </div>
@@ -318,32 +264,32 @@ const ShopSetup = ({ isRevealed }) => {
                             </section>
                             <section className="space-y-8">
                                 <div>
-                                    <h2 className="text-2xl font-bold text-on-surface tracking-tight">Socials</h2>
-                                    <p className="text-on-surface-variant text-sm mt-1">Help customers find your online presence.</p>
+                                    <h2 className="text-2xl font-bold text-primary dark:text-sage tracking-tight">Socials</h2>
+                                    <p className="text-primary/70 dark:text-sage/70 text-sm mt-1">Help customers find your online presence.</p>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="relative">
-                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 material-symbols-outlined text-lg">public</span>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 pl-12 text-sm focus:ring-2 focus:ring-secondary-fixed-dim shadow-sm" placeholder="Website URL" type="url" />
+                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/50 dark:text-sage/50 material-symbols-outlined text-lg">public</span>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 pl-12 text-sm focus:ring-2 ftext-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage shadow-sm" placeholder="Website URL" type="url" />
                                     </div>
                                     <div className="relative">
-                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/40 material-symbols-outlined text-lg">photo_camera</span>
-                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 pl-12 text-sm focus:ring-2 focus:ring-secondary-fixed-dim shadow-sm" placeholder="Instagram Handle" type="text" />
+                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/50 dark:text-sage/50 material-symbols-outlined text-lg">photo_camera</span>
+                                        <input className="w-full bg-background-light dark:bg-primary/50  border-none rounded-xl p-4 pl-12 text-sm focus:ring-2 text-primary/50 focus:text-primary dark:text-sage/50 dark:focus:text-sage shadow-sm" placeholder="Instagram Handle" type="text" />
                                     </div>
                                 </div>
                             </section>
                         </form>
                     </div>
-                    <footer className="w-full p-8 lg:px-16 bg-white/70 backdrop-blur-xl border-t border-surface-container-highest absolute bottom-0 left-0 right-0 z-30 flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-on-surface-variant">
-                            <span className="material-symbols-outlined text-sm text-secondary animate-pulse" style={{ fontVariationSettings: "'FILL' 1" }}>cloud_done</span>
+                    <div className="w-full p-8 lg:px-16 bg-primary dark:bg-sage/50 backdrop-blur-xl absolute bottom-0 left-0 right-0 z-30 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sage dark:text-primary">
+                            <span className="material-symbols-outlined text-sm text-sage dark:text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>cloud_done</span>
                             <span className="text-xs font-medium italic">Your progress is auto-saved</span>
                         </div>
                         <button className="bg-primary shimmer-btn text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:shadow-xl hover:shadow-primary/30 transition-all active:scale-95 group cursor-pointer" type="submit">
                             Save &amp; Continue
                             <span className="material-symbols-outlined text-secondary-fixed group-hover:translate-x-1 transition-transform">arrow_forward</span>
                         </button>
-                    </footer>
+                    </div>
                 </main>
             </div>
         </>
