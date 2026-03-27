@@ -51,16 +51,16 @@ const authMiddleware = async (req, res, next) => {
             .select("+tokenVersion +passwordChangedAt");
 
         if (!user) {
-            // BUG FIX: window is not defined in Node.js — removed window.location.replace()
-            // The client's Axios interceptor handles redirect to /login on 401 responses.
             return res.status(401).json({ message: "User not found" });
         }
 
         if (!user.isActive) {
+            
             return res.status(403).json({ message: "Account disabled" });
         }
 
         if (user.lockUntil && user.lockUntil > Date.now()) {
+            
             return res.status(423).json({ message: "Account locked" });
         }
 
@@ -71,6 +71,7 @@ const authMiddleware = async (req, res, next) => {
         // instantly rejected — no blacklist needed.
 
         if (decoded.tokenVersion !== user.tokenVersion) {
+            
             return res.status(401).json({ message: "Token has been invalidated. Please log in again." });
         }
 
@@ -82,6 +83,7 @@ const authMiddleware = async (req, res, next) => {
         if (user.passwordChangedAt) {
             const changedAtSecs = Math.floor(user.passwordChangedAt.getTime() / 1000);
             if (decoded.iat < changedAtSecs) {
+
                 return res.status(401).json({
                     message: "Password was changed. Please log in again.",
                 });
@@ -99,6 +101,7 @@ const authMiddleware = async (req, res, next) => {
         next();
 
     } catch (err) {
+        
         console.error("[authMiddleware]", err);
         return res.status(500).json({ message: "Authentication error" });
     }
