@@ -47,11 +47,11 @@ import { useNavigate } from "react-router-dom";
  */
 const useGoogleAuth = ({ redirectTo = "/" } = {}) => {
     const { login } = useAuth();
-    const deviceId  = useDeviceId();
-    const navigate  = useNavigate();
+    const deviceId = useDeviceId();
+    const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError]         = useState(null);
+    const [error, setError] = useState(null);
 
     const clearError = () => setError(null);
 

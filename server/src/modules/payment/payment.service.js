@@ -87,30 +87,30 @@ export const createOrder = async (userId, planId, billing) => {
 
     // ── 3. Create Razorpay order ───────────────────────────────────────────────
     const razorpayOrder = await razorpay.orders.create({
-        amount:   price * 100,          // Razorpay expects paise
+        amount: price * 100,          // Razorpay expects paise
         currency: "INR",
-        receipt:  `ord_${Date.now().toString().slice(-8)}`,
+        receipt: `ord_${Date.now().toString().slice(-8)}`,
         notes: {
-            userId:  userId.toString(),
-            planId:  planId.toString(),
+            userId: userId.toString(),
+            planId: planId.toString(),
             billing,
         },
     });
 
     // ── 4. Save pending payment record ────────────────────────────────────────
     await paymentModel.create({
-        user_id:           userId,
-        plan_id:           planId,
-        billing_cycle:     billing,
-        amount:            price,
+        user_id: userId,
+        plan_id: planId,
+        billing_cycle: billing,
+        amount: price,
         razorpay_order_id: razorpayOrder.id,
-        status:            "pending",
+        status: "pending",
     });
 
     // ── 5. Return order + key (client needs both to open Razorpay modal) ───────
     return {
         order: razorpayOrder,
-        key:   process.env.RAZORPAY_KEY_ID,
+        key: process.env.RAZORPAY_KEY_ID,
     };
 };
 
@@ -149,25 +149,25 @@ export const activatePayment = async (orderId, paymentId, signature, userId) => 
     }
 
     // ── 4. Mark payment as successful ─────────────────────────────────────────
-    payment.status               = "success";
-    payment.razorpay_payment_id  = paymentId;
-    payment.razorpay_signature   = signature;
+    payment.status = "success";
+    payment.razorpay_payment_id = paymentId;
+    payment.razorpay_signature = signature;
     await payment.save();
 
     // ── 5. Create Subscription record ─────────────────────────────────────────
     // THIS WAS MISSING — subscription.model.js existed but was never used.
     // Without this, there was no way to know if a user had an active plan.
     const startDate = new Date();
-    const endDate   = calculateEndDate(startDate, payment.billing_cycle);
+    const endDate = calculateEndDate(startDate, payment.billing_cycle);
 
     const subscription = await subscriptionModel.create({
-        user_id:       payment.user_id,
-        plan_id:       payment.plan_id,
-        payment_id:    payment._id,
+        user_id: payment.user_id,
+        plan_id: payment.plan_id,
+        payment_id: payment._id,
         billing_cycle: payment.billing_cycle,
-        status:        "active",
-        start_date:    startDate,
-        end_date:      endDate,
+        status: "active",
+        start_date: startDate,
+        end_date: endDate,
     });
 
     return { payment, subscription };
@@ -195,8 +195,8 @@ export const failPayment = async (orderId, errorCode, errorReason) => {
         return payment;
     }
 
-    payment.status       = "fail";
-    payment.error_code   = errorCode   ?? "UNKNOWN_ERROR";
+    payment.status = "fail";
+    payment.error_code = errorCode ?? "UNKNOWN_ERROR";
     payment.error_reason = errorReason ?? "Payment failed";
     await payment.save();
 

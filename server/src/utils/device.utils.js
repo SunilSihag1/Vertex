@@ -35,24 +35,24 @@ export const parseDevice = (userAgent) => {
     const parser = new UAParser(userAgent);
     const result = parser.getResult();
 
-    const browserName  = result.browser?.name  ?? "Unknown";
+    const browserName = result.browser?.name ?? "Unknown";
     const browserMajor = result.browser?.major ?? "";
-    const osName       = result.os?.name       ?? "Unknown";
-    const osVersion    = result.os?.version    ?? "";
+    const osName = result.os?.name ?? "Unknown";
+    const osVersion = result.os?.version ?? "";
 
     // ua-parser-js sets device.type to "mobile" | "tablet" | undefined
     // undefined means desktop (browser on a PC/Mac/Linux)
     const rawType = result.device?.type;
     let type;
 
-    if (rawType === "mobile")       type = "mobile";
-    else if (rawType === "tablet")  type = "tablet";
+    if (rawType === "mobile") type = "mobile";
+    else if (rawType === "tablet") type = "tablet";
     else if (browserName !== "Unknown" || osName !== "Unknown") type = "desktop";
-    else                            type = "unknown";
+    else type = "unknown";
 
     return {
         browser: browserMajor ? `${browserName} ${browserMajor}` : browserName,
-        os:      osVersion    ? `${osName} ${osVersion}`          : osName,
+        os: osVersion ? `${osName} ${osVersion}` : osName,
         type,
     };
 };
@@ -80,9 +80,9 @@ export const resolveCountry = (ip) => {
 
     // Private / loopback ranges — geoip-lite returns null for these
     const isPrivate =
-        cleanIp === "127.0.0.1"       ||
-        cleanIp === "::1"              ||
-        cleanIp.startsWith("10.")      ||
+        cleanIp === "127.0.0.1" ||
+        cleanIp === "::1" ||
+        cleanIp.startsWith("10.") ||
         cleanIp.startsWith("192.168.") ||
         /^172\.(1[6-9]|2\d|3[01])\./.test(cleanIp);
 

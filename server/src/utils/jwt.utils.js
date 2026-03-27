@@ -13,14 +13,14 @@ import crypto from "crypto";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const ALG               = "HS256";
-const ACCESS_EXPIRY     = "15m";
-const REFRESH_EXPIRY    = "7d";
+const ALG = "HS256";
+const ACCESS_EXPIRY = "15m";
+const REFRESH_EXPIRY = "7d";
 export const REFRESH_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in ms
 
 // ─── Secret Validation ───────────────────────────────────────────────────────
 
-const rawAccessSecret  = process.env.ACCESS_SECRET;
+const rawAccessSecret = process.env.ACCESS_SECRET;
 const rawRefreshSecret = process.env.REFRESH_SECRET;
 
 if (!rawAccessSecret || !rawRefreshSecret) {
@@ -32,7 +32,7 @@ if (rawAccessSecret.length < 32 || rawRefreshSecret.length < 32) {
 }
 
 // jose requires Uint8Array for HMAC secrets
-const ACCESS_SECRET  = new TextEncoder().encode(rawAccessSecret);
+const ACCESS_SECRET = new TextEncoder().encode(rawAccessSecret);
 const REFRESH_SECRET = new TextEncoder().encode(rawRefreshSecret);
 
 // ─── Access Token ─────────────────────────────────────────────────────────────

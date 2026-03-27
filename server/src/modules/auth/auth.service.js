@@ -17,11 +17,11 @@ import { parseDevice, resolveCountry } from "../../utils/device.utils.js";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const MAX_SESSIONS       = 5;
-const BCRYPT_ROUNDS      = 12;
+const MAX_SESSIONS = 5;
+const BCRYPT_ROUNDS = 12;
 const MAX_LOGIN_ATTEMPTS = 5;
-const LOCK_DURATION_MS   = 15 * 60 * 1000;
-const ADMIN_EMAIL        = process.env.ADMIN_EMAIL;
+const LOCK_DURATION_MS = 15 * 60 * 1000;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 // ─── Password Validation ──────────────────────────────────────────────────────
 
@@ -36,17 +36,17 @@ const validatePassword = (password) => {
 // ─── Session Helpers ──────────────────────────────────────────────────────────
 
 const buildSessionMeta = (context, tokenData) => ({
-    deviceId:   context.deviceId,
-    tokenHash:  tokenData.tokenHash,
-    expiresAt:  tokenData.expiresAt,
-    ip:         context.ip         ?? null,
-    country:    resolveCountry(context.ip),
-    device:     parseDevice(context.userAgent),
+    deviceId: context.deviceId,
+    tokenHash: tokenData.tokenHash,
+    expiresAt: tokenData.expiresAt,
+    ip: context.ip ?? null,
+    country: resolveCountry(context.ip),
+    device: parseDevice(context.userAgent),
     lastSeenAt: new Date(),
 });
 
 const upsertSession = (user, context, tokenData) => {
-    const now  = new Date();
+    const now = new Date();
     const meta = buildSessionMeta(context, tokenData);
 
     // Remove expired sessions
@@ -56,11 +56,11 @@ const upsertSession = (user, context, tokenData) => {
     const idx = user.sessions.findIndex((s) => s.deviceId === context.deviceId);
     if (idx !== -1) {
         Object.assign(user.sessions[idx], {
-            tokenHash:  meta.tokenHash,
-            expiresAt:  meta.expiresAt,
-            ip:         meta.ip,
-            country:    meta.country,
-            device:     meta.device,
+            tokenHash: meta.tokenHash,
+            expiresAt: meta.expiresAt,
+            ip: meta.ip,
+            country: meta.country,
+            device: meta.device,
             lastSeenAt: meta.lastSeenAt,
         });
         return;
@@ -86,12 +86,12 @@ const signup = async ({ name, email, password }) => {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
-     const role = ADMIN_EMAIL && email === ADMIN_EMAIL ? "admin" : "user";
+    const role = ADMIN_EMAIL && email === ADMIN_EMAIL ? "admin" : "user";
 
     const user = await User.create({
         name,
         email,
-        password:     hashedPassword,
+        password: hashedPassword,
         authProvider: "local",
         role,          // ← was missing: role was computed but discarded
     });
@@ -111,14 +111,14 @@ const login = async ({ email, password, deviceId }, context = {}) => {
     const user = await User.findOne({ email })
         .select("+password +sessions +tokenVersion");
 
-    if (!user)            throw new Error("Invalid credentials");
-    if (!user.isActive)   throw new Error("Account disabled");
+    if (!user) throw new Error("Invalid credentials");
+    if (!user.isActive) throw new Error("Account disabled");
     if (!user.isVerified) throw new Error("User not verified");
 
     // Auto-unlock expired lockout
     if (user.lockUntil && user.lockUntil < Date.now()) {
         user.loginAttempts = 0;
-        user.lockUntil     = null;
+        user.lockUntil = null;
     }
 
     if (user.lockUntil && user.lockUntil > Date.now()) {
@@ -137,13 +137,13 @@ const login = async ({ email, password, deviceId }, context = {}) => {
     }
 
     user.loginAttempts = 0;
-    user.lockUntil     = null;
-    user.lastLogin     = new Date();
-    user.lastLoginIP   = context.ip ?? null;
+    user.lockUntil = null;
+    user.lastLogin = new Date();
+    user.lastLoginIP = context.ip ?? null;
 
     const accessToken = await signAccessToken({
-        userId:       user._id.toString(),
-        email:        user.email,
+        userId: user._id.toString(),
+        email: user.email,
         tokenVersion: user.tokenVersion,
     });
 
@@ -173,14 +173,14 @@ const refresh = async (rawToken, context = {}) => {
     const user = await User.findById(decoded.userId).select("+sessions +tokenVersion");
     if (!user) throw new Error("Invalid refresh token");
 
-    const now        = new Date();
+    const now = new Date();
     const sessionIdx = user.sessions.findIndex(
         (s) => s.tokenHash === incomingHash && s.expiresAt > now
     );
 
     if (sessionIdx === -1) {
         // Reuse detected — wipe all sessions (potential token theft)
-        user.sessions      = [];
+        user.sessions = [];
         user.tokenVersion += 1;
         await user.save();
         throw new Error("Session expired or reuse detected. Please log in again.");
@@ -189,8 +189,8 @@ const refresh = async (rawToken, context = {}) => {
     const sessionDeviceId = context.deviceId ?? user.sessions[sessionIdx].deviceId;
 
     const accessToken = await signAccessToken({
-        userId:       user._id.toString(),
-        email:        user.email,
+        userId: user._id.toString(),
+        email: user.email,
         tokenVersion: user.tokenVersion,
     });
 
@@ -208,7 +208,7 @@ const refresh = async (rawToken, context = {}) => {
 // ─── GOOGLE AUTH ──────────────────────────────────────────────────────────────
 
 const googleAuth = async ({ idToken, deviceId }, context = {}) => {
-    if (!idToken)  throw new Error("Google ID token is required");
+    if (!idToken) throw new Error("Google ID token is required");
     if (!deviceId) throw new Error("Device ID is required");
 
     let googleUser;
@@ -229,11 +229,11 @@ const googleAuth = async ({ idToken, deviceId }, context = {}) => {
 
     if (!user) {
         user = await User.create({
-            name:         name ?? normalizedEmail.split("@")[0],
-            email:        normalizedEmail,
+            name: name ?? normalizedEmail.split("@")[0],
+            email: normalizedEmail,
             googleId,
             authProvider: "google",
-            isVerified:   true,
+            isVerified: true,
         });
         user = await User.findById(user._id).select("+sessions +tokenVersion");
     } else if (!user.googleId) {
@@ -243,8 +243,8 @@ const googleAuth = async ({ idToken, deviceId }, context = {}) => {
     if (!user.isActive) throw new Error("Account disabled");
 
     const accessToken = await signAccessToken({
-        userId:       user._id.toString(),
-        email:        user.email,
+        userId: user._id.toString(),
+        email: user.email,
         tokenVersion: user.tokenVersion,
     });
 

@@ -3,10 +3,10 @@ import { useState } from "react";
 const PERIODS = ["7D", "30D", "3M", "1Y"];
 
 const STATS = [
-  { label: "Revenue",      value: "₹52,400", delta: "+12%", up: true,  icon: "payments"       },
-  { label: "Orders",       value: "128",      delta: "+5%",  up: true,  icon: "receipt_long"   },
-  { label: "Units Sold",   value: "312",      delta: "+8%",  up: true,  icon: "inventory_2"    },
-  { label: "Conversion",   value: "4.8%",     delta: "−0.5%",up: false, icon: "conversion_path"},
+  { label: "Revenue", value: "₹52,400", delta: "+12%", up: true, icon: "payments" },
+  { label: "Orders", value: "128", delta: "+5%", up: true, icon: "receipt_long" },
+  { label: "Units Sold", value: "312", delta: "+8%", up: true, icon: "inventory_2" },
+  { label: "Conversion", value: "4.8%", delta: "−0.5%", up: false, icon: "conversion_path" },
 ];
 
 const BARS = [
@@ -19,21 +19,21 @@ const BARS = [
 ];
 
 const PRODUCTS = [
-  { name: "Custom Cotton T-Shirt",  units: 120, rev: "₹1,08,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDvuebrPM0N5mZ-jer-1UrOSgMCUykrMSL8_pD1yIZROm5x-5wkdEQYvxyFOVGxdeIEnxEJdQ4WPQXYUtuJ26mYoV7VD9D43glMzoRwWsrstVfb6iyN7j0-oVkTWenvrcPInwne7UbYm-00KJWdQHkTcHgqDQeHKGwdD_07it4jwUbVW2NwGlGCvpBeXY8-bvMBTJSvkbXe30Q5olF1fv4LvA63eFkXxmwFCv196Gr5p0bxPQNxEVCvePsY3cXMiafihXgJPtSvmamq" },
-  { name: "Premium Polo Shirt",     units: 75,  rev: "₹97,500",  img: "https://lh3.googleusercontent.com/aida-public/AB6AXuA58_4Da7-4Zsf2vuSDCO2tSGOq9lS10xHhOKdszIkDnVr9OVn8PfTn2-9D-5R13ETSGTOce5dCT5lsZoqw9AqY1szXtA00AtF1zOCusHtAaprGstyecDmG-2UqAKLBKwiA7ZeYyqtc7hSJI3Y7jep94v5DOgd7wP-e7l3LlCcoGZe3381cJPzq1QPg6q_wxWwpCGHXexP8KF7c74nX8F5E3nBskqtrc9BvqH4pX6D_wpRyz4BJnbABb-pf-_xW_xSOhRpj2gIBGC_o" },
-  { name: "Sports Performance Tee", units: 60,  rev: "₹59,940",  img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBrWlJo7cVYy0dYZ8eGObEADpcMMB3vy7AOEb1vNasf_vDu2qJ4Glyko3QTBAcQBg288wYvoELwcppfDApu8i9T-9Tu7QgQR1l_X5M5SL6Pn5J1FLibxeuh9bje-sCLatytRDuRnUr2_DzKpDlmu1GGmoy8LFUEcIp42AtEWodUbkXqQVJrGVo9wz8HspOLITT8zjLbF2QMDinP_8nRrz9-7yRUbBE8Yo_sa_IN3OmxHM63YOvy2NL6YltZFVNJfhmaOeukQgX3ANmv" },
+  { name: "Custom Cotton T-Shirt", units: 120, rev: "₹1,08,000", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDvuebrPM0N5mZ-jer-1UrOSgMCUykrMSL8_pD1yIZROm5x-5wkdEQYvxyFOVGxdeIEnxEJdQ4WPQXYUtuJ26mYoV7VD9D43glMzoRwWsrstVfb6iyN7j0-oVkTWenvrcPInwne7UbYm-00KJWdQHkTcHgqDQeHKGwdD_07it4jwUbVW2NwGlGCvpBeXY8-bvMBTJSvkbXe30Q5olF1fv4LvA63eFkXxmwFCv196Gr5p0bxPQNxEVCvePsY3cXMiafihXgJPtSvmamq" },
+  { name: "Premium Polo Shirt", units: 75, rev: "₹97,500", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuA58_4Da7-4Zsf2vuSDCO2tSGOq9lS10xHhOKdszIkDnVr9OVn8PfTn2-9D-5R13ETSGTOce5dCT5lsZoqw9AqY1szXtA00AtF1zOCusHtAaprGstyecDmG-2UqAKLBKwiA7ZeYyqtc7hSJI3Y7jep94v5DOgd7wP-e7l3LlCcoGZe3381cJPzq1QPg6q_wxWwpCGHXexP8KF7c74nX8F5E3nBskqtrc9BvqH4pX6D_wpRyz4BJnbABb-pf-_xW_xSOhRpj2gIBGC_o" },
+  { name: "Sports Performance Tee", units: 60, rev: "₹59,940", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBrWlJo7cVYy0dYZ8eGObEADpcMMB3vy7AOEb1vNasf_vDu2qJ4Glyko3QTBAcQBg288wYvoELwcppfDApu8i9T-9Tu7QgQR1l_X5M5SL6Pn5J1FLibxeuh9bje-sCLatytRDuRnUr2_DzKpDlmu1GGmoy8LFUEcIp42AtEWodUbkXqQVJrGVo9wz8HspOLITT8zjLbF2QMDinP_8nRrz9-7yRUbBE8Yo_sa_IN3OmxHM63YOvy2NL6YltZFVNJfhmaOeukQgX3ANmv" },
 ];
 
 const ORDERS = [
-  { id: "CW-2041", name: "Aditi Sharma",  product: "Custom Cotton T-Shirt", amount: "₹899",   status: "Delivered"  },
-  { id: "CW-2045", name: "Rahul Patel",   product: "Polo Shirt",            amount: "₹1,299", status: "Shipped"    },
-  { id: "CW-2049", name: "Neha Kapoor",   product: "Sports Tee",            amount: "₹999",   status: "Processing" },
+  { id: "CW-2041", name: "Aditi Sharma", product: "Custom Cotton T-Shirt", amount: "₹899", status: "Delivered" },
+  { id: "CW-2045", name: "Rahul Patel", product: "Polo Shirt", amount: "₹1,299", status: "Shipped" },
+  { id: "CW-2049", name: "Neha Kapoor", product: "Sports Tee", amount: "₹999", status: "Processing" },
 ];
 
 const ORDER_STYLE = {
-  Delivered:  { bg: "rgba(16,185,129,0.08)",  text: "#059669" },
-  Shipped:    { bg: "rgba(59,130,246,0.08)",   text: "#3b82f6" },
-  Processing: { bg: "rgba(245,158,11,0.09)",   text: "#d97706" },
+  Delivered: { bg: "rgba(16,185,129,0.08)", text: "#059669" },
+  Shipped: { bg: "rgba(59,130,246,0.08)", text: "#3b82f6" },
+  Processing: { bg: "rgba(245,158,11,0.09)", text: "#d97706" },
 };
 
 const Card = ({ children, className = "" }) => (

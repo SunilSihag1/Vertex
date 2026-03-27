@@ -21,37 +21,37 @@ const legalVersionSchema = new Schema(
     {
         // ── Which document this version belongs to ────────────────────────────
         documentId: {
-            type:     ObjectId,
-            ref:      "LegalDocument",
+            type: ObjectId,
+            ref: "LegalDocument",
             required: true,
-            index:    true,
+            index: true,
         },
 
         // ── Semantic version string ───────────────────────────────────────────
         version: {
-            type:     String,
+            type: String,
             required: true,
-            trim:     true,
+            trim: true,
             // e.g., "1.0.0", "1.1.0", "2.0.0"
         },
 
         // ── Full document content ─────────────────────────────────────────────
         content: {
-            type:     String,
+            type: String,
             required: true,
             // Store as Markdown or HTML
         },
 
         // ── When this version becomes legally effective ────────────────────────
         effectiveDate: {
-            type:     Date,
+            type: Date,
             required: true,
         },
 
         // ── Who published this version (admin user) ───────────────────────────
         publishedBy: {
             type: ObjectId,
-            ref:  "User",
+            ref: "User",
         },
 
         // ── Human-readable summary of what changed ────────────────────────────
@@ -62,9 +62,9 @@ const legalVersionSchema = new Schema(
 
         // ── Draft vs published ────────────────────────────────────────────────
         isPublished: {
-            type:    Boolean,
+            type: Boolean,
             default: false,
-            index:   true,
+            index: true,
         },
     },
     {

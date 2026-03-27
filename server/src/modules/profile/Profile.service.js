@@ -10,11 +10,11 @@ export const getUserProfile = async (userId) => {
     const details = await UserDetails.findOne({ userId }).select("phone dob addresses");
 
     return {
-        name:      user.name,
-        email:     user.email,
-        role:      user.role,
-        phone:     details?.phone     ?? null,
-        dob:       details?.dob       ?? null,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        phone: details?.phone ?? null,
+        dob: details?.dob ?? null,
         addresses: details?.addresses ?? []
     };
 };
@@ -35,7 +35,7 @@ export const updateUserProfile = async (userId, data) => {
     }
 
     const userUpdates = {};
-    if (name)  userUpdates.name  = name.trim();
+    if (name) userUpdates.name = name.trim();
     if (email) userUpdates.email = email.toLowerCase().trim();
 
     let updatedUser = user;
@@ -48,8 +48,8 @@ export const updateUserProfile = async (userId, data) => {
     }
 
     const detailsUpdates = {};
-    if (phone     !== undefined) detailsUpdates.phone     = phone;
-    if (dob       !== undefined) detailsUpdates.dob       = dob || null;
+    if (phone !== undefined) detailsUpdates.phone = phone;
+    if (dob !== undefined) detailsUpdates.dob = dob || null;
     if (addresses !== undefined) detailsUpdates.addresses = addresses;
 
     let updatedDetails = null;
@@ -65,11 +65,11 @@ export const updateUserProfile = async (userId, data) => {
     }
 
     return {
-        name:      updatedUser.name,
-        email:     updatedUser.email,
-        role:      updatedUser.role,
-        phone:     updatedDetails?.phone     ?? null,
-        dob:       updatedDetails?.dob       ?? null,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        phone: updatedDetails?.phone ?? null,
+        dob: updatedDetails?.dob ?? null,
         addresses: updatedDetails?.addresses ?? []
     };
 };

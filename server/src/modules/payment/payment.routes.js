@@ -18,8 +18,8 @@ import {
 const router = express.Router();
 
 // Protected — all payment actions require an authenticated user
-router.post("/create-order",    authMiddleware, createSubscriptionOrder);
-router.post("/verify-payment",  authMiddleware, verifyPayment);
-router.post("/payment-failed",  authMiddleware, paymentFailed);
+router.post("/create-order", authMiddleware, createSubscriptionOrder);
+router.post("/verify-payment", authMiddleware, verifyPayment);
+router.post("/payment-failed", authMiddleware, paymentFailed);
 
 export default router;

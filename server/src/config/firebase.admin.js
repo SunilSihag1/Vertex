@@ -39,10 +39,10 @@ if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY) {
 if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert({
-            projectId:   FIREBASE_PROJECT_ID,
+            projectId: FIREBASE_PROJECT_ID,
             clientEmail: FIREBASE_CLIENT_EMAIL,
             // .env stores \n as literal string "\\n" — must convert back to real newlines
-            privateKey:  FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+            privateKey: FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
         }),
     });
 }

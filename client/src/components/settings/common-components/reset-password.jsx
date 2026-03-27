@@ -1,18 +1,18 @@
 import { useState } from "react";
 
 const RULES = [
-  { key: "len",  label: "8+ characters",     test: p => p.length >= 8                         },
-  { key: "up",   label: "Uppercase letter",  test: p => /[A-Z]/.test(p)                       },
-  { key: "num",  label: "Number",            test: p => /[0-9]/.test(p)                       },
-  { key: "sym",  label: "Special character", test: p => /[!@#$%^&*(),.?":{}|<>]/.test(p)     },
+  { key: "len", label: "8+ characters", test: p => p.length >= 8 },
+  { key: "up", label: "Uppercase letter", test: p => /[A-Z]/.test(p) },
+  { key: "num", label: "Number", test: p => /[0-9]/.test(p) },
+  { key: "sym", label: "Special character", test: p => /[!@#$%^&*(),.?":{}|<>]/.test(p) },
 ];
 
 const STRENGTH = [
-  { label: "Weak",       bar: "bg-red-400",     text: "text-red-500"      },
-  { label: "Fair",       bar: "bg-orange-400",  text: "text-orange-500"   },
-  { label: "Good",       bar: "bg-amber-400",   text: "text-amber-600"    },
-  { label: "Strong",     bar: "bg-emerald-500", text: "text-emerald-600"  },
-  { label: "Very Strong",bar: "bg-emerald-600", text: "text-emerald-700"  },
+  { label: "Weak", bar: "bg-red-400", text: "text-red-500" },
+  { label: "Fair", bar: "bg-orange-400", text: "text-orange-500" },
+  { label: "Good", bar: "bg-amber-400", text: "text-amber-600" },
+  { label: "Strong", bar: "bg-emerald-500", text: "text-emerald-600" },
+  { label: "Very Strong", bar: "bg-emerald-600", text: "text-emerald-700" },
 ];
 
 const fieldBase =
@@ -53,16 +53,16 @@ const PwField = ({ label, name, value, show, onChange, onToggle }) => (
 );
 
 export default function ResetPassword() {
-  const [form,     setForm]     = useState({ next: "", confirm: "" });
-  const [show,     setShow]     = useState({ next: false, confirm: false });
-  const [saving,   setSaving]   = useState(false);
+  const [form, setForm] = useState({ next: "", confirm: "" });
+  const [show, setShow] = useState({ next: false, confirm: false });
+  const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState(null);
 
   const score = RULES.filter(r => r.test(form.next)).length;
-  const sm    = form.next.length ? STRENGTH[score] : null;
+  const sm = form.next.length ? STRENGTH[score] : null;
 
-  const onChange   = ({ target: { name, value } }) => { setForm(p => ({ ...p, [name]: value })); setFeedback(null); };
-  const onToggle   = (k) => setShow(p => ({ ...p, [k]: !p[k] }));
+  const onChange = ({ target: { name, value } }) => { setForm(p => ({ ...p, [name]: value })); setFeedback(null); };
+  const onToggle = (k) => setShow(p => ({ ...p, [k]: !p[k] }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -119,7 +119,7 @@ export default function ResetPassword() {
               <div className="space-y-2.5">
                 {/* Strength bar */}
                 <div className="flex gap-1">
-                  {[0,1,2,3].map(i => (
+                  {[0, 1, 2, 3].map(i => (
                     <div
                       key={i}
                       className={`h-1 flex-1 rounded-full transition-all duration-300 ${i < score ? sm.bar : "bg-slate-100"}`}

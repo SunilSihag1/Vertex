@@ -125,7 +125,7 @@ const SavedAddress = () => {
           <h1 className="text-3xl font-bold text-[#143109] tracking-tight">
             Saved Addresses
           </h1>
-          <p className="mt-1.5 text-sm text-[#1f2937]/60">
+          <p className="mt-1.5 text-sm text-charcoal/60">
             Manage your delivery locations.
           </p>
         </header>
@@ -133,7 +133,7 @@ const SavedAddress = () => {
         {/* Global error */}
         {error && (
           <div className="mb-6 flex items-start gap-2 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
-            <span className="material-symbols-outlined text-base mt-0.5 flex-shrink-0">
+            <span className="material-symbols-outlined text-base mt-0.5 shrink-0">
               error
             </span>
             {error}
@@ -171,11 +171,10 @@ const SavedAddress = () => {
           {addresses.map((addr, index) => (
             <div
               key={index}
-              className={`relative rounded-2xl border bg-white p-5 transition-shadow hover:shadow-md ${
-                addr.isDefault
-                  ? "border-[#143109]/30 shadow-sm"
-                  : "border-slate-100"
-              }`}
+              className={`relative rounded-2xl border bg-white p-5 transition-shadow hover:shadow-md ${addr.isDefault
+                ? "border-[#143109]/30 shadow-sm"
+                : "border-slate-100"
+                }`}
             >
               {/* Default ribbon */}
               {addr.isDefault && (
@@ -201,13 +200,13 @@ const SavedAddress = () => {
 
               {/* Address details */}
               <div className="space-y-0.5 mb-4 ml-10">
-                <p className="text-[#1f2937] text-sm font-medium">
+                <p className="text-charcoal text-sm font-medium">
                   {addr.line1}
                 </p>
                 {addr.line2 && (
-                  <p className="text-[#1f2937]/70 text-sm">{addr.line2}</p>
+                  <p className="text-charcoal/70 text-sm">{addr.line2}</p>
                 )}
-                <p className="text-[#1f2937]/70 text-sm">
+                <p className="text-charcoal/70 text-sm">
                   {addr.city}, {addr.state} — {addr.pincode}
                 </p>
               </div>

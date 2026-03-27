@@ -44,13 +44,13 @@ const AddressFormModal = ({
       setForm(
         isEditMode
           ? {
-              type: editAddress.type ?? "home",
-              line1: editAddress.line1 ?? "",
-              line2: editAddress.line2 ?? "",
-              city: editAddress.city ?? "",
-              state: editAddress.state ?? "",
-              pincode: editAddress.pincode ?? "",
-            }
+            type: editAddress.type ?? "home",
+            line1: editAddress.line1 ?? "",
+            line2: editAddress.line2 ?? "",
+            city: editAddress.city ?? "",
+            state: editAddress.state ?? "",
+            pincode: editAddress.pincode ?? "",
+          }
           : INITIAL_FORM
       );
       setErrors({});
@@ -176,7 +176,7 @@ const AddressFormModal = ({
           {/* API error */}
           {apiError && (
             <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-400 text-sm">
-              <span className="material-symbols-outlined text-base mt-0.5 flex-shrink-0">
+              <span className="material-symbols-outlined text-base mt-0.5 shrink-0">
                 error
               </span>
               {apiError}
@@ -196,11 +196,10 @@ const AddressFormModal = ({
                   onClick={() =>
                     setForm((prev) => ({ ...prev, type: t }))
                   }
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-sm font-semibold capitalize transition-all ${
-                    form.type === t
-                      ? "bg-[#143109] text-white border-[#143109]"
-                      : "border-slate-200 dark:border-slate-700 text-slate-500 hover:border-[#143109]/40"
-                  }`}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-sm font-semibold capitalize transition-all ${form.type === t
+                    ? "bg-[#143109] text-white border-[#143109]"
+                    : "border-slate-200 dark:border-slate-700 text-slate-500 hover:border-[#143109]/40"
+                    }`}
                 >
                   <span className="material-symbols-outlined text-sm">
                     {t === "home" ? "home" : t === "office" ? "work" : "location_on"}
@@ -302,8 +301,8 @@ const AddressFormModal = ({
               {saving
                 ? "Saving…"
                 : isEditMode
-                ? "Update Address"
-                : "Save Address"}
+                  ? "Update Address"
+                  : "Save Address"}
             </button>
           </div>
         </form>
@@ -314,10 +313,9 @@ const AddressFormModal = ({
 
 /* ── Helpers ──────────────────────────────────────────────── */
 const inputClass = (hasError) =>
-  `w-full px-3.5 py-2.5 rounded-lg border text-sm outline-none transition-all text-[#143109] dark:text-white bg-white dark:bg-[#143109]/30 placeholder:text-slate-300 ${
-    hasError
-      ? "border-red-400 focus:ring-2 focus:ring-red-200"
-      : "border-slate-200 dark:border-slate-700 focus:border-[#143109] focus:ring-2 focus:ring-[#143109]/20"
+  `w-full px-3.5 py-2.5 rounded-lg border text-sm outline-none transition-all text-[#143109] dark:text-white bg-white dark:bg-[#143109]/30 placeholder:text-slate-300 ${hasError
+    ? "border-red-400 focus:ring-2 focus:ring-red-200"
+    : "border-slate-200 dark:border-slate-700 focus:border-[#143109] focus:ring-2 focus:ring-[#143109]/20"
   }`;
 
 const FormField = ({ label, required, hint, error, children }) => (

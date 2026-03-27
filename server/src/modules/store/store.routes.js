@@ -23,13 +23,13 @@ router.post("/", async (req, res) => {
         }
 
         const store = await Store.create({
-            name:     name.trim(),
-            tagline:  tagline?.trim() ?? "",
+            name: name.trim(),
+            tagline: tagline?.trim() ?? "",
             category: category ?? "",
-            ownerId:  req.user.userId,
+            ownerId: req.user.userId,
             currency: currency ?? "INR",
             timezone: timezone ?? "Asia/Kolkata",
-            status:   "trial",
+            status: "trial",
         });
 
         return res.status(201).json({ success: true, data: store });

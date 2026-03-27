@@ -130,8 +130,8 @@ function Otp() {
                             disabled={timer > 0}
                             type="button"
                             className={`text-sm font-semibold transition-colors ${timer > 0
-                                    ? "text-primary/40 dark:text-sage/40 cursor-not-allowed"
-                                    : "text-primary dark:text-sage hover:underline cursor-pointer"
+                                ? "text-primary/40 dark:text-sage/40 cursor-not-allowed"
+                                : "text-primary dark:text-sage hover:underline cursor-pointer"
                                 }`}
                         >
                             Resend Code

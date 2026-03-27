@@ -10,7 +10,7 @@ const fieldBase =
   "dark:bg-[#143109]/20 dark:text-[#b5bfa1] dark:placeholder:text-slate-600";
 
 const fieldNormal = `${fieldBase} border border-[rgba(20,49,9,0.12)] focus:border-[#143109] focus:ring-3 focus:ring-[rgba(20,49,9,0.06)]`;
-const fieldErr    = `${fieldBase} border border-red-300 focus:border-red-400 focus:ring-3 focus:ring-red-50`;
+const fieldErr = `${fieldBase} border border-red-300 focus:border-red-400 focus:ring-3 focus:ring-red-50`;
 
 /* ── Sub-components ───────────────────────────────────────── */
 const PageHeader = ({ title, subtitle }) => (
@@ -77,10 +77,10 @@ const Feedback = ({ type, msg }) => (
 
 /* ── Main ─────────────────────────────────────────────────── */
 export default function EditProfile() {
-  const [form,     setForm]     = useState({ name: "", email: "", phone: "", dob: "" });
-  const [loading,  setLoading]  = useState(true);
-  const [saving,   setSaving]   = useState(false);
-  const [errors,   setErrors]   = useState({});
+  const [form, setForm] = useState({ name: "", email: "", phone: "", dob: "" });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
   const [feedback, setFeedback] = useState(null);
 
   useEffect(() => {
@@ -91,10 +91,10 @@ export default function EditProfile() {
         });
         const { name, email, phone, dob } = res.data.data;
         setForm({
-          name:  name  ?? "",
+          name: name ?? "",
           email: email ?? "",
           phone: phone ?? "",
-          dob:   dob ? new Date(dob).toISOString().split("T")[0] : "",
+          dob: dob ? new Date(dob).toISOString().split("T")[0] : "",
         });
       } catch {
         setFeedback({ type: "error", msg: "Could not load profile. Please refresh." });
@@ -112,8 +112,8 @@ export default function EditProfile() {
 
   const validate = () => {
     const e = {};
-    if (!form.name.trim())                            e.name  = "Name is required.";
-    if (form.phone && !PHONE_RE.test(form.phone))     e.phone = "Use international format e.g. +919876543210.";
+    if (!form.name.trim()) e.name = "Name is required.";
+    if (form.phone && !PHONE_RE.test(form.phone)) e.phone = "Use international format e.g. +919876543210.";
     return e;
   };
 
@@ -140,7 +140,7 @@ export default function EditProfile() {
       <div className="max-w-lg space-y-5 animate-pulse">
         <div className="h-7 rounded-xl w-40" style={{ background: "rgba(20,49,9,0.07)" }} />
         <div className="h-4 rounded-lg w-64" style={{ background: "rgba(20,49,9,0.05)" }} />
-        {[1,2,3,4].map(n => <div key={n} className="h-12 rounded-xl" style={{ background: "rgba(20,49,9,0.05)" }} />)}
+        {[1, 2, 3, 4].map(n => <div key={n} className="h-12 rounded-xl" style={{ background: "rgba(20,49,9,0.05)" }} />)}
       </div>
     );
   }

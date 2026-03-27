@@ -11,7 +11,7 @@ import ShopSetup from "./shopSetup";
 const CreateShop = () => {
     const [searchParams] = useSearchParams();
     const [isRevealed, setRevealed] = useState(false);
-    const [showModal, setModal]     = useState(true);
+    const [showModal, setModal] = useState(true);
 
     const planKey = searchParams.get("plan")?.toLowerCase() ?? "basic";
 

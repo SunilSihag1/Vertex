@@ -1,16 +1,16 @@
 import { useState } from "react";
 
 const STATUSES = {
-  active:       { label: "Active",       bg: "rgba(16,185,129,0.08)", text: "#059669" },
-  out_of_stock: { label: "Out of Stock", bg: "rgba(239,68,68,0.08)",  text: "#ef4444" },
-  draft:        { label: "Draft",        bg: "rgba(100,116,139,0.08)",text: "#64748b" },
+  active: { label: "Active", bg: "rgba(16,185,129,0.08)", text: "#059669" },
+  out_of_stock: { label: "Out of Stock", bg: "rgba(239,68,68,0.08)", text: "#ef4444" },
+  draft: { label: "Draft", bg: "rgba(100,116,139,0.08)", text: "#64748b" },
 };
 
 const INIT = [
-  { id: 1, name: "Custom Cotton T-Shirt",  category: "Cotton Wear",      price: "₹899",   stock: 25, status: "active",       img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCu_1GeE6iKmSTqIC6C2-Io_JGj_i9n-9FgpvQy6Jk_yNWhVLGQmqjwJPGaTLk1-Ul5QPqMrmlv3MLVtecgKfckQoYxk6TRphC9zLxdZkKGvkyfFfD5mAxdQACWJ2k_oBQlZ90JUFmAY8kUxLz0ShfOzzNdTxOtZeGtoyL4swH3gB5Evy24BOmOw1c4ZNOrqU4iEukcrXIOdrENpRTtP8jonjDrA0Oymt5Vfn3RXCStMKaFyGUFF_UzU0HzwhGPFQvDXd1BaYPWGpVl" },
-  { id: 2, name: "Premium Polo Shirt",     category: "Polo Collection",  price: "₹1,299", stock: 12, status: "active",       img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDn5KGf95fr8L2algGU9Daf7iO5iRbGcyrAgzNOpccJ-H6SskIcsobEHLzE5y9MQ-BN_Vn_WzrXbwQeDVF13v4yYtMpy63DV1rRXqImrT8srZFNVRbiDM2iHtfbbVKMGd0eNVDAhxrixPofYmBE2tUhYI1_VBfLyQcgL4gQJwGWIwxYK1L1dk8ohG-LSSp3egXBWj3YstEQxu5NtnvMP69sZEzqa_TEhNjbRnHwpJEU6F1YWxdbFYaobegg0Ej5Sj02sPwweh3NMZdL" },
-  { id: 3, name: "Sports Performance Tee", category: "Sportswear",       price: "₹999",   stock: 0,  status: "out_of_stock", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBoRXkr9wkVxiKvAY89Cw1vyX5QIK-_X-XUUm3IOiu6Q2gWsQ_7JbcFw54-Blqi5CgegqOPx8DGNz3-ACmfyQs2E1n5GwQb3W0dj2T42nvwuY2AsfRTfKZSwhUqzlusP3VfDjfYUsr3inlTk0NEpf3rEJ5D9hgkfF5kUyp4k8te3FUyMZdbMEtWPfwy8fSFJp4osBETqo7xBQaM8znj-lBww2rMOd2vJj9xJ3DeYKKAUlV_Cead7OLjtDiyQ9ywvw8bbDq-C4MYo1WY" },
-  { id: 4, name: "Oversized Graphic Tee",  category: "Graphic Wear",     price: "₹1,199", stock: 18, status: "active",       img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBoRXkr9wkVxiKvAY89Cw1vyX5QIK-_X-XUUm3IOiu6Q2gWsQ_7JbcFw54-Blqi5CgegqOPx8DGNz3-ACmfyQs2E1n5GwQb3W0dj2T42nvwuY2AsfRTfKZSwhUqzlusP3VfDjfYUsr3inlTk0NEpf3rEJ5D9hgkfF5kUyp4k8te3FUyMZdbMEtWPfwy8fSFJp4osBETqo7xBQaM8znj-lBww2rMOd2vJj9xJ3DeYKKAUlV_Cead7OLjtDiyQ9ywvw8bbDq-C4MYo1WY" },
+  { id: 1, name: "Custom Cotton T-Shirt", category: "Cotton Wear", price: "₹899", stock: 25, status: "active", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCu_1GeE6iKmSTqIC6C2-Io_JGj_i9n-9FgpvQy6Jk_yNWhVLGQmqjwJPGaTLk1-Ul5QPqMrmlv3MLVtecgKfckQoYxk6TRphC9zLxdZkKGvkyfFfD5mAxdQACWJ2k_oBQlZ90JUFmAY8kUxLz0ShfOzzNdTxOtZeGtoyL4swH3gB5Evy24BOmOw1c4ZNOrqU4iEukcrXIOdrENpRTtP8jonjDrA0Oymt5Vfn3RXCStMKaFyGUFF_UzU0HzwhGPFQvDXd1BaYPWGpVl" },
+  { id: 2, name: "Premium Polo Shirt", category: "Polo Collection", price: "₹1,299", stock: 12, status: "active", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDn5KGf95fr8L2algGU9Daf7iO5iRbGcyrAgzNOpccJ-H6SskIcsobEHLzE5y9MQ-BN_Vn_WzrXbwQeDVF13v4yYtMpy63DV1rRXqImrT8srZFNVRbiDM2iHtfbbVKMGd0eNVDAhxrixPofYmBE2tUhYI1_VBfLyQcgL4gQJwGWIwxYK1L1dk8ohG-LSSp3egXBWj3YstEQxu5NtnvMP69sZEzqa_TEhNjbRnHwpJEU6F1YWxdbFYaobegg0Ej5Sj02sPwweh3NMZdL" },
+  { id: 3, name: "Sports Performance Tee", category: "Sportswear", price: "₹999", stock: 0, status: "out_of_stock", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBoRXkr9wkVxiKvAY89Cw1vyX5QIK-_X-XUUm3IOiu6Q2gWsQ_7JbcFw54-Blqi5CgegqOPx8DGNz3-ACmfyQs2E1n5GwQb3W0dj2T42nvwuY2AsfRTfKZSwhUqzlusP3VfDjfYUsr3inlTk0NEpf3rEJ5D9hgkfF5kUyp4k8te3FUyMZdbMEtWPfwy8fSFJp4osBETqo7xBQaM8znj-lBww2rMOd2vJj9xJ3DeYKKAUlV_Cead7OLjtDiyQ9ywvw8bbDq-C4MYo1WY" },
+  { id: 4, name: "Oversized Graphic Tee", category: "Graphic Wear", price: "₹1,199", stock: 18, status: "active", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBoRXkr9wkVxiKvAY89Cw1vyX5QIK-_X-XUUm3IOiu6Q2gWsQ_7JbcFw54-Blqi5CgegqOPx8DGNz3-ACmfyQs2E1n5GwQb3W0dj2T42nvwuY2AsfRTfKZSwhUqzlusP3VfDjfYUsr3inlTk0NEpf3rEJ5D9hgkfF5kUyp4k8te3FUyMZdbMEtWPfwy8fSFJp4osBETqo7xBQaM8znj-lBww2rMOd2vJj9xJ3DeYKKAUlV_Cead7OLjtDiyQ9ywvw8bbDq-C4MYo1WY" },
 ];
 
 const IconBtn = ({ icon, onClick, danger }) => (
@@ -29,7 +29,7 @@ const IconBtn = ({ icon, onClick, danger }) => (
 );
 
 export default function ManageProducts() {
-  const [q,    setQ]    = useState("");
+  const [q, setQ] = useState("");
   const [items, setItems] = useState(INIT);
 
   const visible = items.filter(p =>

@@ -6,7 +6,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser"; 
+import cookieParser from "cookie-parser";
 import authRoutes from "./modules/auth/auth.routes.js";
 import planRoutes from "./modules/plan/plan.routes.js";
 import subscriptionRoutes from "./modules/payment/payment.routes.js";
@@ -30,11 +30,11 @@ app.use(cookieParser());
 connectDB();
 
 // ── Routes ─────────────────────────────────────────────────────────────────────
-app.use("/api/auth",         authRoutes);
-app.use("/api/otp",          otpRoutes);
-app.use("/api/plans",        planRoutes);      // was using `router` (wrong variable) — now correctly uses planRoutes
+app.use("/api/auth", authRoutes);
+app.use("/api/otp", otpRoutes);
+app.use("/api/plans", planRoutes);      // was using `router` (wrong variable) — now correctly uses planRoutes
 app.use("/api/subscription", subscriptionRoutes);
-app.use("/api/profile",      profileRoutes);
-app.use("/api/stores",       storeRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/stores", storeRoutes);
 
 export default app;

@@ -35,9 +35,9 @@ const authMiddleware = async (req, res, next) => {
             decoded = await verifyAccessToken(token);
         } catch (err) {
             if (
-                err instanceof JoseErrors.JWTExpired          ||
-                err instanceof JoseErrors.JWTInvalid          ||
-                err instanceof JoseErrors.JWSInvalid          ||
+                err instanceof JoseErrors.JWTExpired ||
+                err instanceof JoseErrors.JWTInvalid ||
+                err instanceof JoseErrors.JWSInvalid ||
                 err instanceof JoseErrors.JWSSignatureVerificationFailed
             ) {
                 return res.status(401).json({ message: "Invalid or expired token" });
@@ -55,12 +55,12 @@ const authMiddleware = async (req, res, next) => {
         }
 
         if (!user.isActive) {
-            
+
             return res.status(403).json({ message: "Account disabled" });
         }
 
         if (user.lockUntil && user.lockUntil > Date.now()) {
-            
+
             return res.status(423).json({ message: "Account locked" });
         }
 
@@ -71,7 +71,7 @@ const authMiddleware = async (req, res, next) => {
         // instantly rejected — no blacklist needed.
 
         if (decoded.tokenVersion !== user.tokenVersion) {
-            
+
             return res.status(401).json({ message: "Token has been invalidated. Please log in again." });
         }
 
@@ -94,14 +94,14 @@ const authMiddleware = async (req, res, next) => {
 
         req.user = {
             userId: user._id,
-            email:  user.email,
-            role:   user.role,
+            email: user.email,
+            role: user.role,
         };
 
         next();
 
     } catch (err) {
-        
+
         console.error("[authMiddleware]", err);
         return res.status(500).json({ message: "Authentication error" });
     }

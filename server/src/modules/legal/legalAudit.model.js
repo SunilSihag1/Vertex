@@ -22,29 +22,29 @@ const legalAuditSchema = new Schema(
     {
         // ── Which document was acted on ───────────────────────────────────────
         documentId: {
-            type:     ObjectId,
-            ref:      "LegalDocument",
+            type: ObjectId,
+            ref: "LegalDocument",
             required: true,
-            index:    true,
+            index: true,
         },
 
         // ── Which version was acted on (null for document-level actions) ───────
         versionId: {
             type: ObjectId,
-            ref:  "LegalVersion",
+            ref: "LegalVersion",
         },
 
         // ── What action was performed ─────────────────────────────────────────
         action: {
-            type:     String,
-            enum:     ["created", "updated", "published", "deactivated"],
+            type: String,
+            enum: ["created", "updated", "published", "deactivated"],
             required: true,
         },
 
         // ── Who performed the action ──────────────────────────────────────────
         performedBy: {
-            type:     ObjectId,
-            ref:      "User",
+            type: ObjectId,
+            ref: "User",
             required: true,
         },
     },

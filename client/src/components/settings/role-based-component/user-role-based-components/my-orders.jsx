@@ -1,16 +1,16 @@
 import { useState } from "react";
 
 const STATUS = {
-  Delivered:  { bg: "rgba(16,185,129,0.08)",  text: "#059669",  dot: "#10b981" },
-  Shipped:    { bg: "rgba(59,130,246,0.08)",   text: "#3b82f6",  dot: "#3b82f6" },
-  Processing: { bg: "rgba(245,158,11,0.09)",   text: "#d97706",  dot: "#f59e0b" },
-  Cancelled:  { bg: "rgba(239,68,68,0.08)",    text: "#ef4444",  dot: "#ef4444" },
+  Delivered: { bg: "rgba(16,185,129,0.08)", text: "#059669", dot: "#10b981" },
+  Shipped: { bg: "rgba(59,130,246,0.08)", text: "#3b82f6", dot: "#3b82f6" },
+  Processing: { bg: "rgba(245,158,11,0.09)", text: "#d97706", dot: "#f59e0b" },
+  Cancelled: { bg: "rgba(239,68,68,0.08)", text: "#ef4444", dot: "#ef4444" },
 };
 
 const ORDERS = [
-  { id: "CW-2041", name: "Basmati Rice (5kg)",          variant: "Premium · White",  date: "12 Jun 2025", amount: "₹899",   status: "Delivered",  img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D" },
-  { id: "CW-2081", name: "Organic Moong Dal",            variant: "500g · Washed",   date: "18 Jun 2025", amount: "₹450",   status: "Shipped",    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D" },
-  { id: "CW-2094", name: "Cold-Pressed Coconut Oil",     variant: "1L · Glass",      date: "22 Jun 2025", amount: "₹720",   status: "Processing", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D" },
+  { id: "CW-2041", name: "Basmati Rice (5kg)", variant: "Premium · White", date: "12 Jun 2025", amount: "₹899", status: "Delivered", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D" },
+  { id: "CW-2081", name: "Organic Moong Dal", variant: "500g · Washed", date: "18 Jun 2025", amount: "₹450", status: "Shipped", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D" },
+  { id: "CW-2094", name: "Cold-Pressed Coconut Oil", variant: "1L · Glass", date: "22 Jun 2025", amount: "₹720", status: "Processing", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAi4NfF_r3s0709UT9mS0NCfOewpUDH0GGeKCKFOayJv83fE8bLNA-Wmx3HP-EST_nKnan5tzJHn8O8DOKgrwLBYCsgoUKwQdDtSbJKxo5W7fDiT-WZmMOolRRLa04_Hy6WiixPMGHa4fws6lF2ixbTAfPj3AOxi09DtM_d_1ZWWboIY44WjX3UflWKZIYnlHK-zPpVzVWloWsesGgeYaHbQqDlOeIh_p5csDrows75-bG1i96EDhOq9JXbi6EjcAQbWVV8rNOUfF6D" },
 ];
 
 const FILTERS = ["All", "Delivered", "Shipped", "Processing", "Cancelled"];

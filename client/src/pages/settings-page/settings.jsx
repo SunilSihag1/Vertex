@@ -7,24 +7,24 @@ const NAV_CONFIG = [
     {
         section: "Account",
         items: [
-            { path: "edit-profile",   icon: "manage_accounts",   label: "Edit Profile",    roles: ["user", "shop-owner", "admin"] },
-            { path: "reset-password", icon: "lock_reset",        label: "Change Password", roles: ["user", "shop-owner", "admin"] },
-            { path: "notifications",  icon: "notifications",     label: "Notifications",   roles: ["user", "shop-owner", "admin"] },
+            { path: "edit-profile", icon: "manage_accounts", label: "Edit Profile", roles: ["user", "shop-owner", "admin"] },
+            { path: "reset-password", icon: "lock_reset", label: "Change Password", roles: ["user", "shop-owner", "admin"] },
+            { path: "notifications", icon: "notifications", label: "Notifications", roles: ["user", "shop-owner", "admin"] },
         ],
     },
     {
         section: "Shopping",
         items: [
-            { path: "my-orders",     icon: "receipt_long",  label: "My Orders",       roles: ["user", "admin"] },
-            { path: "saved-address", icon: "location_on",   label: "Saved Addresses", roles: ["user", "admin"] },
-            { path: "wishlist",      icon: "favorite",      label: "Wishlist",        roles: ["user", "admin"] },
+            { path: "my-orders", icon: "receipt_long", label: "My Orders", roles: ["user", "admin"] },
+            { path: "saved-address", icon: "location_on", label: "Saved Addresses", roles: ["user", "admin"] },
+            { path: "wishlist", icon: "favorite", label: "Wishlist", roles: ["user", "admin"] },
         ],
     },
     {
         section: "My Shop",
         items: [
-            { path: "shop-profile",    icon: "storefront",       label: "Shop Profile",    roles: ["shop-owner", "admin"] },
-            { path: "manage-products", icon: "inventory_2",      label: "Manage Products", roles: ["shop-owner", "admin"] },
+            { path: "shop-profile", icon: "storefront", label: "Shop Profile", roles: ["shop-owner", "admin"] },
+            { path: "manage-products", icon: "inventory_2", label: "Manage Products", roles: ["shop-owner", "admin"] },
             { path: "sales-analytics", icon: "bar_chart_4_bars", label: "Sales Analytics", roles: ["shop-owner", "admin"] },
         ],
     },
@@ -45,7 +45,7 @@ function RoleGuard({ role, loading }) {
 
     if (loading) return null;
 
-    const seg  = location.pathname.split("/").filter(Boolean);
+    const seg = location.pathname.split("/").filter(Boolean);
     const page = seg[seg.length - 1];
 
     // find the page in all NAV items
@@ -208,13 +208,13 @@ const Settings = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [open,    setOpen]    = useState(false);
-    const [role,    setRole]    = useState(null);
+    const [open, setOpen] = useState(false);
+    const [role, setRole] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const seg    = location.pathname.split("/").filter(Boolean);
+    const seg = location.pathname.split("/").filter(Boolean);
     const active = seg[seg.length - 1] ?? "settings";
-    const label  = NAV_CONFIG.flatMap((s) => s.items).find((i) => i.path === active)?.label ?? "Settings";
+    const label = NAV_CONFIG.flatMap((s) => s.items).find((i) => i.path === active)?.label ?? "Settings";
 
     /* Fetch role once on mount */
     const fetchRole = useCallback(async () => {

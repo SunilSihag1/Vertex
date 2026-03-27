@@ -21,50 +21,50 @@ const subscriptionSchema = new Schema(
     {
         // ── Who owns this subscription ─────────────────────────────────────────
         user_id: {
-            type:     ObjectId,
-            ref:      "User",
+            type: ObjectId,
+            ref: "User",
             required: true,
-            index:    true,
+            index: true,
         },
 
         // ── What plan they're on ───────────────────────────────────────────────
         plan_id: {
-            type:     ObjectId,
-            ref:      "Plan",
+            type: ObjectId,
+            ref: "Plan",
             required: true,
         },
 
         // ── Which payment created this subscription (audit trail) ──────────────
         payment_id: {
-            type:     ObjectId,
-            ref:      "Payment",
+            type: ObjectId,
+            ref: "Payment",
             required: true,
         },
 
         // ── Subscription state ─────────────────────────────────────────────────
         status: {
-            type:    String,
-            enum:    ["active", "cancelled", "expired"],
+            type: String,
+            enum: ["active", "cancelled", "expired"],
             default: "active",
-            index:   true,
+            index: true,
         },
 
         // ── Billing ────────────────────────────────────────────────────────────
         billing_cycle: {
-            type:     String,
-            enum:     ["monthly", "yearly"],
+            type: String,
+            enum: ["monthly", "yearly"],
             required: true,
         },
 
         // ── Duration ───────────────────────────────────────────────────────────
         start_date: {
-            type:     Date,
+            type: Date,
             required: true,
-            default:  Date.now,
+            default: Date.now,
         },
 
         end_date: {
-            type:     Date,
+            type: Date,
             required: true,
             // Calculated in payment.service.js based on billing_cycle:
             //   monthly → start_date + 30 days

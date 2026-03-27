@@ -30,7 +30,7 @@ const F = ({ label, children }) => (
 
 export default function ShopProfile() {
   const [saving, setSaving] = useState(false);
-  const [saved,  setSaved]  = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const save = async (e) => {
     e.preventDefault();
@@ -131,8 +131,8 @@ export default function ShopProfile() {
         <Card title="Social Links" icon="share">
           {[
             { label: "Instagram", icon: "photo_camera", color: "#db2777", ph: "instagram.com/yourshop" },
-            { label: "Facebook",  icon: "social_leaderboard", color: "#3b82f6", ph: "facebook.com/yourshop" },
-            { label: "Website",   icon: "language", color: "rgba(20,49,9,0.4)", ph: "www.yourwebsite.com" },
+            { label: "Facebook", icon: "social_leaderboard", color: "#3b82f6", ph: "facebook.com/yourshop" },
+            { label: "Website", icon: "language", color: "rgba(20,49,9,0.4)", ph: "www.yourwebsite.com" },
           ].map(({ label, icon, color, ph }) => (
             <F key={label} label={label}>
               <div className="relative">

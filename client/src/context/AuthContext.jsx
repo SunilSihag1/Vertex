@@ -71,14 +71,14 @@ const getUserFromToken = (token) => {
     if (!payload?.userId) return null;
     return {
         userId: payload.userId,
-        email:  payload.email,
+        email: payload.email,
     };
 };
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser]         = useState(null);
+    const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true); // true during boot check only
 
     // ── Boot: check auth status once on app load ───────────────────────────────

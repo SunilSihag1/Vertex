@@ -169,7 +169,7 @@ const Landing = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                             <div className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200 dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
                                 <div className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150"></div>
-                                <div className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
+                                <div className="w-16 h-16 bg-linear-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
                                     <span className="material-symbols-outlined text-primary text-3xl">inventory_2</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Stock Intelligence</h3>
@@ -180,7 +180,7 @@ const Landing = () => {
                             </div>
                             <div className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200 dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
                                 <div className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary rounded-full transition-all group-hover:scale-150"></div>
-                                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-primary/10 relative z-10">
+                                <div className="w-16 h-16 bg-linear-to-br from-primary to-primary rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-primary/10 relative z-10">
                                     <span className="material-symbols-outlined text-sage text-3xl">storefront</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Store Experience</h3>
@@ -191,7 +191,7 @@ const Landing = () => {
                             </div>
                             <div className="group p-10 rounded-2xl bg-white dark:bg-sage border border-slate-200 dark:border-slate-500 hover:border-sage/50 transition-all hover:shadow-[0_40px_80px_-15px_rgba(181,191,161,0.2)] hover:-translate-y-2 relative overflow-hidden">
                                 <div className="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 dark:bg-primary/70 rounded-full transition-all group-hover:scale-150"></div>
-                                <div className="w-16 h-16 bg-gradient-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
+                                <div className="w-16 h-16 bg-linear-to-br from-sage dark:from-primary to-sage/80 dark:to-primary-80 rounded-2xl flex items-center justify-center mb-10 shadow-lg shadow-sage/10 relative z-10">
                                     <span className="material-symbols-outlined text-primary text-3xl">monitoring</span>
                                 </div>
                                 <h3 className="text-2xl font-bold text-primary mb-4 font-display">Unified Analytics</h3>
@@ -240,7 +240,7 @@ const Landing = () => {
                             </div>
                             <div className="relative">
                                 <div className="absolute -inset-10 bg-sage/5 rounded-full blur-[80px]"></div>
-                                <div className="glass-card rounded-[2rem] p-4 border-white/20 shadow-2xl relative z-10 overflow-hidden">
+                                <div className="glass-card rounded-4xl p-4 border-white/20 shadow-2xl relative z-10 overflow-hidden">
                                     <div className="absolute inset-0 grainy-bg opacity-10"></div>
                                     <div className="aspect-video bg-cover bg-center rounded-2xl"
                                         style={{
@@ -310,7 +310,7 @@ const Landing = () => {
                             )}
 
                             {plans[1] && (
-                                <div className="bg-primary dark:bg-sage text-white dark:text-primary dark:border dark:border-slate-500 p-10 rounded-[2.5rem] relative shadow-[0_30px_60px_-15px_rgba(20,49,9,0.3)] hover:-translate-y-2 transition-all">
+                                <div className="bg-primary dark:bg-sage text-white dark:text-primary dark:border dark:border-slate-500 p-10 rounded-2xl relative shadow-[0_30px_60px_-15px_rgba(20,49,9,0.3)] hover:-translate-y-2 transition-all">
                                     <div className="grainy-bg absolute inset-0 opacity-10"></div>
                                     {plans[1].isPopular && (
                                         <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-sage dark:bg-primary dark:border dark:border-slate-500 text-primary dark:text-sage text-[10px] font-black px-5 py-1.5 rounded-full uppercase tracking-widest shadow-xl">

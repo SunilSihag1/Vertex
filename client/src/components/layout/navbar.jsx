@@ -93,7 +93,7 @@ const Navbar = () => {
                         >
                             {item}
                             <span
-                                className={`absolute left-0 -bottom-1 h-[2px] bg-primary dark:bg-sage transition-all duration-500 ${hovered === index ? "w-full" : "w-0"
+                                className={`absolute left-0 -bottom-1 h-0.5 bg-primary dark:bg-sage transition-all duration-500 ${hovered === index ? "w-full" : "w-0"
                                     }`}
                             ></span>
                         </a>

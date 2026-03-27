@@ -52,23 +52,23 @@ export const createSubscriptionOrder = async (req, res) => {
         });
 
     } catch (err) {
-    console.error("🔥 CREATE ORDER ERROR:", err);
-    console.error("🔥 ERROR TYPE:", typeof err);
-    console.error("🔥 ERROR KEYS:", Object.keys(err || {}));
+        console.error("🔥 CREATE ORDER ERROR:", err);
+        console.error("🔥 ERROR TYPE:", typeof err);
+        console.error("🔥 ERROR KEYS:", Object.keys(err || {}));
 
-    const message = err?.message || JSON.stringify(err) || "Internal Server Error";
+        const message = err?.message || JSON.stringify(err) || "Internal Server Error";
 
-    const status =
-        message === "Plan not found" ? 404 :
-        message === "Invalid plan ID" ? 400 :
-        message.includes("Billing cycle") ? 400 :
-        500;
+        const status =
+            message === "Plan not found" ? 404 :
+                message === "Invalid plan ID" ? 400 :
+                    message.includes("Billing cycle") ? 400 :
+                        500;
 
-    return res.status(status).json({
-        success: false,
-        message,
-    });
-}
+        return res.status(status).json({
+            success: false,
+            message,
+        });
+    }
 };
 
 // ─── VERIFY PAYMENT (on success) ──────────────────────────────────────────────
@@ -159,7 +159,7 @@ export const paymentFailed = async (req, res) => {
 
         await paymentService.failPayment(
             razorpay_order_id,
-            error_code   ?? "UNKNOWN_ERROR",
+            error_code ?? "UNKNOWN_ERROR",
             error_reason ?? "No reason provided"
         );
 

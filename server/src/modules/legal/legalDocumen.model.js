@@ -24,8 +24,8 @@ const legalDocumentSchema = new Schema(
     {
         // ── Document type ─────────────────────────────────────────────────────
         type: {
-            type:     String,
-            enum:     [
+            type: String,
+            enum: [
                 "privacy_policy",
                 "terms_and_conditions",
                 "refund_policy",
@@ -34,33 +34,33 @@ const legalDocumentSchema = new Schema(
                 "acceptable_use_policy",
             ],
             required: true,
-            unique:   true,  // Only one active document per type
-            index:    true,
+            unique: true,  // Only one active document per type
+            index: true,
         },
 
         // ── Display title ─────────────────────────────────────────────────────
         title: {
-            type:     String,
+            type: String,
             required: true,
-            trim:     true,
+            trim: true,
             // e.g., "Privacy Policy", "Terms and Conditions"
         },
 
         // ── Points to the currently active version ────────────────────────────
         currentVersionId: {
             type: ObjectId,
-            ref:  "LegalVersion",
+            ref: "LegalVersion",
         },
 
         // ── Visibility + enforcement flags ────────────────────────────────────
         isActive: {
-            type:    Boolean,
+            type: Boolean,
             default: true,
-            index:   true,
+            index: true,
         },
 
         requiresAcceptance: {
-            type:    Boolean,
+            type: Boolean,
             default: true,
             // true  → users must explicitly accept before using the service
             // false → informational only (e.g., Cookie Policy in some regions)

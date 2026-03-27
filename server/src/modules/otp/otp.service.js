@@ -92,6 +92,6 @@ const verifyOtp = async ({ userId, otp, type }) => {
 export {
     generateOtp,
     verifyOtp,
-    
+
 
 };

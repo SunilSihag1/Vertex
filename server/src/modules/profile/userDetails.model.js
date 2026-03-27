@@ -87,7 +87,7 @@ const userDetailsSchema = new mongoose.Schema(
             },
             default: []
         }
-    },   
+    },
     {
         timestamps: true
     }

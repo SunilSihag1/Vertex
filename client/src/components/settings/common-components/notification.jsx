@@ -9,10 +9,10 @@ const FEED = [
 ];
 
 const PREFS = [
-  { key: "orders",   label: "Order updates",    desc: "Confirmations, tracking, delivery",  on: true  },
-  { key: "promo",    label: "Promotions",        desc: "Deals, offers, new arrivals",        on: false },
-  { key: "shop",     label: "Shop activity",     desc: "Orders, reviews, performance",       on: true  },
-  { key: "security", label: "Security alerts",   desc: "Login activity, account changes",    on: true  },
+  { key: "orders", label: "Order updates", desc: "Confirmations, tracking, delivery", on: true },
+  { key: "promo", label: "Promotions", desc: "Deals, offers, new arrivals", on: false },
+  { key: "shop", label: "Shop activity", desc: "Orders, reviews, performance", on: true },
+  { key: "security", label: "Security alerts", desc: "Login activity, account changes", on: true },
 ];
 
 const Toggle = ({ on, onChange }) => (
@@ -42,10 +42,10 @@ export default function Notification() {
   const [prefs, setPrefs] = useState(PREFS);
 
   const unread = items.filter(n => n.unread).length;
-  const dismiss  = id  => setItems(p => p.filter(n => n.id !== id));
-  const markRead = id  => setItems(p => p.map(n => n.id === id ? { ...n, unread: false } : n));
-  const markAll  = ()  => setItems(p => p.map(n => ({ ...n, unread: false })));
-  const toggleP  = key => setPrefs(p => p.map(pf => pf.key === key ? { ...pf, on: !pf.on } : pf));
+  const dismiss = id => setItems(p => p.filter(n => n.id !== id));
+  const markRead = id => setItems(p => p.map(n => n.id === id ? { ...n, unread: false } : n));
+  const markAll = () => setItems(p => p.map(n => ({ ...n, unread: false })));
+  const toggleP = key => setPrefs(p => p.map(pf => pf.key === key ? { ...pf, on: !pf.on } : pf));
 
   return (
     <div className="max-w-lg space-y-7">

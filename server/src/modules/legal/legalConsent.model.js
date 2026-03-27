@@ -23,30 +23,30 @@ const legalConsentSchema = new Schema(
     {
         // ── Who accepted ──────────────────────────────────────────────────────
         userId: {
-            type:     ObjectId,
-            ref:      "User",
+            type: ObjectId,
+            ref: "User",
             required: true,
-            index:    true,
+            index: true,
         },
 
         // ── What they accepted ────────────────────────────────────────────────
         documentId: {
-            type:     ObjectId,
-            ref:      "LegalDocument",
+            type: ObjectId,
+            ref: "LegalDocument",
             required: true,
         },
 
         versionId: {
-            type:     ObjectId,
-            ref:      "LegalVersion",
+            type: ObjectId,
+            ref: "LegalVersion",
             required: true,
         },
 
         // ── When they accepted ────────────────────────────────────────────────
         acceptedAt: {
-            type:     Date,
+            type: Date,
             required: true,
-            default:  Date.now,
+            default: Date.now,
         },
 
         // ── Context of acceptance (for audit trail) ───────────────────────────
@@ -59,8 +59,8 @@ const legalConsentSchema = new Schema(
         },
 
         acceptedVia: {
-            type:     String,
-            enum:     ["signup", "subscription", "manual_update"],
+            type: String,
+            enum: ["signup", "subscription", "manual_update"],
             required: true,
         },
     },
