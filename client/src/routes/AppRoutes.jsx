@@ -19,6 +19,7 @@ import ManageProducts from "../components/settings/role-based-component/shop-own
 import SalesAnalytics from "../components/settings/role-based-component/shop-owner-components/sales-analytics";
 import ShopProfile from "../components/settings/role-based-component/shop-owner-components/shop-profile";
 import CreateShop from "../pages/create-shop/CreateShop";
+import Dashboard from "../pages/dashboard/dashboard";
 
 const AppRoutes = () => {
     return (
@@ -38,6 +39,7 @@ const AppRoutes = () => {
             {/* ── Protected Routes ──────────────────────────────── */}
             <Route element={<ProtectedRoute />}>
                 <Route path="/create-shop" element={<CreateShop />} />
+                <Route path="/dashboard" element={<Dashboard />} />
 
                 {/* Settings with nested children */}
                 <Route path="/settings" element={<Settings />}>
