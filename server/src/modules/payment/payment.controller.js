@@ -24,6 +24,7 @@
  */
 
 import * as paymentService from "./payment.service.js";
+import storeModel from "../store/store.model.js";
 import { verifyRazorpaySignature } from "../../utils/payment.utils.js";
 
 // ─── CREATE ORDER ─────────────────────────────────────────────────────────────
@@ -81,6 +82,8 @@ export const verifyPayment = async (req, res) => {
             razorpay_signature,
         } = req.body;
 
+        const userId = req.user.userId;
+
         // Input validation
         if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
             return res.status(400).json({
@@ -111,8 +114,21 @@ export const verifyPayment = async (req, res) => {
             });
         }
 
+        // ✅ Step 2: Now safely create store
+        let store = await storeModel.findOne({ ownerId: userId });
+
+        if (!store) {
+            store = await storeModel.create({
+                ownerId: userId,
+                name: `Store-${Date.now()}`,
+                tagline: "",
+                category: "",
+            });
+        }
+
+
         // ── Activate: mark payment success + create Subscription ──────────────
-        const { payment, subscription } = await paymentService.activatePayment(
+        const { subscription } = await paymentService.activatePayment(
             razorpay_order_id,
             razorpay_payment_id,
             razorpay_signature,
@@ -133,6 +149,7 @@ export const verifyPayment = async (req, res) => {
         });
 
     } catch (err) {
+        console.error("🔥 VERIFY PAYMENT ERROR:", err);
         const status = err.message === "Unauthorized: payment does not belong to this user" ? 403
             : err.message === "Payment record not found" ? 404
                 : 500;

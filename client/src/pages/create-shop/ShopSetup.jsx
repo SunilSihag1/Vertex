@@ -1,4 +1,4 @@
-const ShopSetup = ({ isRevealed }) => {
+const ShopSetup = () => {
     return (
         <>
             <div className="flex h-screen w-full">
