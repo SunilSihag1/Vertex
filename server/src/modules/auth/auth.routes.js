@@ -1,8 +1,9 @@
 /**
- * auth.routes.js
- * Location: server/src/modules/auth/auth.routes.js
+ * auth.routes.js — COMPLETE FILE (replace existing)
  *
- * Added: POST /logout-all  → logs out from all devices
+ * Added two protected routes:
+ *   POST /send-change-password-otp  → sends OTP to logged-in user's email
+ *   POST /change-password           → verifies OTP + updates password
  */
 
 import express from "express";
@@ -22,5 +23,9 @@ router.post("/google",  authController.googleAuth);
 
 router.post("/logout",     authMiddleware, authController.logout);
 router.post("/logout-all", authMiddleware, authController.logoutAll);
+
+// Password change flow (OTP-verified)
+router.post("/send-change-password-otp", authMiddleware, authController.sendChangePasswordOtp);
+router.post("/change-password",          authMiddleware, authController.changePassword);
 
 export default router;

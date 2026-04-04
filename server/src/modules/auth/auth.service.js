@@ -1,5 +1,5 @@
 /**
- * auth.service.js
+ * auth.service.js — COMPLETE FILE (replace existing)
  * Location: server/src/modules/auth/auth.service.js
  */
 
@@ -52,7 +52,7 @@ const upsertSession = (user, context, tokenData) => {
     // Remove expired sessions
     user.sessions = user.sessions.filter((s) => s.expiresAt > now);
 
-    // Same deviceId → update in place (same device re-logging in)
+    // Same deviceId → update in place
     const idx = user.sessions.findIndex((s) => s.deviceId === context.deviceId);
     if (idx !== -1) {
         Object.assign(user.sessions[idx], {
@@ -86,13 +86,14 @@ const signup = async ({ name, email, password }) => {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_ROUNDS);
 
-     const role = ADMIN_EMAIL && email === ADMIN_EMAIL ? "admin" : "user";
+    const role = ADMIN_EMAIL && email === ADMIN_EMAIL ? "admin" : "user";
 
     const user = await User.create({
         name,
         email,
         password:     hashedPassword,
         authProvider: "local",
+        role,
     });
 
     await otpService.generateOtp(user._id, "email_verification");
@@ -178,7 +179,6 @@ const refresh = async (rawToken, context = {}) => {
     );
 
     if (sessionIdx === -1) {
-        // Reuse detected — wipe all sessions (potential token theft)
         user.sessions      = [];
         user.tokenVersion += 1;
         await user.save();
@@ -206,82 +206,40 @@ const refresh = async (rawToken, context = {}) => {
 
 // ─── GOOGLE AUTH ──────────────────────────────────────────────────────────────
 
-/**
- * Industrial-standard Google OAuth flow:
- *
- * ❌ Old way (INSECURE):
- *    Client sends { name, email, googleId } → Server trusts it blindly
- *    → Anyone can fake any user's email and get logged in
- *
- * ✅ New way (SECURE):
- *    Client sends { idToken } → Server verifies with Google → extracts data
- *    → idToken is cryptographically signed by Google, cannot be faked
- *
- * @param {{ idToken: string, deviceId: string }} data
- * @param {{ ip: string, userAgent: string }} context
- */
 const googleAuth = async ({ idToken, deviceId }, context = {}) => {
-
-    // ── Validate inputs ────────────────────────────────────────────────────────
-
     if (!idToken)  throw new Error("Google ID token is required");
     if (!deviceId) throw new Error("Device ID is required");
-
-    // ── Step 1: Verify idToken with Google ────────────────────────────────────
-    // admin.auth().verifyIdToken() sends the token to Google's servers.
-    // Google checks: is it signed by us? is it expired? is it for this project?
-    // If anything is wrong, it throws — we catch and convert to a clean error.
 
     let googleUser;
     try {
         googleUser = await admin.auth().verifyIdToken(idToken);
-    } catch (err) {
-        // Common reasons: token expired (>1hr), wrong project, tampered token
+    } catch {
         throw new Error("Invalid Google token");
     }
 
-    // ── Step 2: Extract VERIFIED data ─────────────────────────────────────────
-    // ONLY trust what Google confirmed — never the client's raw payload.
+    const { uid: googleId, email, name } = googleUser;
 
-    const { uid: googleId, email, name, picture } = googleUser;
-
-    if (!email) {
-        // Rare: Google accounts without verified email (shouldn't happen for consumer accounts)
-        throw new Error("Google account has no verified email");
-    }
+    if (!email) throw new Error("Google account has no verified email");
 
     const normalizedEmail = email.toLowerCase();
-
-    // ── Step 3: Find or create user ───────────────────────────────────────────
 
     let user = await User.findOne({ email: normalizedEmail })
         .select("+sessions +tokenVersion");
 
     if (!user) {
-        // First time Google login → create account
-        // Name fallback: use part before @ if Google doesn't provide a name
         user = await User.create({
             name:         name ?? normalizedEmail.split("@")[0],
             email:        normalizedEmail,
             googleId,
             authProvider: "google",
-            isVerified:   true,  // Google already verified their email
+            isVerified:   true,
         });
-        // Re-fetch with select fields (create() doesn't return select: false fields)
         user = await User.findById(user._id).select("+sessions +tokenVersion");
-
     } else if (!user.googleId) {
-        // User already has an account (signed up with email/password) but
-        // is now logging in with Google for the first time → link accounts
         user.googleId = googleId;
-        // Keep authProvider as "local" so they can still use password login too
     }
 
     if (!user.isActive) throw new Error("Account disabled");
-
-    // ── Step 4: Issue our own JWT pair ────────────────────────────────────────
-    // Same as normal login — Google auth just gave us a verified identity.
-    // From here on, we use our own access/refresh tokens.
 
     const accessToken = await signAccessToken({
         userId:       user._id.toString(),
@@ -321,6 +279,90 @@ const logoutAll = async (userId) => {
     return { message: "Logged out from all devices" };
 };
 
+// ─── SEND CHANGE-PASSWORD OTP ─────────────────────────────────────────────────
+
+/**
+ * Sends a password-reset OTP to the logged-in user's registered email.
+ * Reuses the existing OTP infrastructure (same model, service, mailer).
+ *
+ * @param {string} userId   from req.user.userId (set by authMiddleware)
+ * @returns {{ message: string, maskedEmail: string }}
+ */
+const sendChangePasswordOtp = async (userId) => {
+    const user = await User.findById(userId);
+    if (!user) throw new Error("User not found");
+
+    // Google users have no local password to change
+    if (user.authProvider === "google") {
+        throw new Error("Google accounts cannot change password here. Manage your password through Google.");
+    }
+
+    // Reuse existing OTP generation + email delivery
+    await otpService.generateOtp(userId, "password_reset");
+
+    // Build masked email for UI ("s***t@gmail.com")
+    const [local, domain] = user.email.split("@");
+    const visibleStart    = local[0] ?? "";
+    const visibleEnd      = local.length > 2 ? local[local.length - 1] : "";
+    const stars           = "*".repeat(Math.max(local.length - 2, 2));
+    const maskedEmail     = `${visibleStart}${stars}${visibleEnd}@${domain}`;
+
+    return { message: "OTP sent to your email.", maskedEmail };
+};
+
+// ─── CHANGE PASSWORD (after OTP verification) ─────────────────────────────────
+
+/**
+ * Verifies the OTP, hashes the new password, and revokes all sessions.
+ *
+ * Security actions on success:
+ *  - bcrypt hash (12 rounds)
+ *  - passwordChangedAt set → authMiddleware rejects tokens issued before this
+ *  - sessions cleared      → revokes all refresh tokens (all devices logged out)
+ *  - tokenVersion++        → instantly invalidates all outstanding access tokens
+ *
+ * @param {string} userId
+ * @param {{ otp: string, newPassword: string }} data
+ * @returns {{ message: string }}
+ */
+const changePassword = async (userId, { otp, newPassword }) => {
+    const user = await User.findById(userId);
+    if (!user) throw new Error("User not found");
+
+    if (user.authProvider === "google") {
+        throw new Error("Google accounts cannot change password.");
+    }
+
+    // ── 1. Verify OTP (throws on failure — one-time use, auto-deleted on success)
+    await otpService.verifyOtp({ userId, otp, type: "password_reset" });
+
+    // ── 2. Validate password strength
+    validatePassword(newPassword);
+
+    // ── 3. Hash and persist
+    const hashedPassword = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+
+    await User.findByIdAndUpdate(userId, {
+        $set: {
+            password:          hashedPassword,
+            passwordChangedAt: new Date(),
+            sessions:          [],           // revoke all refresh tokens
+        },
+        $inc: { tokenVersion: 1 },           // invalidate all access tokens
+    });
+
+    return { message: "Password changed successfully." };
+};
+
 // ─── EXPORT ───────────────────────────────────────────────────────────────────
 
-export { signup, login, refresh, logout, logoutAll, googleAuth };
+export {
+    signup,
+    login,
+    refresh,
+    logout,
+    logoutAll,
+    googleAuth,
+    sendChangePasswordOtp,
+    changePassword,
+};
