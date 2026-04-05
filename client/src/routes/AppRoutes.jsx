@@ -1,7 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-// BUG FIX: ProtectedRoute and PublicOnlyRoute were imported twice — duplicate named imports
-// cause module binding errors. Consolidated to a single import statement.
 import { ProtectedRoute, PublicOnlyRoute } from "../components/auth/ProtectedRoutes";
+
+import MainLayout from "../pages/layouts/MainLayout";
+import DashboardLayout from "../pages/layouts/DashboardLayout";
 
 import Landing from "../pages/landing/landing";
 import Pricing from "../pages/landing/pricing";
@@ -25,38 +26,47 @@ const AppRoutes = () => {
     return (
         <Routes>
 
-            {/* ── Public Routes ─────────────────────────────────── */}
-            <Route path="/" element={<Landing />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/verify-otp" element={<Otp />} />
+            {/* ── MAIN LAYOUT (Navbar + Footer) ───────────────── */}
+            <Route element={<MainLayout />}>
 
-            {/* ── Public Only (redirect to / if logged in) ──────── */}
-            <Route element={<PublicOnlyRoute />}>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-            </Route>
+                <Route path="/" element={<Landing />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/verify-otp" element={<Otp />} />
 
-            {/* ── Protected Routes ──────────────────────────────── */}
-            <Route element={<ProtectedRoute />}>
-                <Route path="/create-shop" element={<CreateShop />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route element={<PublicOnlyRoute />}>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                </Route>
 
-                {/* Settings with nested children */}
-                <Route path="/settings" element={<Settings />}>
-                    <Route index element={<Navigate to="edit-profile" replace />} />
-                    <Route path="edit-profile" element={<EditProfile />} />
-                    <Route path="reset-password" element={<ResetPassword />} />
-                    <Route path="notifications" element={<Notification />} />
-                    <Route path="my-orders" element={<MyOrders />} />
-                    <Route path="wishlist" element={<Wishlist />} />
-                    <Route path="saved-address" element={<SavedAddress />} />
-                    <Route path="manage-products" element={<ManageProducts />} />
-                    <Route path="sales-analytics" element={<SalesAnalytics />} />
-                    <Route path="shop-profile" element={<ShopProfile />} />
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/create-shop" element={<CreateShop />} />
+
+                    <Route path="/settings" element={<Settings />}>
+                        <Route index element={<Navigate to="edit-profile" replace />} />
+                        <Route path="edit-profile" element={<EditProfile />} />
+                        <Route path="reset-password" element={<ResetPassword />} />
+                        <Route path="notifications" element={<Notification />} />
+                        <Route path="my-orders" element={<MyOrders />} />
+                        <Route path="wishlist" element={<Wishlist />} />
+                        <Route path="saved-address" element={<SavedAddress />} />
+                        <Route path="manage-products" element={<ManageProducts />} />
+                        <Route path="sales-analytics" element={<SalesAnalytics />} />
+                        <Route path="shop-profile" element={<ShopProfile />} />
+                    </Route>
+
                 </Route>
             </Route>
 
-            {/* ── 404 Fallback ──────────────────────────────────── */}
+            {/* ── DASHBOARD (NO Navbar/Footer) ───────────────── */}
+            <Route element={<ProtectedRoute />}>
+                <Route element={<DashboardLayout />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    {/* future dashboard routes */}
+                    {/* <Route path="/dashboard/users" element={<Users />} /> */}
+                </Route>
+            </Route>
+
+            {/* ── 404 ───────────────── */}
             <Route path="*" element={<Navigate to="/" replace />} />
 
         </Routes>

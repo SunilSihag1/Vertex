@@ -38,10 +38,14 @@
 
 
 :root {
-  --primary: #143109;
+  --primary-sage: #143109;
   --sage: #b5bfa1;
   --charcoal: #1f2937;
   --background-light: #fdfdfb;
+}
+
+.dark {
+  --primary-sage: #b5bfa1;
 }
 
 .font-display {

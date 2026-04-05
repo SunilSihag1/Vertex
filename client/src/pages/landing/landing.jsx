@@ -39,35 +39,6 @@ const Landing = () => {
     return (
         <>
             <main>
-                {/* {
-                    paymentError && (
-                        <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-300 text-sm text-center">
-                            {paymentError}
-                            <button onClick={resetPayment} className="ml-3 underline">Dismiss</button>
-                        </div>
-                    )
-                }
-
-                SUCCESS BANNER — show after subscription activates:
-
-                {
-                    paymentSuccess && subscription && (
-                        <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl text-green-700 dark:text-green-300 text-sm text-center">
-                            ✓ Subscription activated! Your plan is active until {new Date(subscription.end_date).toLocaleDateString()}.
-                        </div>
-                    )
-                }
-
-                LOADING STATE on plan buttons — add`disabled` + spinner:
-
-                <button
-                    onClick={() => handleSelectPlan(plans[0]._id)}
-                    disabled={isPaymentLoading}
-                    className="... disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                    {isPaymentLoading ? "Processing..." : "Start Free Trial"}
-                </button> */}
-
                 <section className="relative pt-20 pb-20 md:pt-14 md:pb-14 overflow-hidden bg-background-light dark:bg-background-dark">
                     <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-sage/20 rounded-full blur-[120px]"></div>
                     <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">

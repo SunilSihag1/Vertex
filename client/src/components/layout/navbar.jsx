@@ -17,7 +17,7 @@ const MoonIcon = () => (
     </svg>
 );
 
-const ThemeSwitcher = () => {
+export const ThemeSwitcher = () => {
     const [theme, setThemeState] = useState("light");
 
     useEffect(() => {

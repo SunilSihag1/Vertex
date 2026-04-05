@@ -47,7 +47,7 @@ const CompleteStep = () => {
 
     const goToDashboard = () => {
         // Force a full reload so AuthContext refreshes the user's new role
-        window.location.href = "/settings/shop-profile";
+        window.location.href = "/dashboard";
     };
 
     return (
@@ -88,7 +88,7 @@ const CompleteStep = () => {
                         style={{ background: "#143109" }}
                     >
                         <span
-                            className="material-symbols-outlined text-4xl text-[#b5bfa1]"
+                            className="material-symbols-outlined text-4xl text-sage"
                             style={{ fontVariationSettings: "'FILL' 1" }}
                         >
                             check_circle
